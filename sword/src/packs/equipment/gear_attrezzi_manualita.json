@@ -1,0 +1,33 @@
+{
+  "_id": "t6Ff7zrlAQAuJqLF",
+  "_key": "!items!t6Ff7zrlAQAuJqLF",
+  "name": "Attrezzi da manualita",
+  "type": "gear",
+  "img": "icons/tools/hand/lockpicks-steel-grey.webp",
+  "system": {
+    "gearCategory": "skill_tool",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 3,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": "manualita",
+    "description": "Required for Manualita checks (lockpicks, tools, etc.)"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

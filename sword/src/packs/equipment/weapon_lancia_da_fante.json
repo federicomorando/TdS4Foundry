@@ -1,0 +1,40 @@
+{
+  "_id": "ZJp1g2urgegmPqZO",
+  "_key": "!items!ZJp1g2urgegmPqZO",
+  "name": "Lancia da fante",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/spear-simple-engraved.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "asta",
+    "hands": "due_mani",
+    "costDenari": 10,
+    "costDisplay": "10d",
+    "weight": 3,
+    "damageValue": 3,
+    "damageType": "P",
+    "parryModifier": 3,
+    "misura": "L",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

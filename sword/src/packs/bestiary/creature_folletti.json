@@ -1,0 +1,124 @@
+{
+  "_id": "bcgPAWD0TH2pFA7T",
+  "_key": "!actors!bcgPAWD0TH2pFA7T",
+  "name": "Folletti",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 4,
+    "creatureType": "fatato",
+    "sizeCategory": "piccola",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 4,
+      "forza": 2,
+      "percezione": 3,
+      "volonta": 3,
+      "ragionamento": 2,
+      "carisma": 3
+    },
+    "skills": {
+      "lotta": 2,
+      "furtivita": 4,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 3,
+      "archi": 3,
+      "autorita": 2,
+      "empatia": 2,
+      "raggirare": 3,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 14,
+        "max": 14
+      },
+      "fatica": {
+        "value": 4,
+        "max": 4
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 5,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Coltellaccio o pugnale",
+        "skill": "armi_corte",
+        "misura": "Stretta",
+        "damage": "+2T"
+      },
+      {
+        "name": "Arco corto",
+        "skill": "archi",
+        "misura": null,
+        "damage": "+2P"
+      }
+    ],
+    "advantages": [
+      "invisibilita",
+      "sfuggente",
+      "terzo_occhio",
+      "tocco_fatato"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [
+      "notturno"
+    ],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 0,
+      "gravi": 2,
+      "critiche": 2,
+      "mortali": 1
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 4,
+      "stanco": 4,
+      "sfinito": 4
+    },
+    "speciale": "Up to four times per day, may vanish and reappear within 90m, or transform into a Small animal for one hour. Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Folletti",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

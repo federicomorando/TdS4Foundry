@@ -1,0 +1,33 @@
+{
+  "_id": "mrDLuW6MoIfvDhZH",
+  "_key": "!items!mrDLuW6MoIfvDhZH",
+  "name": "Razioni (1 giorno)",
+  "type": "gear",
+  "img": "icons/consumables/grains/bread-loaf-boule-tan.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 2,
+    "costDisplay": "2d",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Dried food for one day"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

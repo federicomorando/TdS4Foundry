@@ -1,0 +1,32 @@
+{
+  "_id": "74qrRGs7ZvMLHhgy",
+  "_key": "!items!74qrRGs7ZvMLHhgy",
+  "name": "Scudo",
+  "type": "shield",
+  "img": "icons/equipment/shield/heater-steel-grey.webp",
+  "system": {
+    "costDenari": 12,
+    "costDisplay": "1s",
+    "weight": 3,
+    "damageValue": 2,
+    "parryModifier": 2,
+    "pregi": [],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

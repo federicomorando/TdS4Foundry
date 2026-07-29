@@ -1,0 +1,236 @@
+<div class="tab scrollable{{#if tab.active}} active{{/if}}"
+     data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <div class="inventory-list">
+
+    {{!-- Encumbrance bar --}}
+    <div class="encumbrance-bar">
+      <div class="encumbrance-info">
+        <span class="encumbrance-label">{{localize "SWORD.Encumbrance.Label"}}:</span>
+        <span class="encumbrance-values">{{encumbrance.totalWeight}} kg / {{encumbrance.maxWeight}} kg</span>
+        <span class="encumbrance-category encumbrance-{{encumbrance.category}}">
+          {{localize (concat "SWORD.Encumbrance." encumbrance.category)}}
+        </span>
+        {{#if encumbrance.penalty}}
+        <span class="encumbrance-penalty">({{encumbrance.penalty}})</span>
+        {{/if}}
+      </div>
+      <div class="encumbrance-track">
+        <div class="encumbrance-fill encumbrance-{{encumbrance.category}}" style="width: {{encumbrance.percent}}%"></div>
+      </div>
+    </div>
+
+    {{!-- Currency --}}
+    <div class="currency-row">
+      <label class="currency-field">
+        <span>{{localize "SWORD.Currency.Lire"}}</span>
+        <input type="number" name="system.money.lire" value="{{system.money.lire}}" min="0" step="1" />
+      </label>
+      <label class="currency-field">
+        <span>{{localize "SWORD.Currency.Soldi"}}</span>
+        <input type="number" name="system.money.soldi" value="{{system.money.soldi}}" min="0" step="1" />
+      </label>
+      <label class="currency-field">
+        <span>{{localize "SWORD.Currency.Denari"}}</span>
+        <input type="number" name="system.money.denari" value="{{system.money.denari}}" min="0" step="1" />
+      </label>
+    </div>
+
+    {{!-- Militare quality equipment reminder --}}
+    {{#if militareQualityEquipment}}
+    <div class="militare-banner">
+      <i class="fas fa-shield-halved"></i>
+      {{localize "SWORD.Cultures.militare.equipmentReminder"}}
+    </div>
+    {{/if}}
+
+    {{!-- Weapons --}}
+    <div class="inventory-category">
+      <h3 class="inventory-category-header">
+        <i class="fas fa-sword"></i>
+        {{localize "TYPES.Item.weapon"}}
+        <button type="button" class="item-add-btn" data-action="createItem" data-type="weapon" title="{{localize "SWORD.Inventory.AddWeapon"}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </h3>
+      {{#if weapons.length}}
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "SWORD.Item.Label"}}</th>
+            <th class="col-cat">{{localize "SWORD.Item.Category"}}</th>
+            <th class="col-hands">{{localize "SWORD.Item.Hands"}}</th>
+            <th class="col-damage">{{localize "SWORD.Item.Damage"}}</th>
+            <th class="col-parry">{{localize "SWORD.Item.Parry"}}</th>
+            <th class="col-weight">{{localize "SWORD.Item.Weight"}}</th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each weapons}}
+          <tr class="item-row">
+            <td class="col-name">
+              <img class="item-thumb" src="{{this.img}}" width="24" height="24" />
+              <a class="item-name-link" data-action="editItem" data-item-id="{{this.id}}">{{this.name}}</a>
+            </td>
+            <td class="col-cat">{{this.categoryLabel}}</td>
+            <td class="col-hands">{{this.handsLabel}}</td>
+            <td class="col-damage">{{this.damageValue}}{{this.damageType}}</td>
+            <td class="col-parry">{{this.parryModifier}}</td>
+            <td class="col-weight">{{this.weight}}</td>
+            <td class="col-actions">
+              <a class="item-action draw-toggle {{#if this.isDrawn}}active{{/if}}" data-action="drawWeapon" data-item-id="{{this.id}}" title="{{localize "SWORD.Combat.DrawSheathe"}}"><i class="fas {{#if this.isDrawn}}fa-hand-fist{{else}}fa-hand{{/if}}"></i></a>
+              {{#if this.canBeSecondary}}
+              <a class="item-action secondary-toggle {{#if this.isSecondary}}active{{/if}}" data-action="toggleSecondary" data-item-id="{{this.id}}" title="{{localize "SWORD.Combat.SecondaryHand"}}"><i class="fas fa-hand-back-fist"></i></a>
+              {{/if}}
+              {{#if this.isReloading}}
+              <span class="reload-badge" title="{{localize "SWORD.Combat.Reloading"}}">
+                <i class="fas fa-hourglass-half"></i> {{this.reloadTurnsRemaining}}
+              </span>
+              {{else}}
+              {{#if this.isDrawn}}
+              <a class="item-action attack-btn" data-action="attackWithWeapon" data-item-id="{{this.id}}" title="{{localize "SWORD.Combat.Attack"}}"><i class="fas fa-swords"></i></a>
+              {{/if}}
+              {{/if}}
+              <a class="item-action" data-action="editItem" data-item-id="{{this.id}}" title="Modifica"><i class="fas fa-edit"></i></a>
+              <a class="item-action" data-action="deleteItem" data-item-id="{{this.id}}" title="Elimina"><i class="fas fa-trash"></i></a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
+    </div>
+
+    {{!-- Shields --}}
+    <div class="inventory-category">
+      <h3 class="inventory-category-header">
+        <i class="fas fa-shield-halved"></i>
+        {{localize "TYPES.Item.shield"}}
+        <button type="button" class="item-add-btn" data-action="createItem" data-type="shield" title="{{localize "SWORD.Inventory.AddShield"}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </h3>
+      {{#if shields.length}}
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "SWORD.Item.Label"}}</th>
+            <th class="col-parry">{{localize "SWORD.Item.Parry"}}</th>
+            <th class="col-damage">{{localize "SWORD.Item.Damage"}}</th>
+            <th class="col-weight">{{localize "SWORD.Item.Weight"}}</th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each shields}}
+          <tr class="item-row">
+            <td class="col-name">
+              <img class="item-thumb" src="{{this.img}}" width="24" height="24" />
+              <a class="item-name-link" data-action="editItem" data-item-id="{{this.id}}">{{this.name}}</a>
+            </td>
+            <td class="col-parry">{{this.parryModifier}}</td>
+            <td class="col-damage">{{this.damageValue}}</td>
+            <td class="col-weight">{{this.weight}}</td>
+            <td class="col-actions">
+              <a class="item-action" data-action="editItem" data-item-id="{{this.id}}" title="Modifica"><i class="fas fa-edit"></i></a>
+              <a class="item-action" data-action="deleteItem" data-item-id="{{this.id}}" title="Elimina"><i class="fas fa-trash"></i></a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
+    </div>
+
+    {{!-- Armor --}}
+    <div class="inventory-category">
+      <h3 class="inventory-category-header">
+        <i class="fas fa-helmet-safety"></i>
+        {{localize "TYPES.Item.armor"}}
+        <button type="button" class="item-add-btn" data-action="createItem" data-type="armor" title="{{localize "SWORD.Inventory.AddArmor"}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </h3>
+      {{#if armor.length}}
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "SWORD.Item.Label"}}</th>
+            <th class="col-prot">{{localize "SWORD.Item.Protezione"}}</th>
+            <th class="col-rob">{{localize "SWORD.Item.Robustezza"}}</th>
+            <th class="col-weight">{{localize "SWORD.Item.Weight"}}</th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each armor}}
+          <tr class="item-row">
+            <td class="col-name">
+              <img class="item-thumb" src="{{this.img}}" width="24" height="24" />
+              <a class="item-name-link" data-action="editItem" data-item-id="{{this.id}}">{{this.name}}</a>
+            </td>
+            <td class="col-prot">{{this.protezione}}</td>
+            <td class="col-rob">
+              <a class="inline-adjust" data-action="adjustRobustezza" data-item-id="{{this.id}}" data-delta="-1" title="-1"><i class="fas fa-minus"></i></a>
+              {{this.robustezzaCurrent}} / {{this.robustezza}}
+              <a class="inline-adjust" data-action="adjustRobustezza" data-item-id="{{this.id}}" data-delta="1" title="+1"><i class="fas fa-plus"></i></a>
+            </td>
+            <td class="col-weight">{{this.weight}}</td>
+            <td class="col-actions">
+              <a class="item-action" data-action="editItem" data-item-id="{{this.id}}" title="Modifica"><i class="fas fa-edit"></i></a>
+              <a class="item-action" data-action="deleteItem" data-item-id="{{this.id}}" title="Elimina"><i class="fas fa-trash"></i></a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
+    </div>
+
+    {{!-- Gear --}}
+    <div class="inventory-category">
+      <h3 class="inventory-category-header">
+        <i class="fas fa-backpack"></i>
+        {{localize "TYPES.Item.gear"}}
+        <button type="button" class="item-add-btn" data-action="createItem" data-type="gear" title="{{localize "SWORD.Inventory.AddGear"}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </h3>
+      {{#if gear.length}}
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th class="col-name">{{localize "SWORD.Item.Label"}}</th>
+            <th class="col-cat">{{localize "SWORD.Item.Category"}}</th>
+            <th class="col-qty">{{localize "SWORD.Item.Quantity"}}</th>
+            <th class="col-weight">{{localize "SWORD.Item.Weight"}}</th>
+            <th class="col-actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each gear}}
+          <tr class="item-row">
+            <td class="col-name">
+              <img class="item-thumb" src="{{this.img}}" width="24" height="24" />
+              <a class="item-name-link" data-action="editItem" data-item-id="{{this.id}}">{{this.name}}</a>
+            </td>
+            <td class="col-cat">{{this.gearCategoryLabel}}</td>
+            <td class="col-qty">
+              <a class="inline-adjust" data-action="adjustQuantity" data-item-id="{{this.id}}" data-delta="-1" title="-1"><i class="fas fa-minus"></i></a>
+              {{this.quantity}}
+              <a class="inline-adjust" data-action="adjustQuantity" data-item-id="{{this.id}}" data-delta="1" title="+1"><i class="fas fa-plus"></i></a>
+            </td>
+            <td class="col-weight">{{this.totalWeight}}</td>
+            <td class="col-actions">
+              <a class="item-action" data-action="editItem" data-item-id="{{this.id}}" title="Modifica"><i class="fas fa-edit"></i></a>
+              <a class="item-action" data-action="deleteItem" data-item-id="{{this.id}}" title="Elimina"><i class="fas fa-trash"></i></a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{/if}}
+    </div>
+
+  </div>
+</div>

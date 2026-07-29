@@ -1,0 +1,122 @@
+{
+  "_id": "gdJtjZUfg1bABv4r",
+  "_key": "!actors!gdJtjZUfg1bABv4r",
+  "name": "Demone dell'acqua",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 15,
+    "creatureType": "demone",
+    "sizeCategory": "enorme",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 0,
+      "forza": 5,
+      "percezione": 3,
+      "volonta": 5,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 5,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 12,
+        "max": 12
+      },
+      "fatica": {
+        "value": 10,
+        "max": 10
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 7,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 6,
+    "attacks": [
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Larga",
+        "damage": "+4T"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "aura_infernale",
+      "immunita_freddo",
+      "ostacolare",
+      "paura",
+      "scatto_fulmineo"
+    ],
+    "advantageDetails": {
+      "aura_infernale": 2,
+      "ostacolare": 3,
+      "paura": 4
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 8,
+      "leggere": 7,
+      "gravi": 7,
+      "critiche": 7,
+      "mortali": 7
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 10,
+      "stanco": 10,
+      "sfinito": 10
+    },
+    "speciale": "Three times per day, may spend 2 consecutive actions to unleash a whirlpool/storm (100m radius, 12 turns). Boats: a Profession (sailor/pilot) check vs difficulty 5, or the vessel capsizes. In spirit form: immune to mundane damage, Incorporeal, Invisible, Third Eye, Night Vision."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Demone dell'acqua",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_id": "Gm53WXW72qkPFrig",
+  "_key": "!items!Gm53WXW72qkPFrig",
+  "name": "Martello",
+  "type": "weapon",
+  "img": "icons/weapons/hammers/hammer-simple-iron.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 6,
+    "costDisplay": "6d",
+    "weight": 2,
+    "damageValue": 2,
+    "damageType": "B",
+    "parryModifier": 1,
+    "misura": "S",
+    "pregi": [
+      "compatta"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "_id": "HDCRTuH0S5LSDKHS",
+  "_key": "!items!HDCRTuH0S5LSDKHS",
+  "name": "Lancia da cavaliere",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/spear-ornate-gold.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "asta",
+    "hands": "due_mani",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 4,
+    "damageValue": 5,
+    "damageType": "P",
+    "parryModifier": 1,
+    "misura": "LL",
+    "pregi": [
+      "pesante",
+      "da_cavallo"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

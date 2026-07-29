@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify system.json version matches tag
+        run: |
+          json_version=$(jq -r .version sword/system.json)
+          if [ "$json_version" != "${{ steps.version.outputs.version }}" ]; then
+            echo "::error::system.json version ($json_version) does not match tag (${{ steps.version.outputs.version }})"
+            exit 1
+          fi
+
+      - name: Create release zip
+        run: |
+          cd sword
+          zip -r ../sword.zip . -x "src/*" "scripts/*"
+
+      - name: Copy system.json for manifest
+        run: cp sword/system.json system.json
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            sword.zip
+            system.json
+          generate_release_notes: true

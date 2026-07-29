@@ -1,0 +1,33 @@
+{
+  "_id": "3JulEQbrfAamTrN2",
+  "_key": "!items!3JulEQbrfAamTrN2",
+  "name": "Olio per lanterna",
+  "type": "gear",
+  "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 3,
+    "costDisplay": "3d",
+    "weight": 0.5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Burns for ~4 hours"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,92 @@
+<div class="sword chat-card grapple-result">
+
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      {{#if isLock}}
+      <h3><i class="fas fa-lock"></i> {{localize "SWORD.Combat.GrappleLock"}}</h3>
+      {{else}}
+      <h3><i class="fas fa-unlock"></i> {{localize "SWORD.Combat.BreakFree"}}</h3>
+      {{/if}}
+      <span class="char-info">{{skillLabel}} → {{targetName}}</span>
+    </div>
+  </header>
+
+  {{#if isCreature}}
+  {{!-- Creature: fixed successes --}}
+  <div class="result-section {{#if passed}}passed{{else}}failed{{/if}}">
+    <div class="successes-detail">
+      {{localize "SWORD.Chat.FinalSuccesses"}}: <strong>{{finalSuccesses}}</strong>
+      vs. {{#if isLock}}{{lockDifficulty}}{{else}}{{breakDifficulty}}{{/if}}
+    </div>
+    <div class="defense-outcome">
+      {{#if passed}}
+      <span class="result-badge pass"><i class="fas fa-check"></i>
+        {{#if isLock}}{{localize "SWORD.Combat.GrappleLockSuccess"}}{{else}}{{localize "SWORD.Combat.BreakFreeSuccess"}}{{/if}}
+      </span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-times"></i>
+        {{#if isLock}}{{localize "SWORD.Combat.GrappleLockFail"}}{{else}}{{localize "SWORD.Combat.BreakFreeFail"}}{{/if}}
+      </span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{else}}
+  {{!-- Character: dice roll --}}
+  <div class="dice-section">
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="result-section {{#if passed}}passed{{else}}failed{{/if}}">
+    <div class="sum-line">
+      {{localize "SWORD.Chat.Sum"}}: <strong>{{finalSum}}</strong>
+      {{localize "SWORD.Chat.VsChar"}} {{characteristicScore}}
+      {{#if basePassed}}
+      <span class="result-badge pass">{{localize "SWORD.Chat.Passed"}}</span>
+      {{else}}
+      <span class="result-badge fail">{{localize "SWORD.Chat.Failed"}}</span>
+      {{/if}}
+    </div>
+
+    {{#if basePassed}}
+    <div class="successes-detail">
+      {{localize "SWORD.Chat.FinalSuccesses"}}: {{finalSuccesses}}
+      vs. {{#if isLock}}{{lockDifficulty}}{{else}}{{breakDifficulty}}{{/if}}
+      ({{localize "SWORD.Chat.DifficultyThreshold"}})
+    </div>
+    {{/if}}
+
+    <div class="defense-outcome">
+      {{#if passed}}
+      <span class="result-badge pass"><i class="fas fa-check"></i>
+        {{#if isLock}}{{localize "SWORD.Combat.GrappleLockSuccess"}}{{else}}{{localize "SWORD.Combat.BreakFreeSuccess"}}{{/if}}
+      </span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-times"></i>
+        {{#if isLock}}{{localize "SWORD.Combat.GrappleLockFail"}}{{else}}{{localize "SWORD.Combat.BreakFreeFail"}}{{/if}}
+      </span>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Penalty display --}}
+  {{#if hasPenalty}}
+  <div class="bonus-line fatigue-line">
+    {{#if fatiguePenalty}}<i class="fas fa-bed"></i> {{localize "SWORD.Chat.PenaltyApplied"}}: -{{fatiguePenalty}}{{/if}}
+    {{#if woundPenalty}} {{localize "SWORD.Combat.WoundPenalty"}}: -{{woundPenalty}}{{/if}}
+    {{#if armorPenalty}} {{localize "SWORD.Combat.ArmorPenalty"}}: -{{armorPenalty}}{{/if}}
+    {{#if penaltyCancelled}}
+    &middot; {{localize "SWORD.Chat.PenaltyCancelled"}}: {{penaltyCancelled}}
+    {{/if}}
+  </div>
+  {{/if}}
+
+</div>

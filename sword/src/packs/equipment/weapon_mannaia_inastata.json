@@ -1,0 +1,42 @@
+{
+  "_id": "TQDXFijKjTTIB9LJ",
+  "_key": "!items!TQDXFijKjTTIB9LJ",
+  "name": "Mannaia inastata",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/halberd-engraved-steel.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "asta",
+    "hands": "due_mani",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 5,
+    "damageValue": 6,
+    "damageType": "T",
+    "parryModifier": 3,
+    "misura": "L",
+    "pregi": [
+      "pesante"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

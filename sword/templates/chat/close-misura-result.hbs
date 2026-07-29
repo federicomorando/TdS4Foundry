@@ -1,0 +1,54 @@
+<div class="sword chat-card close-misura-result">
+
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      <h3><i class="fas fa-arrows-left-right"></i> {{localize "SWORD.Combat.CloseMisuraAction"}}</h3>
+      <span class="char-info">{{skillLabel}} vs. {{targetName}} ({{opposedSuccesses}})</span>
+    </div>
+  </header>
+
+  <div class="bonus-line misura-line">
+    <i class="fas fa-arrows-left-right"></i>
+    {{engagementMisuraLabel}} → {{targetMisuraLabel}}
+  </div>
+
+  <div class="dice-section">
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <div class="result-section {{#if attackerWins}}passed{{else}}failed{{/if}}">
+    <div class="final-successes">
+      {{localize "SWORD.Chat.FinalSuccesses"}}:
+      <span class="final-successes-value">{{finalSuccesses}}</span>
+      vs. {{opposedSuccesses}}
+    </div>
+
+    <div class="defense-outcome">
+      {{#if attackerWins}}
+      <span class="result-badge pass"><i class="fas fa-check"></i> {{resultText}}</span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-times"></i> {{resultText}}</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if hasPenalty}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-bed"></i>
+    {{#if fatiguePenalty}}{{localize "SWORD.Chat.PenaltyApplied"}}: -{{fatiguePenalty}}{{/if}}
+    {{#if woundPenalty}} {{localize "SWORD.Combat.WoundPenalty"}}: -{{woundPenalty}}{{/if}}
+    {{#if armorPenalty}} {{localize "SWORD.Combat.ArmorPenalty"}}: -{{armorPenalty}}{{/if}}
+    {{#if penaltyCancelled}}
+    &middot; {{localize "SWORD.Chat.PenaltyCancelled"}}: {{penaltyCancelled}}
+    {{/if}}
+  </div>
+  {{/if}}
+
+</div>

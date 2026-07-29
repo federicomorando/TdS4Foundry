@@ -1,0 +1,40 @@
+{
+  "_id": "0moGCWE1z0zl8AYc",
+  "_key": "!items!0moGCWE1z0zl8AYc",
+  "name": "Mazza ferrata",
+  "type": "weapon",
+  "img": "icons/weapons/maces/mace-round-spiked-black.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 120,
+    "costDisplay": "10s",
+    "weight": 2,
+    "damageValue": 3,
+    "damageType": "B",
+    "parryModifier": 1,
+    "misura": "M",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

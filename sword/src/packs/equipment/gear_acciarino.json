@@ -1,0 +1,33 @@
+{
+  "_id": "PppF4HVCCAjPJu4S",
+  "_key": "!items!PppF4HVCCAjPJu4S",
+  "name": "Acciarino e esca",
+  "type": "gear",
+  "img": "icons/sundries/lights/candle-lit-yellow.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 3,
+    "costDisplay": "3d",
+    "weight": 0.25,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Flint and tinder"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

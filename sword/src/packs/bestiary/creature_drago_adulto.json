@@ -1,0 +1,131 @@
+{
+  "_id": "7uMnizf2uUEqwn22",
+  "_key": "!actors!7uMnizf2uUEqwn22",
+  "name": "Drago adulto",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 16,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "enorme",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 5,
+      "percezione": 4,
+      "volonta": 5,
+      "ragionamento": 3,
+      "carisma": 3
+    },
+    "skills": {
+      "lotta": 5,
+      "furtivita": 1,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 4,
+      "empatia": 4,
+      "raggirare": 4,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 10,
+        "max": 10
+      },
+      "fatica": {
+        "value": 10,
+        "max": 10
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 7,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 14,
+      "swim": 0
+    },
+    "protezione": 8,
+    "attacks": [
+      {
+        "name": "Artiglio",
+        "skill": "lotta",
+        "misura": "Larga",
+        "damage": "+4T"
+      },
+      {
+        "name": "Secondo artiglio",
+        "skill": "lotta",
+        "misura": "Larga",
+        "damage": "+4T"
+      },
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+6T"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "aura_letale",
+      "ferocia",
+      "paura"
+    ],
+    "advantageDetails": {
+      "aura_letale": 3,
+      "paura": 4
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 8,
+      "leggere": 8,
+      "gravi": 8,
+      "critiche": 7,
+      "mortali": 7
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 10,
+      "stanco": 10,
+      "sfinito": 10
+    },
+    "speciale": "Breath: 10m x 20m cone, 5 successes, Agility reaction, 3 wounds per uncontested success. Sweep: 4 successes, Largest reach, 4m radius, 4 wounds per uncontested success."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Drago adulto",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

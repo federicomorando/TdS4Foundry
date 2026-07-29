@@ -1,0 +1,95 @@
+<div class="sword chat-card reaction-result">
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      <h3><i class="fas fa-shield-virus"></i> {{reactionTypeLabel}}</h3>
+      <span class="char-info">{{skillLabel}} vs. {{threatSuccesses}}</span>
+    </div>
+  </header>
+
+  {{!-- Dice section (characters only) --}}
+  {{#unless isCreature}}
+  <div class="dice-section">
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  {{/unless}}
+
+  <div class="result-section {{#if passed}}passed{{else}}failed{{/if}}">
+    <div class="final-successes">
+      {{localize "SWORD.Chat.FinalSuccesses"}}:
+      <span class="final-successes-value">{{finalSuccesses}}</span>
+      vs. {{threatSuccesses}}
+    </div>
+    <div class="defense-outcome">
+      {{#if passed}}
+      <span class="result-badge pass"><i class="fas fa-check"></i> {{localize "SWORD.Reaction.ReactionPassed"}}</span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-times"></i> {{localize "SWORD.Reaction.ReactionFailed"}}</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Riflessi cost (if in combat) --}}
+  {{#if riflessiCost}}
+  <div class="bonus-line">
+    <i class="fas fa-bolt"></i>
+    {{localize "SWORD.Reaction.RiflessiCost"}}: -{{riflessiCost}}
+  </div>
+  {{/if}}
+
+  {{!-- Fatica lost --}}
+  {{#if fatigaLost}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-bed"></i>
+    {{localize "SWORD.Reaction.FatigueLoss"}}: -{{fatigaLost}}
+  </div>
+  {{/if}}
+
+  {{!-- Fear outcome --}}
+  {{#if fearOutcome}}
+  <div class="bonus-line fear-line">
+    <i class="fas fa-ghost"></i>
+    {{localize "SWORD.Reaction.FearOutcome"}}: {{fearOutcomeLabel}}
+  </div>
+  {{#if fearDurationText}}
+  <div class="bonus-line fear-line">
+    <i class="fas fa-clock"></i> {{fearDurationText}}
+  </div>
+  {{/if}}
+  {{/if}}
+
+  {{!-- Cavalcare outcome --}}
+  {{#if cavalcareOutcome}}
+  <div class="bonus-line fear-line">
+    {{#if (eq cavalcareOutcomeType "mount_flees")}}
+    <i class="fas fa-horse"></i> {{localize "SWORD.Reaction.CavalcareMountFlees"}}
+    {{else}}
+    <i class="fas fa-person-falling"></i> {{localize "SWORD.Reaction.CavalcareUnhorsed"}}
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Penalty display --}}
+  {{#if hasPenalty}}
+  <div class="bonus-line fatigue-line">
+    {{#if fatiguePenalty}}
+    <i class="fas fa-bed"></i> {{localize "SWORD.Chat.PenaltyApplied"}}: -{{fatiguePenalty}}
+    {{/if}}
+    {{#if woundPenalty}}
+    <i class="fas fa-droplet"></i> {{localize "SWORD.Combat.WoundPenalty"}}: -{{woundPenalty}}
+    {{/if}}
+    {{#if armorReactionPenalty}}
+    <i class="fas fa-shield-halved"></i> {{localize "SWORD.Reaction.ArmorPenaltyNote"}}: -{{armorReactionPenalty}}
+    {{/if}}
+    {{#if penaltyCancelled}}
+    &middot; {{localize "SWORD.Chat.PenaltyCancelled"}}: {{penaltyCancelled}}
+    {{/if}}
+  </div>
+  {{/if}}
+</div>

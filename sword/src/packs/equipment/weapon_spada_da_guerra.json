@@ -1,0 +1,42 @@
+{
+  "_id": "gED9x0bmpxZyzMTW",
+  "_key": "!items!gED9x0bmpxZyzMTW",
+  "name": "Spada da guerra",
+  "type": "weapon",
+  "img": "icons/weapons/swords/sword-guard-blue.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "spada",
+    "hands": "una_mano",
+    "costDenari": 480,
+    "costDisplay": "40s",
+    "weight": 2,
+    "damageValue": 4,
+    "damageType": "T",
+    "parryModifier": 3,
+    "misura": "M",
+    "pregi": [
+      "versatile"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

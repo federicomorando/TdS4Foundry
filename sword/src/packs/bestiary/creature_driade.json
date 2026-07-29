@@ -1,0 +1,115 @@
+{
+  "_id": "IG4KgFDEn39yrPMS",
+  "_key": "!actors!IG4KgFDEn39yrPMS",
+  "name": "Driade",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 4,
+    "creatureType": "fatato",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 4,
+      "forza": 2,
+      "percezione": 3,
+      "volonta": 3,
+      "ragionamento": 2,
+      "carisma": 3
+    },
+    "skills": {
+      "lotta": 2,
+      "furtivita": 4,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 2,
+      "empatia": 3,
+      "raggirare": 2,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 14,
+        "max": 14
+      },
+      "fatica": {
+        "value": 5,
+        "max": 5
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [],
+    "advantages": [
+      "fascinazione",
+      "ostacolare",
+      "sfuggente",
+      "terzo_occhio",
+      "tocco_fatato"
+    ],
+    "advantageDetails": {
+      "fascinazione": 4,
+      "ostacolare": 3
+    },
+    "disadvantages": [
+      "vincolo"
+    ],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 2,
+      "gravi": 2,
+      "critiche": 2,
+      "mortali": 2
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 5,
+      "stanco": 5,
+      "sfinito": 5
+    },
+    "speciale": "Fascination (sight). Hinder: Agility or Force reaction vs 3 successes as vegetation grows, 5m radius. Bound to an oak. Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Driade",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

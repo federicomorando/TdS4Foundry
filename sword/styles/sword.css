@@ -1,0 +1,3565 @@
+/* ============================================
+   SwORD System — Il Tempo della Spada
+   Foundry VTT v13 Stylesheet
+
+   Aesthetic: refined manuscript / codex
+   Warm parchment, ink brown, gold accents
+   ============================================ */
+
+/* ── Accent variables (work with both light and dark Foundry themes) ── */
+
+.sword {
+  --sword-gold: rgb(200, 150, 50);
+  --sword-gold-light: rgba(200, 150, 50, 0.15);
+  --sword-gold-dark: rgb(160, 110, 20);
+}
+
+/* --- Tab visibility (unlayered to override Foundry @layer) --- */
+
+.tab[data-tab]:not(.active) {
+  display: none;
+}
+
+/* --- Character Sheet Layout --- */
+
+.sword.character-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.application.sword.sheet input:focus,
+.application.sword.sheet select:focus {
+  border-color: var(--sword-gold);
+  box-shadow: 0 0 0 1px var(--sword-gold-light);
+  outline: none;
+}
+
+/* --- Header --- */
+
+.sword.character-sheet .sheet-header {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+  background: linear-gradient(180deg, rgba(44, 36, 22, 0.03) 0%, transparent 100%);
+}
+
+.sword.character-sheet .profile-img {
+  border: 2px solid var(--color-border-dark-primary, #444);
+  border-radius: 2px;
+  object-fit: cover;
+  cursor: pointer;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.sword.character-sheet .header-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sword.character-sheet .header-fields h1 {
+  margin: 0;
+  border: none;
+}
+
+.sword.character-sheet .header-fields h1 input {
+  width: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 28px;
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+}
+
+.sword.character-sheet .header-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.sword.character-sheet .header-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sword.character-sheet .header-field label {
+  font-weight: bold;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .header-field select,
+.sword.character-sheet .header-field input[type="number"] {
+  width: 80px;
+}
+
+/* PDF export button */
+.sword.character-sheet .export-pdf-btn {
+  align-self: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border-dark-primary, #444);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-dark-primary, #ccc);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sword.character-sheet .export-pdf-btn:hover {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+/* PE in header (right side) */
+.sword.character-sheet .header-pe {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.sword.character-sheet .header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-self: center;
+  flex-shrink: 0;
+  max-width: 220px;
+  justify-content: center;
+}
+
+.sword.character-sheet .action-group {
+  display: contents;
+}
+
+.sword.character-sheet .header-pe-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sword.character-sheet .header-pe-field label {
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-text-dark-secondary, #999);
+}
+
+.sword.character-sheet .header-pe-field input[type="number"] {
+  width: 44px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* --- Characteristics Grid (3x2) --- */
+
+.sword.character-sheet .characteristics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 3px;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.character-sheet .char-valori-split {
+  display: grid;
+  grid-template-columns: 56% 44%;
+  gap: 6px;
+  align-items: start;
+}
+
+.sword.character-sheet .characteristic {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+}
+
+.sword.character-sheet .char-label {
+  flex: 1;
+  font-weight: bold;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .characteristic input[type="number"] {
+  width: 44px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.sword.character-sheet .char-value {
+  width: 44px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: help;
+}
+
+.sword.character-sheet .char-value.increased {
+  color: var(--color-level-success, #107c10);
+}
+
+.sword.character-sheet .char-value.decreased {
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.character-sheet .char-mod {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword.character-sheet .char-mod.positive {
+  color: var(--color-level-success, #107c10);
+}
+
+.sword.character-sheet .char-mod.negative {
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.character-sheet .char-adjust-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--color-text-dark-secondary, #999);
+  opacity: 0.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sword.character-sheet .char-adjust-btn:hover {
+  opacity: 1;
+  color: var(--color-text-dark-primary, #333);
+}
+
+/* --- Stats Bar (PE + Resources) --- */
+
+.sword.character-sheet .stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  align-items: center;
+  padding: 4px 6px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 3px;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.character-sheet .stats-field {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sword.character-sheet .resource-field {
+  position: relative;
+  overflow: hidden;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.sword.character-sheet .resource-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+  pointer-events: none;
+}
+
+.sword.character-sheet .resource-field label,
+.sword.character-sheet .resource-field .resource-values {
+  position: relative;
+  z-index: 1;
+}
+
+.sword.character-sheet .resource-spirito .resource-fill { background: rgba(63, 81, 181, 0.12); }
+.sword.character-sheet .resource-fatica .resource-fill { background: var(--sword-gold-light); }
+.sword.character-sheet .resource-ferite .resource-fill { background: rgba(209, 52, 56, 0.12); }
+.sword.character-sheet .resource-riflessi .resource-fill { background: rgba(76, 175, 80, 0.12); }
+
+.sword.character-sheet .stats-field label {
+  font-weight: bold;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .stats-field input[type="number"] {
+  width: 42px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword.character-sheet .stats-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border-light-primary, #ccc);
+}
+
+.sword.character-sheet .resource-values {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sword.character-sheet .resource-values input[type="number"] {
+  width: 36px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword.character-sheet .resource-values .separator {
+  font-weight: bold;
+}
+
+.sword.character-sheet .resource-values .resource-max {
+  width: 24px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .resource-adjust {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 8px;
+  color: var(--color-text-dark-secondary, #666);
+  cursor: pointer;
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.sword.character-sheet .resource-adjust:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.sword.character-sheet .penalty-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.sword.character-sheet .fatigue-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .fatigue-badge.fresco {
+  background: rgba(76, 175, 80, 0.15);
+  color: #388e3c;
+}
+
+.sword.character-sheet .fatigue-badge.stanco {
+  background: rgba(200, 150, 50, 0.25);
+  color: rgb(160, 110, 20);
+}
+
+.sword.character-sheet .fatigue-badge.sfinito {
+  background: rgba(209, 52, 56, 0.2);
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.character-sheet .encumbrance-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: rgba(121, 85, 72, 0.2);
+  color: #5d4037;
+}
+
+.sword.character-sheet .movimento-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: rgba(33, 150, 243, 0.12);
+  color: #1565c0;
+}
+
+.sword.character-sheet .action-group button {
+  padding: 3px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  color: inherit;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.sword.character-sheet .action-group button:hover {
+  background: var(--color-warm-2, rgba(200, 150, 50, 0.2));
+  border-color: var(--color-border-dark-primary, #444);
+}
+
+/* Action buttons: compact wrapping layout */
+
+/* --- Skills List --- */
+
+.sword.character-sheet .skills-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 120px;
+}
+
+.sword.character-sheet .skill-group-header {
+  margin: 8px 0 4px 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-variant: small-caps;
+  color: var(--color-text-dark-secondary, #999);
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.character-sheet .skill-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 2px;
+}
+
+.sword.character-sheet .skill-row:hover {
+  background: var(--color-warm-2, rgba(200, 150, 50, 0.15));
+  border-radius: 2px;
+}
+
+.sword.character-sheet .roll-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 2px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--color-text-dark-secondary, #999);
+  transition: all 0.15s;
+}
+
+.sword.character-sheet .roll-btn:hover {
+  background: var(--sword-gold-light);
+  border-color: var(--sword-gold);
+  color: var(--sword-gold-dark);
+}
+
+.sword.character-sheet .combined-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 2px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--color-text-dark-secondary, #999);
+  transition: all 0.15s;
+}
+
+.sword.character-sheet .combined-btn:hover {
+  background: var(--sword-gold-light);
+  border-color: var(--sword-gold);
+}
+
+.sword.character-sheet .skill-name {
+  flex: 1;
+  font-size: 12px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .skill-name.mestiere {
+  color: var(--sword-gold-dark);
+}
+
+.sword.character-sheet .skill-name.outside-ceto {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.sword.character-sheet .skill-rows-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0 6px;
+}
+
+.sword.character-sheet .skill-grade {
+  width: 30px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.sword.character-sheet .skill-specialty {
+  font-size: 10px;
+  font-style: italic;
+  color: #666;
+  cursor: pointer;
+  flex-shrink: 0;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .skill-specialty:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.sword.character-sheet .skill-focus-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  height: 16px;
+  font-size: 9px;
+  font-weight: bold;
+  color: var(--sword-gold-dark);
+  background: var(--sword-gold-light);
+  border: 1px solid rgba(184, 148, 62, 0.3);
+  border-radius: 2px;
+  flex-shrink: 0;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .add-focus-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  height: 16px;
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(200, 150, 50, 0.9);
+  background: transparent;
+  border: 1px dashed rgba(200, 150, 50, 0.5);
+  border-radius: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sword.character-sheet .add-focus-btn:hover {
+  background: rgba(200, 150, 50, 0.15);
+}
+
+.sword.character-sheet .skill-extra-dice-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  height: 16px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(30, 100, 200, 0.7);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* --- Compact Skill Summary Grid (character tab) --- */
+
+.sword.character-sheet .skill-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0 28px;
+  font-size: 10px;
+  padding: 2px 0;
+}
+
+.sword.character-sheet .skill-summary-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 2px;
+  white-space: nowrap;
+  color: var(--color-text-dark-secondary, #999);
+}
+
+.sword.character-sheet .skill-summary-cell.mestiere {
+  color: rgb(200, 150, 50);
+}
+
+.sword.character-sheet .skill-summary-cell.outside-ceto {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.sword.character-sheet .skill-summary-cell:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 2px;
+}
+
+.sword.character-sheet .skill-summary-roll {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 9px;
+  color: inherit;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sword.character-sheet .skill-summary-cell:hover .skill-summary-roll {
+  opacity: 1;
+}
+
+.sword.character-sheet .skill-summary-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sword.character-sheet .skill-summary-grade {
+  font-weight: bold;
+}
+
+/* --- Creation Banner --- */
+
+.sword.character-sheet .creation-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(200, 150, 50, 0.25);
+  border: 1px solid rgba(200, 150, 50, 0.6);
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.sword.character-sheet .creation-banner button {
+  padding: 4px 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sword.character-sheet .pe-value {
+  font-weight: bold;
+  font-size: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sword.character-sheet .pe-negative {
+  color: var(--color-level-error, #d13438);
+}
+
+/* --- Valori Section --- */
+
+.sword.character-sheet .valori-section {
+  padding: 6px 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword.character-sheet .valori-header {
+  margin: 0 0 6px 0;
+  font-size: 11px;
+  font-variant: small-caps;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-dark-secondary, #666);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sword.character-sheet .valori-total {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .valori-axes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sword.character-sheet .valori-axis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.sword.character-sheet .valori-axis label {
+  width: 60px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.sword.character-sheet .valori-axis label:first-child {
+  text-align: right;
+}
+
+.sword.character-sheet .valori-axis label:last-child {
+  text-align: left;
+}
+
+.sword.character-sheet .valori-axis input[type="number"] {
+  width: 36px;
+  text-align: center;
+}
+
+.sword.character-sheet .valori-separator {
+  font-weight: bold;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* ============================================
+   Chat Card Styles
+   ============================================ */
+
+.sword.chat-card {
+  font-size: 13px;
+}
+
+.sword.chat-card .card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+  margin-bottom: 6px;
+}
+
+.sword.chat-card .card-header img {
+  border-radius: 4px;
+  border: 1px solid var(--color-border-dark-primary, #444);
+}
+
+.sword.chat-card .card-header-text h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.sword.chat-card .char-info {
+  font-size: 12px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* Dice display */
+
+.sword.chat-card .dice-section {
+  margin-bottom: 6px;
+}
+
+.sword.chat-card .dice-row {
+  margin-bottom: 4px;
+}
+
+.sword.chat-card .dice-label {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+  margin-bottom: 2px;
+  display: block;
+}
+
+.sword.chat-card .dice-pool {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.sword.chat-card .die {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #555;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  background: #e8e8e8;
+  color: #222;
+}
+
+.sword.chat-card .die.is-one {
+  background: #d4a017;
+  color: #fff;
+  border-color: #b8860b;
+}
+
+/* Results */
+
+.sword.chat-card .result-section {
+  padding: 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.sword.chat-card .result-section.passed {
+  background: rgba(16, 124, 16, 0.1);
+  border: 1px solid rgba(16, 124, 16, 0.3);
+}
+
+.sword.chat-card .result-section.failed {
+  background: rgba(209, 52, 56, 0.1);
+  border: 1px solid rgba(209, 52, 56, 0.3);
+}
+
+.sword.chat-card .sum-line {
+  margin-bottom: 4px;
+}
+
+.sword.chat-card .result-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.sword.chat-card .result-badge.pass {
+  background: #107c10;
+  color: #fff;
+}
+
+.sword.chat-card .result-badge.fail {
+  background: #d13438;
+  color: #fff;
+}
+
+.sword.chat-card .successes-detail {
+  font-size: 12px;
+  color: var(--color-text-dark-secondary, #666);
+  margin-bottom: 4px;
+}
+
+.sword.chat-card .final-successes {
+  font-size: 14px;
+}
+
+.sword.chat-card .final-successes-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Bonus/penalty info lines (valore, fama, fatigue) */
+
+.sword.chat-card .bonus-line {
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.sword.chat-card .bonus-line i {
+  margin-right: 4px;
+}
+
+.sword.chat-card .valore-line {
+  background: rgba(200, 150, 50, 0.15);
+  border: 1px solid rgba(200, 150, 50, 0.3);
+  color: rgb(160, 110, 20);
+}
+
+.sword.chat-card .fama-line {
+  background: rgba(128, 0, 128, 0.1);
+  border: 1px solid rgba(128, 0, 128, 0.25);
+  color: #800080;
+}
+
+.sword.chat-card .fatigue-line {
+  background: rgba(100, 100, 100, 0.1);
+  border: 1px solid rgba(100, 100, 100, 0.25);
+  color: #555;
+}
+
+.sword.chat-card .difficulty-section,
+.sword.chat-card .opposed-section {
+  padding: 4px 6px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* ============================================
+   Roll Dialog Styles
+   ============================================ */
+
+.sword-roll-dialog .hint {
+  font-size: 12px;
+  color: var(--color-text-dark-secondary, #666);
+  font-style: italic;
+  margin: 2px 0 6px 0;
+}
+
+.sword-roll-dialog .form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.sword-roll-dialog .form-group-inline label {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.sword-roll-dialog .form-group-inline input[type="number"] {
+  width: 60px;
+}
+
+.sword-roll-dialog .focus-selection {
+  border: 1px solid rgba(200, 150, 50, 0.4);
+  border-radius: 4px;
+  padding: 4px 8px 6px;
+  margin-top: 6px;
+}
+
+.sword-roll-dialog .focus-selection legend {
+  font-size: 11px;
+  font-weight: bold;
+  color: rgba(200, 150, 50, 0.9);
+  padding: 0 4px;
+}
+
+.sword-roll-dialog .focus-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sword-roll-dialog .focus-checkbox {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ============================================
+   Creation Wizard Styles
+   ============================================ */
+
+.sword-creation-wizard {
+  font-size: 13px;
+}
+
+.sword-creation-wizard .wizard-steps {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border-dark-primary, #444);
+}
+
+.sword-creation-wizard .wizard-step-indicator {
+  flex: 1;
+  text-align: center;
+  padding: 4px 2px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 3px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .wizard-step-indicator.active {
+  background: rgba(200, 150, 50, 0.5);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.sword-creation-wizard .wizard-step-indicator.completed {
+  background: rgba(16, 124, 16, 0.15);
+  color: var(--color-level-success, #107c10);
+}
+
+.sword-creation-wizard .wizard-content {
+  min-height: 300px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.sword-creation-wizard .wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-light-primary, #ccc);
+  margin-top: 8px;
+}
+
+.sword-creation-wizard .wizard-nav button {
+  padding: 6px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sword-creation-wizard .wizard-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Ceto cards */
+
+.sword-creation-wizard .ceto-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.sword-creation-wizard .ceto-card {
+  padding: 10px;
+  border: 2px solid var(--color-border-light-primary, #ccc);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.sword-creation-wizard .ceto-card:hover {
+  border-color: var(--color-border-dark-primary, #444);
+}
+
+.sword-creation-wizard .ceto-card.selected {
+  border-color: rgba(200, 150, 50, 0.8);
+  background: rgba(200, 150, 50, 0.1);
+}
+
+.sword-creation-wizard .ceto-card h4 {
+  margin: 0 0 4px 0;
+}
+
+.sword-creation-wizard .ceto-card .ceto-cost {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* Characteristic spinners */
+
+.sword-creation-wizard .char-spinners {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.sword-creation-wizard .char-spinner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+}
+
+.sword-creation-wizard .char-spinner label {
+  flex: 1;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword-creation-wizard .char-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #333;
+  color: #ddd;
+}
+
+.sword-creation-wizard .char-btn:hover:not(:disabled) {
+  background: #555;
+}
+
+.sword-creation-wizard .char-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.sword-creation-wizard .char-value {
+  width: 36px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.sword-creation-wizard .char-spinner .char-mod-preview {
+  width: 28px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sword-creation-wizard .char-points-total {
+  text-align: center;
+  font-weight: bold;
+  padding: 6px;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .char-points-total.valid {
+  background: rgba(16, 124, 16, 0.1);
+  color: var(--color-level-success, #107c10);
+}
+
+.sword-creation-wizard .char-points-total.invalid {
+  background: rgba(209, 52, 56, 0.1);
+  color: var(--color-level-error, #d13438);
+}
+
+/* Derived stats display */
+
+.sword-creation-wizard .derived-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.sword-creation-wizard .derived-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .derived-stat label {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.sword-creation-wizard .derived-stat .derived-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Skill picker */
+
+.sword-creation-wizard .skill-picker-section {
+  margin-bottom: 12px;
+}
+
+.sword-creation-wizard .skill-picker-section h4 {
+  margin: 0 0 6px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .skill-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.sword-creation-wizard .skill-pick {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sword-creation-wizard .skill-pick:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+.sword-creation-wizard .skill-pick.selected {
+  background: rgba(200, 150, 50, 0.15);
+  border-color: rgba(200, 150, 50, 0.6);
+}
+
+.sword-creation-wizard .skill-pick.base-skill {
+  background: rgba(16, 124, 16, 0.1);
+  border-color: rgba(16, 124, 16, 0.3);
+  cursor: default;
+}
+
+.sword-creation-wizard .skill-pick .pick-cost {
+  font-size: 10px;
+  color: var(--color-text-dark-secondary, #666);
+  margin-left: auto;
+}
+
+/* Training allocation */
+
+.sword-creation-wizard .training-section {
+  margin-top: 12px;
+}
+
+.sword-creation-wizard .training-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px;
+}
+
+.sword-creation-wizard .training-row select {
+  flex: 1;
+}
+
+/* Valori picker */
+
+.sword-creation-wizard .valori-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sword-creation-wizard .valori-axis-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .valori-label-left {
+  width: 80px;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: right;
+}
+
+.sword-creation-wizard .valori-label-right {
+  width: 80px;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: left;
+}
+
+.sword-creation-wizard .valori-value {
+  width: 28px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Retaggio */
+
+.sword-creation-wizard .retaggio-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sword-creation-wizard .retaggio-info {
+  padding: 6px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sword-creation-wizard .event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sword-creation-wizard .event-slot {
+  border-left: 3px solid transparent;
+  padding-left: 4px;
+}
+
+.sword-creation-wizard .event-slot:has(.event-sub-ui) {
+  border-left-color: rgba(200, 150, 50, 0.5);
+}
+
+.sword-creation-wizard .event-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sword-creation-wizard .event-row select {
+  flex: 1;
+}
+
+.sword-creation-wizard .event-row input[type="text"] {
+  flex: 2;
+}
+
+/* Event sub-UI */
+
+.sword-creation-wizard .event-sub-ui {
+  padding: 4px 6px;
+  margin-top: 4px;
+}
+
+.sword-creation-wizard .event-effect-label {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .event-pick-label {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+  margin: 0 0 4px 0;
+}
+
+.sword-creation-wizard .event-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.sword-creation-wizard .event-mode {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.sword-creation-wizard .event-mode-btn {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  background: transparent;
+}
+
+.sword-creation-wizard .event-mode-btn.selected {
+  background: rgba(200, 150, 50, 0.15);
+  border-color: rgba(200, 150, 50, 0.6);
+  font-weight: bold;
+}
+
+.sword-creation-wizard .event-mode-btn:hover:not(.selected) {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+.sword-creation-wizard .event-valore-pick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sword-creation-wizard .event-valore-pick label {
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sword-creation-wizard .event-valore-pick select {
+  flex: 1;
+}
+
+.sword-creation-wizard .event-training {
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .validation-msg {
+  padding: 6px;
+  background: rgba(209, 52, 56, 0.1);
+  border: 1px solid rgba(209, 52, 56, 0.3);
+  border-radius: 4px;
+  color: var(--color-level-error, #d13438);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Skill overlap warnings in wizard */
+
+.sword-creation-wizard .skill-warnings {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: rgba(180, 120, 0, 0.1);
+  border: 1px solid rgba(180, 120, 0, 0.3);
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .skill-warnings .warn {
+  margin: 4px 0;
+  font-size: 11px;
+  color: #8b6914;
+  line-height: 1.4;
+}
+
+/* Talent preview in wizard */
+
+.sword-creation-wizard .talent-preview {
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .talent-preview h4 {
+  margin: 0 0 6px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .talent-preview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.sword-creation-wizard .talent-preview-chip {
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 10px;
+  background: rgba(16, 124, 16, 0.15);
+  color: var(--color-level-success, #107c10);
+  border: 1px solid rgba(16, 124, 16, 0.3);
+}
+
+.sword-creation-wizard .talent-preview-chip.grade-4 {
+  background: rgba(30, 100, 200, 0.15);
+  color: #1e64c8;
+  border-color: rgba(30, 100, 200, 0.3);
+}
+
+.sword-creation-wizard .talent-preview-chip.grade-5 {
+  background: rgba(128, 0, 128, 0.15);
+  color: #800080;
+  border-color: rgba(128, 0, 128, 0.3);
+}
+
+.sword-creation-wizard .talent-preview-chip.grade-6 {
+  background: rgba(200, 150, 50, 0.15);
+  color: rgb(180, 130, 30);
+  border-color: rgba(200, 150, 50, 0.4);
+}
+
+/* Culture step */
+
+.sword-creation-wizard .wizard-step-culture {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sword-creation-wizard .culture-trait-section {
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .culture-trait-section h4 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+}
+
+.sword-creation-wizard .culture-trait-section select {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.sword-creation-wizard .culture-detail {
+  padding: 6px 0;
+}
+
+.sword-creation-wizard .culture-desc {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #999);
+  margin: 0 0 6px 0;
+  font-style: italic;
+}
+
+.sword-creation-wizard .culture-skill-pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sword-creation-wizard .culture-skill-pick label {
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sword-creation-wizard .culture-skill-pick select {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.sword-creation-wizard .culture-info-row {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.sword-creation-wizard .culture-info-label {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sword-creation-wizard .culture-cortese-section {
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.sword-creation-wizard .culture-cortese-section h4 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+}
+
+.sword-creation-wizard .culture-cortese-section select {
+  width: 100%;
+}
+
+/* Disabled valori labels (not available from culture) */
+.sword-creation-wizard .valori-label-left.disabled,
+.sword-creation-wizard .valori-label-right.disabled {
+  opacity: 0.35;
+}
+
+/* Equipment step (Step 8) */
+
+.sword-creation-wizard .equip-wealth-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.sword-creation-wizard .equip-wealth-label {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword-creation-wizard .equip-wealth-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--color-level-success, #107c10);
+}
+
+.sword-creation-wizard .equip-laboriosa-note {
+  font-size: 11px;
+  color: var(--color-level-success, #107c10);
+  font-style: italic;
+}
+
+.sword-creation-wizard .equip-reroll-btn {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.sword-creation-wizard .equip-militare-banner {
+  padding: 6px 8px;
+  background: rgba(200, 150, 50, 0.15);
+  border: 1px solid rgba(200, 150, 50, 0.4);
+  border-radius: 4px;
+  font-size: 11px;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.sword-creation-wizard .equip-mode-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.sword-creation-wizard .equip-mode-btn {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  background: transparent;
+}
+
+.sword-creation-wizard .equip-mode-btn.active {
+  background: rgba(200, 150, 50, 0.3);
+  border-color: rgba(200, 150, 50, 0.6);
+}
+
+.sword-creation-wizard .equip-mode-btn:hover:not(.active) {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+.sword-creation-wizard .equip-random-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sword-creation-wizard .equip-regenerate-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sword-creation-wizard .equip-random-hint {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+/* Catalog */
+
+.sword-creation-wizard .equip-catalog {
+  margin-bottom: 8px;
+}
+
+.sword-creation-wizard .equip-category-section {
+  margin-bottom: 4px;
+}
+
+.sword-creation-wizard .equip-category-label {
+  margin: 6px 0 2px 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+  padding-bottom: 2px;
+}
+
+.sword-creation-wizard .equip-item-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.sword-creation-wizard .equip-item-row:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.03));
+}
+
+.sword-creation-wizard .equip-item-row.in-cart {
+  background: rgba(200, 150, 50, 0.08);
+}
+
+.sword-creation-wizard .equip-item-row.unaffordable {
+  opacity: 0.4;
+}
+
+.sword-creation-wizard .equip-item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sword-creation-wizard .equip-item-cost {
+  width: 36px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .equip-item-row button,
+.sword-creation-wizard .equip-cart-item button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background: #333;
+  color: #ddd;
+  flex-shrink: 0;
+}
+
+.sword-creation-wizard .equip-item-row button:hover:not(:disabled),
+.sword-creation-wizard .equip-cart-item button:hover {
+  background: #555;
+}
+
+.sword-creation-wizard .equip-item-row button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Cart */
+
+.sword-creation-wizard .equip-cart {
+  border-top: 2px solid var(--color-border-dark-primary, #444);
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+.sword-creation-wizard .equip-cart-title {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.sword-creation-wizard .equip-cart-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.sword-creation-wizard .equip-cart-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sword-creation-wizard .equip-militare-tag {
+  display: inline-block;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: bold;
+  background: rgba(200, 150, 50, 0.25);
+  border-radius: 2px;
+  margin-left: 4px;
+}
+
+.sword-creation-wizard .equip-cart-cost {
+  width: 36px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword-creation-wizard .equip-cart-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px 0;
+  margin-top: 4px;
+  border-top: 1px solid var(--color-border-light-primary, #ccc);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sword-creation-wizard .equip-cart-remaining {
+  color: var(--color-level-success, #107c10);
+}
+
+.sword-creation-wizard .equip-cart-remaining.over-budget {
+  color: var(--color-level-error, #d13438);
+}
+
+.sword-creation-wizard .equip-empty-cart {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+  font-style: italic;
+  padding: 4px;
+  margin: 0;
+}
+
+/* ============================================
+   Item Sheet Styles
+   ============================================ */
+
+.sword.item-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sword.item-sheet .item-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border-dark-primary, #444);
+}
+
+.sword.item-sheet .item-img {
+  border: 2px solid var(--color-border-dark-primary, #444);
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.sword.item-sheet .item-header-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sword.item-sheet .item-header-fields input[name="name"] {
+  width: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  height: 28px;
+}
+
+.sword.item-sheet .item-type-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.item-sheet .item-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sword.item-sheet .item-form-row {
+  display: flex;
+  gap: 8px;
+}
+
+.sword.item-sheet .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sword.item-sheet .form-group.full-width {
+  flex-basis: 100%;
+}
+
+.sword.item-sheet .form-group label {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.item-sheet .form-group input,
+.sword.item-sheet .form-group select,
+.sword.item-sheet .form-group textarea {
+  width: 100%;
+}
+
+.sword.item-sheet .form-group textarea {
+  resize: vertical;
+  font-size: 12px;
+}
+
+.sword.item-sheet .inline-group {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.sword.item-sheet .inline-group input {
+  width: 60px;
+}
+
+.sword.item-sheet .inline-group select {
+  width: auto;
+  flex: 1;
+}
+
+.sword.item-sheet .inline-group .separator {
+  font-weight: bold;
+}
+
+/* Pregi section */
+
+.sword.item-sheet .pregi-section {
+  border-top: 1px solid var(--color-border-light-primary, #ccc);
+  padding-top: 6px;
+}
+
+.sword.item-sheet .pregi-header {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.sword.item-sheet .pregi-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px 0;
+}
+
+.sword.item-sheet .pregio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.sword.item-sheet .pregio-row:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+.sword.item-sheet .pregio-label {
+  font-size: 12px;
+  cursor: help;
+}
+
+.sword.item-sheet .pregio-remove {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-level-error, #d13438);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sword.item-sheet .pregio-remove:hover {
+  color: #a00;
+}
+
+.sword.item-sheet .no-pregi {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+  margin: 0 0 6px 0;
+}
+
+.sword.item-sheet .pregi-add {
+  display: flex;
+  gap: 4px;
+}
+
+.sword.item-sheet .pregi-add select {
+  flex: 1;
+  font-size: 12px;
+}
+
+.sword.item-sheet .pregio-add-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sword.item-sheet .pregio-add-btn:hover {
+  background: var(--color-warm-2, rgba(200, 150, 50, 0.3));
+}
+
+/* ============================================
+   Inventory Tab (Character Sheet)
+   ============================================ */
+
+.inventory-list {
+  padding: 8px;
+}
+
+/* Currency row */
+
+.currency-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.currency-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.currency-field input {
+  width: 54px;
+  text-align: center;
+}
+
+/* Militare quality equipment reminder */
+
+.militare-banner {
+  padding: 4px 8px;
+  margin-bottom: 8px;
+  background: var(--color-warm-2, rgba(180, 140, 50, 0.15));
+  border: 1px solid var(--color-warm-3, rgba(180, 140, 50, 0.3));
+  border-radius: 4px;
+  font-size: 11px;
+  font-style: italic;
+  color: inherit;
+}
+
+.militare-banner i {
+  margin-right: 4px;
+}
+
+/* Encumbrance bar */
+
+.encumbrance-bar {
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+}
+
+.encumbrance-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.encumbrance-label {
+  font-weight: bold;
+}
+
+.encumbrance-category {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.encumbrance-leggero {
+  background: rgba(16, 124, 16, 0.15);
+  color: var(--color-level-success, #107c10);
+}
+
+.encumbrance-moderato {
+  background: rgba(200, 150, 50, 0.2);
+  color: rgb(160, 110, 20);
+}
+
+.encumbrance-pesante {
+  background: rgba(209, 100, 56, 0.2);
+  color: #c44;
+}
+
+.encumbrance-massimo,
+.encumbrance-overloaded {
+  background: rgba(209, 52, 56, 0.2);
+  color: var(--color-level-error, #d13438);
+}
+
+.encumbrance-penalty {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--color-level-error, #d13438);
+}
+
+.encumbrance-track {
+  height: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.encumbrance-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.encumbrance-fill.encumbrance-leggero {
+  background: var(--color-level-success, #107c10);
+}
+
+.encumbrance-fill.encumbrance-moderato {
+  background: rgb(200, 150, 50);
+}
+
+.encumbrance-fill.encumbrance-pesante {
+  background: #c44;
+}
+
+.encumbrance-fill.encumbrance-massimo,
+.encumbrance-fill.encumbrance-overloaded {
+  background: var(--color-level-error, #d13438);
+}
+
+/* Inventory categories */
+
+.inventory-category {
+  margin-bottom: 6px;
+}
+
+.inventory-category-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px 0;
+  padding: 2px 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: inherit;
+  opacity: 0.7;
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.inventory-category-header .item-add-btn {
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: inherit;
+  opacity: 1;
+}
+
+.inventory-category-header .item-add-btn:hover {
+  background: var(--color-warm-2, rgba(200, 150, 50, 0.3));
+  border-color: var(--color-border-dark-primary, #444);
+}
+
+/* Inventory tables */
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.inventory-table thead th {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-dark-secondary, #999);
+  text-align: left;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.inventory-table tbody tr:hover {
+  background: var(--color-warm-2, rgba(200, 150, 50, 0.15));
+}
+
+.inventory-table td {
+  padding: 3px 4px;
+  vertical-align: middle;
+}
+
+.inventory-table .col-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inventory-table .item-thumb {
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.inventory-table .item-name-link {
+  cursor: pointer;
+  color: inherit;
+}
+
+.inventory-table .item-name-link:hover {
+  text-decoration: underline;
+}
+
+.inventory-table .col-actions {
+  white-space: nowrap;
+  text-align: right;
+  width: 48px;
+}
+
+.inventory-table .item-action {
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 11px;
+  color: inherit;
+  opacity: 0.6;
+}
+
+.inventory-table .item-action:hover {
+  opacity: 1;
+}
+
+.inventory-table .col-cat,
+.inventory-table .col-hands,
+.inventory-table .col-damage,
+.inventory-table .col-parry,
+.inventory-table .col-weight,
+.inventory-table .col-qty,
+.inventory-table .col-prot,
+.inventory-table .col-rob {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.inventory-table .inline-adjust {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 8px;
+  color: var(--color-text-dark-secondary, #666);
+  cursor: pointer;
+  border-radius: 2px;
+  opacity: 0.4;
+  vertical-align: middle;
+}
+
+.inventory-table .inline-adjust:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   Tab Navigation (Character Sheet)
+   ============================================ */
+
+.sword.sheet .window-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sword.sheet .window-content > .tab {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sword.sheet .sheet-tabs {
+  border-bottom: 2px solid var(--color-border-dark-primary, #444);
+  padding-bottom: 0;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.sword.sheet .sheet-tabs a {
+  font-size: 13px;
+  padding: 4px 12px;
+}
+
+/* ============================================
+   Talents Tab (Character Sheet)
+   ============================================ */
+
+.talents-list {
+  padding: 8px;
+}
+
+.talents-header {
+  margin: 4px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.talent-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  background: var(--color-level-success, #107c10);
+  border-radius: 10px;
+}
+
+.talent-group-header {
+  margin: 6px 0 2px 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dark-secondary, #999);
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.talent-grade-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.talent-grade-badge.grade-3 {
+  background: #2d8a2d;
+}
+
+.talent-grade-badge.grade-4 {
+  background: #1e64c8;
+}
+
+.talent-grade-badge.grade-5 {
+  background: #7b2d8b;
+}
+
+.talent-grade-badge.grade-6 {
+  background: rgb(180, 130, 30);
+}
+
+.talent-row-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 3px;
+}
+
+.talent-row-detail:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+.talent-row-detail .talent-grade-badge {
+  margin-top: 2px;
+}
+
+.talent-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.talent-name-detail {
+  font-size: 13px;
+  font-weight: bold;
+  display: block;
+}
+
+.talent-description {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+  margin: 2px 0 0 0;
+  line-height: 1.4;
+}
+
+/* Partial talent (some requirements met) */
+.talent-row-partial {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  opacity: 0.45;
+}
+
+.talent-grade-badge-partial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--color-text-dark-secondary, #888);
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.talent-name-partial {
+  font-size: 12px;
+  color: var(--color-text-dark-secondary, #999);
+}
+
+.talent-missing-reqs {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #aaa);
+}
+
+/* ============================================
+   Wound Track (Character Sheet)
+   ============================================ */
+
+/* --- Char + Wounds side-by-side row --- */
+
+.sword.character-sheet .char-wounds-row {
+  display: flex;
+  gap: 6px;
+}
+
+.sword.character-sheet .char-valori-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sword.character-sheet .wound-track {
+  width: 90px;
+  flex-shrink: 0;
+  padding: 6px 6px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sword.character-sheet .wound-track-header {
+  margin: 0 0 4px 0;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-variant: small-caps;
+  color: var(--color-text-dark-secondary, #999);
+  text-align: center;
+}
+
+.sword.character-sheet .wound-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.sword.character-sheet .wound-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 2px 3px;
+  border-radius: 3px;
+  border-left: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.sword.character-sheet .wound-level-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 3px 0 0 3px;
+  transition: width 0.3s;
+  pointer-events: none;
+}
+
+.sword.character-sheet .wound-level-graffi .wound-level-fill { background: rgba(76, 175, 80, 0.15); }
+.sword.character-sheet .wound-level-leggere .wound-level-fill { background: rgba(139, 195, 74, 0.15); }
+.sword.character-sheet .wound-level-gravi .wound-level-fill { background: rgba(255, 152, 0, 0.18); }
+.sword.character-sheet .wound-level-critiche .wound-level-fill { background: rgba(244, 67, 54, 0.18); }
+.sword.character-sheet .wound-level-mortali .wound-level-fill { background: rgba(123, 31, 162, 0.18); }
+
+.sword.character-sheet .wound-level-graffi { border-left-color: #4caf50; }
+.sword.character-sheet .wound-level-leggere { border-left-color: #8bc34a; }
+.sword.character-sheet .wound-level-gravi { border-left-color: #ff9800; }
+.sword.character-sheet .wound-level-critiche { border-left-color: #f44336; }
+.sword.character-sheet .wound-level-mortali { border-left-color: #7b1fa2; }
+
+.sword.character-sheet .wound-level.wound-active {
+  border-left-width: 4px;
+}
+.sword.character-sheet .wound-level.wound-active.wound-level-graffi { background: rgba(76, 175, 80, 0.08); }
+.sword.character-sheet .wound-level.wound-active.wound-level-leggere { background: rgba(139, 195, 74, 0.08); }
+.sword.character-sheet .wound-level.wound-active.wound-level-gravi { background: rgba(255, 152, 0, 0.1); }
+.sword.character-sheet .wound-level.wound-active.wound-level-critiche { background: rgba(244, 67, 54, 0.1); }
+.sword.character-sheet .wound-level.wound-active.wound-level-mortali { background: rgba(123, 31, 162, 0.1); }
+
+.sword.character-sheet .wound-level-label {
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.sword.character-sheet .wound-level-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.sword.character-sheet .wound-level-input {
+  width: 28px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sword.character-sheet .wound-level-max {
+  font-size: 10px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .wound-level-penalty {
+  font-size: 9px;
+  font-weight: bold;
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.character-sheet .wound-penalty-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: rgba(209, 52, 56, 0.2);
+  color: var(--color-level-error, #d13438);
+}
+
+/* ============================================
+   Combat Chat Card Styles
+   ============================================ */
+
+/* Attack info in dialog */
+
+.sword-attack-info {
+  padding: 6px 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+/* Attack card damage info line */
+
+.sword.chat-card .attack-damage-info {
+  font-size: 12px;
+  color: var(--color-text-dark-secondary, #666);
+  margin-top: 4px;
+}
+
+/* Defend buttons in attack card */
+
+.sword.chat-card .combat-defend-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.chat-card .defend-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 5px 8px;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  border-radius: 2px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  color: var(--color-text-dark-secondary, #666);
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.sword.chat-card .defend-btn:hover {
+  background: var(--sword-gold-light, rgba(184, 148, 62, 0.15));
+  border-color: var(--sword-gold, #b8943e);
+  color: inherit;
+}
+
+.sword.chat-card .defend-btn i {
+  margin-right: 4px;
+}
+
+/* Defense outcome badge */
+
+.sword.chat-card .defense-outcome {
+  margin-top: 4px;
+}
+
+/* Damage section in defense card */
+
+.sword.chat-card .damage-section {
+  margin-top: 6px;
+  padding: 6px;
+  background: rgba(209, 52, 56, 0.08);
+  border: 1px solid rgba(209, 52, 56, 0.2);
+  border-radius: 4px;
+}
+
+.sword.chat-card .damage-section h4 {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.chat-card .damage-line {
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+.sword.chat-card .damage-type-effect {
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.chat-card .damage-total {
+  font-size: 13px;
+}
+
+.sword.chat-card .wounds-value {
+  font-size: 16px;
+  color: var(--color-level-error, #d13438);
+}
+
+/* Attack button in inventory */
+
+.inventory-table .attack-btn {
+  color: rgb(180, 130, 30);
+}
+
+.inventory-table .attack-btn:hover {
+  color: rgb(200, 150, 50);
+}
+
+.inventory-table .draw-toggle {
+  color: rgb(100, 100, 100);
+}
+
+.inventory-table .draw-toggle.active {
+  color: rgb(60, 130, 180);
+  opacity: 1;
+}
+
+.inventory-table .secondary-toggle {
+  color: rgb(100, 100, 100);
+}
+
+.inventory-table .secondary-toggle.active {
+  color: rgb(80, 160, 80);
+  opacity: 1;
+}
+
+/* ============================================
+   Creature Sheet Styles
+   ============================================ */
+
+.sword.creature-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sword.creature-sheet .sheet-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-border-dark-primary, #444);
+}
+
+.sword.creature-sheet .profile-img {
+  border: 2px solid var(--color-border-dark-primary, #444);
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.sword.creature-sheet .header-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sword.creature-sheet .header-fields h1 {
+  margin: 0;
+  border: none;
+}
+
+.sword.creature-sheet .header-fields h1 input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: bold;
+  height: 32px;
+}
+
+.sword.creature-sheet .header-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sword.creature-sheet .creature-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sword.creature-sheet .rango-badge {
+  background: rgba(200, 150, 50, 0.3);
+  color: rgb(160, 110, 20);
+  border: 1px solid rgba(200, 150, 50, 0.5);
+}
+
+.sword.creature-sheet .type-badge {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  color: var(--color-text-dark-secondary, #666);
+  border: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.creature-sheet .template-badge {
+  background: rgba(128, 0, 128, 0.15);
+  color: #800080;
+  border: 1px solid rgba(128, 0, 128, 0.3);
+}
+
+.sword.creature-sheet .creature-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Resources bar */
+
+.sword.creature-sheet .creature-resources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 6px 8px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 4px;
+  align-items: center;
+}
+
+.sword.creature-sheet .creature-resource {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sword.creature-sheet .creature-resource label {
+  font-weight: bold;
+  font-size: 11px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sword.creature-sheet .creature-resource .resource-values {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sword.creature-sheet .creature-resource input[type="number"] {
+  width: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.sword.creature-sheet .creature-resource .separator {
+  font-weight: bold;
+}
+
+.sword.creature-sheet .creature-resource .resource-max {
+  width: 28px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.creature-sheet .protezione-value {
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Sections */
+
+.sword.creature-sheet .creature-section {
+  padding: 4px 0;
+}
+
+.sword.creature-sheet .creature-section-header {
+  margin: 0 0 4px 0;
+  padding: 2px 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dark-secondary, #666);
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+/* Stat rows (abilities, skills, movement) */
+
+.sword.creature-sheet .creature-stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 2px 4px;
+}
+
+.sword.creature-sheet .creature-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sword.creature-sheet .stat-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sword.creature-sheet .stat-value {
+  font-size: 13px;
+  font-weight: bold;
+  min-width: 16px;
+  text-align: center;
+  padding: 1px 4px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+  border-radius: 3px;
+}
+
+/* Attacks table */
+
+.sword.creature-sheet .creature-attacks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.sword.creature-sheet .creature-attacks-table thead th {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary, #666);
+  text-align: left;
+  padding: 2px 4px;
+  border-bottom: 1px solid var(--color-border-light-primary, #ccc);
+}
+
+.sword.creature-sheet .creature-attacks-table td {
+  padding: 3px 4px;
+}
+
+.sword.creature-sheet .creature-attacks-table tbody tr:hover {
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.05));
+}
+
+/* Wound track (reuse character sheet wound styles) */
+
+.sword.creature-sheet .wound-levels {
+  display: flex;
+  gap: 6px;
+}
+
+.sword.creature-sheet .wound-level {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 3px;
+  border-left: 3px solid transparent;
+}
+
+.sword.creature-sheet .wound-level-graffi { border-left-color: #4caf50; }
+.sword.creature-sheet .wound-level-leggere { border-left-color: #8bc34a; }
+.sword.creature-sheet .wound-level-gravi { border-left-color: #ff9800; }
+.sword.creature-sheet .wound-level-critiche { border-left-color: #f44336; }
+.sword.creature-sheet .wound-level-mortali { border-left-color: #7b1fa2; }
+
+.sword.creature-sheet .wound-level-label {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sword.creature-sheet .wound-level-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sword.creature-sheet .wound-level-input {
+  width: 32px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.sword.creature-sheet .wound-level-max {
+  font-size: 11px;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.creature-sheet .wound-level-penalty {
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--color-level-error, #d13438);
+}
+
+.sword.creature-sheet .wound-penalty-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: rgba(209, 52, 56, 0.2);
+  color: var(--color-level-error, #d13438);
+}
+
+/* Tags (advantages, disadvantages) */
+
+.sword.creature-sheet .creature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 4px;
+}
+
+.sword.creature-sheet .creature-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.sword.creature-sheet .advantage-tag {
+  background: rgba(16, 124, 16, 0.12);
+  color: var(--color-level-success, #107c10);
+  border: 1px solid rgba(16, 124, 16, 0.3);
+}
+
+.sword.creature-sheet .disadvantage-tag {
+  background: rgba(209, 52, 56, 0.1);
+  color: var(--color-level-error, #d13438);
+  border: 1px solid rgba(209, 52, 56, 0.3);
+}
+
+/* Speciale */
+
+.sword.creature-sheet .creature-speciale {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-text-dark-secondary, #666);
+  padding: 2px 4px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ============================================
+   Character Sheet Compact Usability Pass
+   ============================================ */
+
+.sword.character-sheet {
+  gap: 6px;
+  padding: 6px;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.sword.character-sheet .sheet-header {
+  gap: 6px;
+}
+
+.sword.character-sheet .header-fields h1 input {
+  height: 24px;
+  font-size: 16px;
+}
+
+.sword.character-sheet .header-pe {
+  gap: 1px;
+}
+
+.sword.character-sheet .header-actions {
+  gap: 2px;
+}
+
+.sword.character-sheet .header-pe-field label {
+  font-size: 9px;
+}
+
+.sword.character-sheet .header-pe-field input[type="number"] {
+  width: 40px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .char-wounds-row {
+  gap: 4px;
+}
+
+.sword.character-sheet .stats-bar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  gap: 2px 6px;
+  padding: 3px 5px;
+  border: 1px solid var(--color-border-light-primary, #ccc);
+  backdrop-filter: blur(2px);
+}
+
+.sword.character-sheet .stats-field label {
+  font-size: 9px;
+}
+
+.sword.character-sheet .stats-field input[type="number"] {
+  width: 36px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .resource-values input[type="number"] {
+  width: 30px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .resource-values .resource-max {
+  width: 20px;
+  font-size: 10px;
+}
+
+/* compact responsive layout */
+
+.sword.character-sheet .characteristics-grid {
+  gap: 4px;
+  padding: 6px;
+}
+
+.sword.character-sheet .char-valori-split {
+  gap: 4px;
+}
+
+.sword.character-sheet .characteristic {
+  gap: 3px;
+  padding: 2px;
+}
+
+.sword.character-sheet .char-label {
+  font-size: 11px;
+}
+
+.sword.character-sheet .characteristic input[type="number"],
+.sword.character-sheet .char-value {
+  width: 36px;
+  font-size: 13px;
+}
+
+.sword.character-sheet .char-mod {
+  font-size: 11px;
+}
+
+.sword.character-sheet .char-adjust-btn {
+  width: 16px;
+  height: 16px;
+}
+
+.sword.character-sheet .valori-section {
+  padding: 5px 6px;
+}
+
+.sword.character-sheet .valori-header {
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .valori-axis {
+  gap: 3px;
+}
+
+.sword.character-sheet .valori-axis label {
+  width: 56px;
+  font-size: 10px;
+}
+
+.sword.character-sheet .valori-axis input[type="number"] {
+  width: 30px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .wound-track {
+  width: 84px;
+  padding: 5px;
+}
+
+.sword.character-sheet .wound-level {
+  padding: 2px;
+}
+
+.sword.character-sheet .wound-level-input {
+  width: 24px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .wound-level-max {
+  font-size: 9px;
+}
+
+.sword.character-sheet .skill-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 10px;
+}
+
+.sword.character-sheet .skill-summary-cell {
+  padding: 1px;
+}
+
+.sword.character-sheet .skill-summary-name {
+  font-size: 9px;
+}
+
+.sword.character-sheet .skill-summary-grade {
+  min-width: 12px;
+  text-align: right;
+}
+
+.sword.character-sheet .skills-list,
+.talents-list,
+.inventory-list {
+  padding-top: 4px;
+}
+
+.sword.character-sheet .skill-group-header {
+  margin: 6px 0 3px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .skill-rows-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 4px;
+}
+
+.sword.character-sheet .skill-row {
+  gap: 2px;
+  padding: 1px;
+}
+
+.sword.character-sheet .skill-name {
+  font-size: 11px;
+}
+
+.sword.character-sheet .skill-grade {
+  width: 26px;
+  font-size: 11px;
+}
+
+.talents-list {
+  padding: 6px;
+}
+
+.talent-row-detail {
+  gap: 6px;
+  padding: 3px;
+}
+
+.talent-name-detail {
+  font-size: 12px;
+}
+
+.talent-description {
+  font-size: 11px;
+}
+
+.talent-choice-select {
+  margin-top: 3px;
+  font-size: 11px;
+  padding: 2px 4px;
+  max-width: 200px;
+}
+
+.inventory-list {
+  padding: 6px;
+}
+
+.currency-row,
+.encumbrance-bar {
+  margin-bottom: 6px;
+  padding: 5px 6px;
+}
+
+.encumbrance-info {
+  flex-wrap: wrap;
+  gap: 3px 6px;
+  font-size: 11px;
+}
+
+.inventory-category {
+  margin-bottom: 4px;
+}
+
+.inventory-category-header {
+  margin-bottom: 2px;
+  padding: 1px 2px;
+  font-size: 11px;
+}
+
+.inventory-table {
+  font-size: 11px;
+}
+
+.inventory-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  font-size: 9px;
+  padding: 1px 3px;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.08));
+}
+
+.inventory-table td {
+  padding: 2px 3px;
+}
+
+.inventory-table .item-thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.inventory-table .col-actions {
+  width: 56px;
+}
+
+.inventory-table .item-action {
+  padding: 1px 3px;
+  font-size: 10px;
+}
+
+.sword.sheet .sheet-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: var(--color-cool-5, rgba(0, 0, 0, 0.08));
+  backdrop-filter: blur(2px);
+}
+
+.sword.sheet .sheet-tabs a {
+  font-size: 12px;
+  padding: 3px 8px;
+}
+
+/* ============================================
+   Combat Tracker — Action Counter Badge
+   ============================================ */
+
+.token-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  flex: 0 0 28px;
+}
+
+.token-actions .action-counter {
+  font-size: 11px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(16, 124, 16, 0.15);
+  color: var(--color-level-success, #107c10);
+}
+
+.token-actions.exhausted .action-counter {
+  background: rgba(209, 52, 56, 0.2);
+  color: var(--color-level-error, #d13438);
+}
+
+@media (max-width: 900px) {
+  .sword.character-sheet .sheet-header {
+    flex-wrap: wrap;
+  }
+
+  .sword.character-sheet .header-actions {
+    order: 4;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .sword.character-sheet .header-actions .rest-btn,
+  .sword.character-sheet .header-actions .rifiatare-btn,
+  .sword.character-sheet .header-actions .attesa-btn {
+    min-width: 0;
+  }
+
+  .sword.character-sheet .char-wounds-row {
+    flex-direction: column;
+  }
+
+  .sword.character-sheet .wound-track {
+    width: 100%;
+  }
+
+  .sword.character-sheet .wound-levels {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .sword.character-sheet .skill-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sword.character-sheet .skill-rows-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sword.character-sheet .char-valori-split {
+    grid-template-columns: 1fr;
+  }
+
+  .inventory-table .col-cat,
+  .inventory-table .col-hands,
+  .inventory-table .col-weight {
+    display: none;
+  }
+
+  .inventory-table thead .col-cat,
+  .inventory-table thead .col-hands,
+  .inventory-table thead .col-weight {
+    display: none;
+  }
+}
+
+/* --- Contacts Section --- */
+
+.sword.character-sheet .contacts-section {
+  margin: 4px 0;
+}
+
+.sword.character-sheet .contacts-header {
+  font-size: 13px;
+  margin: 0 0 4px;
+  padding: 2px 4px;
+  background: var(--color-cool-5, #e8e8e8);
+  border-radius: 3px;
+}
+
+.sword.character-sheet .contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sword.character-sheet .contact-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--color-border-light-1, #ddd);
+}
+
+.sword.character-sheet .contact-name {
+  min-width: 80px;
+}
+
+.sword.character-sheet .contact-profession,
+.sword.character-sheet .contact-settlement {
+  color: var(--color-text-dark-secondary, #666);
+  font-style: italic;
+}
+
+.sword.character-sheet .contact-stats {
+  margin-left: auto;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .contact-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-dark-secondary, #999);
+  padding: 0 2px;
+  font-size: 11px;
+}
+
+.sword.character-sheet .contact-delete-btn:hover {
+  color: var(--color-level-error, #c00);
+}
+
+/* ── Languages section ── */
+
+.sword.character-sheet .languages-section {
+  margin: 4px 0;
+}
+
+.sword.character-sheet .languages-header {
+  font-size: 13px;
+  margin: 0 0 4px;
+  padding: 2px 4px;
+  background: var(--color-cool-5, #e8e8e8);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sword.character-sheet .languages-count {
+  font-size: 11px;
+  font-weight: normal;
+  color: var(--color-text-dark-secondary, #666);
+}
+
+.sword.character-sheet .languages-count.over-limit {
+  color: var(--color-level-error, #d13438);
+  font-weight: bold;
+}
+
+.sword.character-sheet .language-add-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--color-text-dark-secondary, #666);
+  padding: 0 3px;
+}
+
+.sword.character-sheet .language-add-btn:hover {
+  color: var(--color-text-dark-primary, #333);
+}
+
+.sword.character-sheet .languages-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.sword.character-sheet .language-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  font-size: 11px;
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.sword.character-sheet .language-delete {
+  font-size: 9px;
+  cursor: pointer;
+  color: var(--color-text-dark-secondary, #999);
+  opacity: 0.5;
+}
+
+.sword.character-sheet .language-delete:hover {
+  opacity: 1;
+  color: var(--color-level-error, #c00);
+}

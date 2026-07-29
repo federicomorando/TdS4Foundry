@@ -1,0 +1,123 @@
+{
+  "_id": "DdESUlcmwWOcIw42",
+  "_key": "!actors!DdESUlcmwWOcIw42",
+  "name": "Giganti",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 8,
+    "creatureType": "fatato",
+    "sizeCategory": "enorme",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 0,
+      "forza": 5,
+      "percezione": 2,
+      "volonta": 4,
+      "ragionamento": 2,
+      "carisma": 2
+    },
+    "skills": {
+      "lotta": 5,
+      "furtivita": 0,
+      "armi_comuni": 5,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 4,
+      "empatia": 2,
+      "raggirare": 2,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 8,
+        "max": 8
+      },
+      "fatica": {
+        "value": 13,
+        "max": 13
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 7,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 6,
+    "attacks": [
+      {
+        "name": "Lotta",
+        "skill": "lotta",
+        "misura": "Larga",
+        "damage": "+3B",
+        "parata": 1
+      },
+      {
+        "name": "Macigno",
+        "skill": "forza",
+        "misura": null,
+        "damage": "+4B"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "ferocia",
+      "tocco_fatato",
+      "terzo_occhio"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 7,
+      "leggere": 7,
+      "gravi": 7,
+      "critiche": 7,
+      "mortali": 6
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 13,
+      "stanco": 13,
+      "sfinito": 13
+    },
+    "speciale": "Base weapon increases Reach by two categories, damage by +3, and Parry by +2. Boulder thrown with Force, range 20. Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Giganti",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

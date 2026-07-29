@@ -1,0 +1,42 @@
+{
+  "_id": "Bpz4bNc9cdSahWTr",
+  "_key": "!items!Bpz4bNc9cdSahWTr",
+  "name": "Spiedo",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/spear-simple-barbed.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "asta",
+    "hands": "una_mano",
+    "costDenari": 10,
+    "costDisplay": "10d",
+    "weight": 2,
+    "damageValue": 3,
+    "damageType": "P",
+    "parryModifier": 2,
+    "misura": "M",
+    "pregi": [
+      "da_lancio"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "d4Wf5keHjLIMnBAS",
+  "_key": "!items!d4Wf5keHjLIMnBAS",
+  "name": "Lanterna",
+  "type": "gear",
+  "img": "icons/sundries/lights/lantern-iron-lit-yellow.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 12,
+    "costDisplay": "1s",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Metal lantern, requires oil"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

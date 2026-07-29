@@ -1,0 +1,104 @@
+{
+  "_id": "yF80tjQezdwvpLBy",
+  "_key": "!actors!yF80tjQezdwvpLBy",
+  "name": "Licantropo",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 0,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "media",
+    "isTemplate": true,
+    "abilities": {
+      "agilita": 0,
+      "forza": 0,
+      "percezione": 0,
+      "volonta": 0,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 0,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 0,
+        "max": 0
+      },
+      "fatica": {
+        "value": 0,
+        "max": 0
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 0,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [],
+    "advantages": [],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 0,
+      "stanco": 0,
+      "sfinito": 0
+    },
+    "speciale": "Template creature. Uses the NPC's stats with XP+50. In animal form, takes the wolf's stats and advantages plus human Reasoning and skills. Both forms gain: +1 success to Force, Perception, Willpower, Stealth, and Grapple; +1 Grapple damage; +1 wound and +1 Fatigue per level; +1 Protection; +3 successes to Empathy/Survival toward wolves; a focus for intimidating/frightening; and regeneration of up to 3 wounds at end of turn (silver or wolfsbane prevents regeneration). Loses 1 Fides and gains 1 Impietas on the first transformation. Terrified of wolfsbane (within 10m, a Fear reaction vs 4 successes)."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Licantropo",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

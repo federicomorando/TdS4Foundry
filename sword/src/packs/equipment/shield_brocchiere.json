@@ -1,0 +1,32 @@
+{
+  "_id": "QN03m4aZz7J5Hy7S",
+  "_key": "!items!QN03m4aZz7J5Hy7S",
+  "name": "Brocchiere",
+  "type": "shield",
+  "img": "icons/equipment/shield/buckler-wooden-boss-steel.webp",
+  "system": {
+    "costDenari": 12,
+    "costDisplay": "1s",
+    "weight": 1,
+    "damageValue": 1,
+    "parryModifier": 1,
+    "pregi": [],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

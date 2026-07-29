@@ -1,0 +1,40 @@
+{
+  "_id": "ExBZwU12ARd97Xtu",
+  "_key": "!items!ExBZwU12ARd97Xtu",
+  "name": "Balestra a verricello",
+  "type": "weapon",
+  "img": "icons/weapons/crossbows/crossbow-heavy-black.webp",
+  "system": {
+    "category": "balestre",
+    "skillId": "balestre",
+    "weaponType": "balestra",
+    "hands": "due_mani",
+    "costDenari": 120,
+    "costDisplay": "10s",
+    "weight": 6,
+    "damageValue": 6,
+    "damageType": "P",
+    "parryModifier": 2,
+    "misura": null,
+    "pregi": [],
+    "quality": "normale",
+    "gittata": 20,
+    "ricarica": 6
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,2128 @@
+{
+  "EngineCore": {
+    "version": "1.1",
+    "sourceAuthority": "sword-check-spec.json",
+    "diceType": "d6",
+
+    "inputSchema": {
+      "characteristicScore": {
+        "type": "integer",
+        "min": 5,
+        "max": 13,
+        "required": true,
+        "description": "The linked characteristic value (one of: fortitudo, celeritas, gratia, mens, prudentia, audacia)."
+      },
+      "diceCount": {
+        "type": "integer",
+        "min": 2,
+        "required": true,
+        "description": "Number of d6 chosen by the player (risk betting). Minimum 2. Untrained characters are limited to exactly 2."
+      },
+      "grade": {
+        "type": "integer",
+        "min": 0,
+        "required": true,
+        "description": "Effective grade points for die value reduction. May include combined maneuver grades."
+      },
+      "extraDice": {
+        "type": "integer",
+        "min": 0,
+        "required": true,
+        "description": "Number of extra dice from focus, fama, talents, items. Each grants one discard."
+      },
+      "successBonus": {
+        "type": "integer",
+        "min": 0,
+        "default": 0,
+        "description": "Positive modifier applied to final successes."
+      },
+      "successPenalty": {
+        "type": "integer",
+        "min": 0,
+        "default": 0,
+        "description": "Negative modifier applied to final successes."
+      },
+      "difficultyThreshold": {
+        "type": "integer|null",
+        "min": 1,
+        "default": null,
+        "description": "If set, finalSuccesses must meet or exceed this value to pass."
+      },
+      "opposedSuccesses": {
+        "type": "integer|null",
+        "min": 0,
+        "default": null,
+        "description": "If set, opponent's final successes for opposed resolution."
+      },
+      "diceRolled": {
+        "type": "array<integer>",
+        "itemMin": 1,
+        "itemMax": 6,
+        "required": true,
+        "description": "Pre-rolled dice results. Length must equal diceCount + extraDice. The engine is deterministic; rolling is external."
+      },
+      "discardIndices": {
+        "type": "array<integer>|null",
+        "default": null,
+        "description": "Player-chosen indices of dice to discard. Length must not exceed extraDice (player may keep extra dice when sum fits). If null, smart auto-discard: keep all when sum fits, otherwise discard highest non-1 values first stopping as soon as sum fits."
+      }
+    },
+
+    "pipeline": [
+      {
+        "step": 1,
+        "name": "validateInput",
+        "description": "Assert diceCount >= 2. If untrained (grade == 0 and no extraDice from skill sources), enforce diceCount == 2. Assert diceRolled.length == diceCount + extraDice. Assert all dice values in [1,6]. If discardIndices provided, assert discardIndices.length <= extraDice and all indices are valid."
+      },
+      {
+        "step": 2,
+        "name": "rollDice",
+        "description": "Accept diceRolled as input. Store copy as diceOriginal. Passthrough in deterministic engine; actual rolling is delegated to the adapter layer."
+      },
+      {
+        "step": 3,
+        "name": "applyExtraDiceDiscards",
+        "description": "Optionally remove up to extraDice dice from working set. If discardIndices provided, remove those specific indices (may be fewer than extraDice). If null, smart auto-discard: if total sum already fits characteristic score, keep all dice (maximizes 1s count); otherwise discard highest non-1 values first, stopping as soon as sum fits. Store result as diceAfterDiscards.",
+        "edgeCase": "If all dice are discarded (diceAfterDiscards is empty), sum = 0, roll-under automatically passes, onesCount = 0, basePassed = true, rawSuccesses = 1."
+      },
+      {
+        "step": 4,
+        "name": "applyGradeReductions",
+        "strategyName": "reduceLowestNonOneFirst",
+        "procedure": [
+          "Set gradesRemaining = grade.",
+          "While gradesRemaining > 0 AND there exists a die with value > 1:",
+          "  Select the die with the minimum value among dice > 1.",
+          "  Reduce that die's value by 1.",
+          "  Decrease gradesRemaining by 1.",
+          "Repeat until gradesRemaining == 0 OR all dice == 1."
+        ],
+        "rationale": "Each grade reduces total sum by 1 regardless of which die is chosen. Since extra successes come from dice showing 1, it is always optimal to reduce the lowest die greater than 1 first to maximize the number of dice that reach 1.",
+        "minimumDieValue": 1,
+        "costPerReduction": 1,
+        "outputFields": {
+          "diceAfterReduction": "Final die values after all grade points applied.",
+          "gradesUsed": "Number of grade points actually consumed.",
+          "gradesRemaining": "Leftover grade points (when all dice are already 1)."
+        }
+      },
+      {
+        "step": 5,
+        "name": "computeSum",
+        "formula": "finalSum = sum(diceAfterReduction)",
+        "edgeCase": "If diceAfterReduction is empty, finalSum = 0."
+      },
+      {
+        "step": 6,
+        "name": "computeSuccesses",
+        "logic": [
+          "basePassed = (finalSum <= characteristicScore).",
+          "If basePassed: rawSuccesses = 1 + count(die == 1 in diceAfterReduction).",
+          "If NOT basePassed: rawSuccesses = 0.",
+          "The fail gate blocks ALL successes including those from dice showing 1."
+        ],
+        "outputFields": {
+          "basePassed": "boolean",
+          "onesCount": "Count of dice showing 1 (informational even if basePassed is false).",
+          "rawSuccesses": "Successes before modifiers."
+        }
+      },
+      {
+        "step": 7,
+        "name": "applyModifiers",
+        "formula": "finalSuccesses = max(0, rawSuccesses + successBonus - successPenalty)",
+        "floor": 0,
+        "description": "Modifiers are applied to final successes, not to the dice roll. Successes cannot go below 0."
+      },
+      {
+        "step": 8,
+        "name": "evaluateDifficulty",
+        "logic": "If difficultyThreshold is set: difficultyPassed = (finalSuccesses >= difficultyThreshold). Else: difficultyPassed = null."
+      },
+      {
+        "step": 9,
+        "name": "evaluateOpposed",
+        "logic": "If opposedSuccesses is set: netSuccesses = finalSuccesses - opposedSuccesses. Else: netSuccesses = null."
+      }
+    ],
+
+    "outputSchema": {
+      "diceOriginal": { "type": "array<integer>", "description": "All dice as rolled, before any processing." },
+      "diceAfterDiscards": { "type": "array<integer>", "description": "Dice remaining after extra dice discards." },
+      "diceAfterReduction": { "type": "array<integer>", "description": "Dice after grade reduction applied." },
+      "gradesUsed": { "type": "integer", "description": "Grade points actually consumed." },
+      "gradesRemaining": { "type": "integer", "description": "Unused grade points." },
+      "finalSum": { "type": "integer", "description": "Sum of diceAfterReduction." },
+      "characteristicScore": { "type": "integer", "description": "Echo of input characteristic for display." },
+      "basePassed": { "type": "boolean", "description": "Whether finalSum <= characteristicScore." },
+      "onesCount": { "type": "integer", "description": "Count of dice showing 1 in diceAfterReduction." },
+      "rawSuccesses": { "type": "integer", "description": "1 + onesCount if basePassed, else 0. Before modifiers." },
+      "successBonus": { "type": "integer", "description": "Echo of applied bonus." },
+      "successPenalty": { "type": "integer", "description": "Echo of applied penalty." },
+      "finalSuccesses": { "type": "integer", "description": "max(0, rawSuccesses + successBonus - successPenalty)." },
+      "difficultyThreshold": { "type": "integer|null", "description": "Echo of input difficulty." },
+      "difficultyPassed": { "type": "boolean|null", "description": "finalSuccesses >= difficultyThreshold, or null." },
+      "opposedSuccesses": { "type": "integer|null", "description": "Echo of opponent successes." },
+      "netSuccesses": { "type": "integer|null", "description": "finalSuccesses - opposedSuccesses, or null." }
+    },
+
+    "edgeCases": [
+      {
+        "id": "EDGE-001",
+        "name": "allDiceDiscarded",
+        "condition": "extraDice >= diceCount, causing diceAfterDiscards to be empty.",
+        "behavior": "finalSum = 0, basePassed = true (0 <= any characteristic), onesCount = 0, rawSuccesses = 1.",
+        "source": "sword-check-spec.json mechanic.extraDice.autoSuccessEdgeCase"
+      },
+      {
+        "id": "EDGE-002",
+        "name": "negativeSuccessesClamped",
+        "condition": "successPenalty > rawSuccesses + successBonus.",
+        "behavior": "finalSuccesses = 0. Cannot go below zero.",
+        "source": "sword-check-spec.json mechanic.modifiers.floor"
+      },
+      {
+        "id": "EDGE-003",
+        "name": "untrainedCheck",
+        "condition": "Skill grade == 0 and no skill-sourced extraDice.",
+        "behavior": "diceCount is forced to exactly 2. Validator rejects diceCount != 2.",
+        "source": "sword-check-spec.json mechanic.untrainedDiceLimit"
+      },
+      {
+        "id": "EDGE-004",
+        "name": "combinedManeuver",
+        "condition": "Player activates a combined maneuver with a correlated skill.",
+        "behavior": "effectiveGrade = gradeBase + gradeCorrelated. Spirito cost (1 point) is deducted by the adapter, not the engine. In initiative contexts, costs 3 Riflessi.",
+        "source": "sword-system.md section 6, PDF p.82, p.90"
+      },
+      {
+        "id": "EDGE-005",
+        "name": "allDiceAlreadyOne",
+        "condition": "All dice in diceAfterDiscards are already 1 before grade reduction.",
+        "behavior": "Grade reduction terminates immediately. gradesUsed = 0, gradesRemaining = grade.",
+        "source": "sword-check-spec.json algorithm.gradeReductionStrategy.termination"
+      },
+      {
+        "id": "EDGE-006",
+        "name": "gradesExceedReducibleTotal",
+        "condition": "grade > sum(die - 1 for die in diceAfterDiscards where die > 1).",
+        "behavior": "All dice reduced to 1, remaining grades unused. gradesRemaining captures leftover.",
+        "source": "sword-check-spec.json algorithm.gradeReductionStrategy.termination"
+      },
+      {
+        "id": "EDGE-007",
+        "name": "valoreActivation",
+        "condition": "Player spends 3 Spirito to invoke a Valore after rolling.",
+        "behavior": "Only available if basePassed == true. Adds the Valore score to successBonus. Adapter must gate on basePassed before adding to engine input.",
+        "source": "PDF p.75",
+        "AmbiguityDetected": true,
+        "ambiguityNote": "PDF says activation only after passing roll-under. JSON spec modifier pipeline is unconditional. Adapter must enforce the gate."
+      },
+      {
+        "id": "EDGE-008",
+        "name": "spiritoForPenaltyCancellation",
+        "condition": "Player spends Spirito to ignore wound/fatigue penalties.",
+        "behavior": "Each Spirito point cancels 1 point of successPenalty. Adapter adjusts successPenalty before calling engine.",
+        "source": "PDF p.71"
+      }
+    ],
+
+    "testCases": [
+      {
+        "name": "John example",
+        "source": "sword-check-spec.json testCases[0]",
+        "input": {
+          "characteristicScore": 10,
+          "diceRolled": [6, 5],
+          "grade": 4,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [6, 5],
+          "diceAfterDiscards": [6, 5],
+          "gradeReductionSteps": "lowest>1=5: 5->4->3->2->1 (4 grades used). Result: [6, 1].",
+          "diceAfterReduction": [6, 1],
+          "gradesUsed": 4,
+          "gradesRemaining": 0,
+          "finalSum": 7,
+          "basePassed": true,
+          "onesCount": 1,
+          "rawSuccesses": 2
+        },
+        "expectedOutput": {
+          "finalSuccesses": 2,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "Risk example 3 dice",
+        "source": "sword-check-spec.json testCases[1]",
+        "input": {
+          "characteristicScore": 10,
+          "diceRolled": [3, 2, 2],
+          "grade": 4,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [3, 2, 2],
+          "diceAfterDiscards": [3, 2, 2],
+          "gradeReductionSteps": "lowest>1=2: 2->1 (3 left). lowest>1=2: 2->1 (2 left). lowest>1=3: 3->2->1 (0 left). Result: [1, 1, 1].",
+          "diceAfterReduction": [1, 1, 1],
+          "gradesUsed": 4,
+          "gradesRemaining": 0,
+          "finalSum": 3,
+          "basePassed": true,
+          "onesCount": 3,
+          "rawSuccesses": 4
+        },
+        "expectedOutput": {
+          "finalSuccesses": 4,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "Fail gate blocks 1s",
+        "source": "sword-check-spec.json testCases[2]",
+        "input": {
+          "characteristicScore": 5,
+          "diceRolled": [1, 6],
+          "grade": 0,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [1, 6],
+          "diceAfterDiscards": [1, 6],
+          "gradeReductionSteps": "No grades to apply.",
+          "diceAfterReduction": [1, 6],
+          "gradesUsed": 0,
+          "gradesRemaining": 0,
+          "finalSum": 7,
+          "basePassed": false,
+          "onesCount": 1,
+          "rawSuccesses": 0
+        },
+        "expectedOutput": {
+          "finalSuccesses": 0,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "All dice discarded edge case",
+        "source": "Derived from sword-check-spec.json mechanic.extraDice.autoSuccessEdgeCase",
+        "input": {
+          "characteristicScore": 7,
+          "diceRolled": [4, 3],
+          "grade": 0,
+          "extraDice": 2,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": [0, 1]
+        },
+        "trace": {
+          "diceOriginal": [4, 3],
+          "diceAfterDiscards": [],
+          "gradeReductionSteps": "No dice to reduce.",
+          "diceAfterReduction": [],
+          "gradesUsed": 0,
+          "gradesRemaining": 0,
+          "finalSum": 0,
+          "basePassed": true,
+          "onesCount": 0,
+          "rawSuccesses": 1
+        },
+        "expectedOutput": {
+          "finalSuccesses": 1,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "Modifiers clamp to zero",
+        "source": "Derived from sword-check-spec.json mechanic.modifiers.floor",
+        "input": {
+          "characteristicScore": 8,
+          "diceRolled": [3, 4],
+          "grade": 0,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 3,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [3, 4],
+          "diceAfterDiscards": [3, 4],
+          "gradeReductionSteps": "No grades to apply.",
+          "diceAfterReduction": [3, 4],
+          "gradesUsed": 0,
+          "gradesRemaining": 0,
+          "finalSum": 7,
+          "basePassed": true,
+          "onesCount": 0,
+          "rawSuccesses": 1
+        },
+        "expectedOutput": {
+          "finalSuccesses": 0,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "Difficulty threshold pass",
+        "source": "Derived from sword-check-spec.json mechanic.difficulty",
+        "input": {
+          "characteristicScore": 10,
+          "diceRolled": [2, 1, 3],
+          "grade": 2,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": 3,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [2, 1, 3],
+          "diceAfterDiscards": [2, 1, 3],
+          "gradeReductionSteps": "lowest>1=2: 2->1 (1 left). lowest>1=3: 3->2 (0 left). Result: [1, 1, 2].",
+          "diceAfterReduction": [1, 1, 2],
+          "gradesUsed": 2,
+          "gradesRemaining": 0,
+          "finalSum": 4,
+          "basePassed": true,
+          "onesCount": 2,
+          "rawSuccesses": 3
+        },
+        "expectedOutput": {
+          "finalSuccesses": 3,
+          "difficultyPassed": true,
+          "netSuccesses": null
+        }
+      },
+      {
+        "name": "Opposed roll with net successes",
+        "source": "Derived from sword-check-spec.json mechanic.opposed",
+        "input": {
+          "characteristicScore": 9,
+          "diceRolled": [2, 3],
+          "grade": 3,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": 2,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [2, 3],
+          "diceAfterDiscards": [2, 3],
+          "gradeReductionSteps": "lowest>1=2: 2->1 (2 left). lowest>1=3: 3->2->1 (0 left). Result: [1, 1].",
+          "diceAfterReduction": [1, 1],
+          "gradesUsed": 3,
+          "gradesRemaining": 0,
+          "finalSum": 2,
+          "basePassed": true,
+          "onesCount": 2,
+          "rawSuccesses": 3
+        },
+        "expectedOutput": {
+          "finalSuccesses": 3,
+          "difficultyPassed": null,
+          "netSuccesses": 1
+        }
+      },
+      {
+        "name": "Excess grades with all dice becoming 1",
+        "source": "Derived from sword-check-spec.json algorithm.gradeReductionStrategy.termination",
+        "input": {
+          "characteristicScore": 8,
+          "diceRolled": [2, 2],
+          "grade": 10,
+          "extraDice": 0,
+          "successBonus": 0,
+          "successPenalty": 0,
+          "difficultyThreshold": null,
+          "opposedSuccesses": null,
+          "discardIndices": null
+        },
+        "trace": {
+          "diceOriginal": [2, 2],
+          "diceAfterDiscards": [2, 2],
+          "gradeReductionSteps": "lowest>1=2: 2->1 (9 left). lowest>1=2: 2->1 (8 left). All dice == 1, stop. Result: [1, 1].",
+          "diceAfterReduction": [1, 1],
+          "gradesUsed": 2,
+          "gradesRemaining": 8,
+          "finalSum": 2,
+          "basePassed": true,
+          "onesCount": 2,
+          "rawSuccesses": 3
+        },
+        "expectedOutput": {
+          "finalSuccesses": 3,
+          "difficultyPassed": null,
+          "netSuccesses": null
+        }
+      }
+    ]
+  },
+
+  "FoundryAdapter": {
+    "actorDataSchema": {
+      "characteristics": {
+        "fortitudo": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Fortitudo" },
+        "celeritas": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Celeritas" },
+        "gratia": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Gratia" },
+        "mens": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Mens" },
+        "prudentia": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Prudentia" },
+        "audacia": { "type": "integer", "min": 5, "max": 13, "default": 7, "label": "Audacia" }
+      },
+
+      "characteristicModifierTable": {
+        "description": "Derived modifier from characteristic score. PDF p.46.",
+        "formula": "d > 0 ? ceil(d / 2) : floor(d / 2), where d = score - 7",
+        "note": "Errata p.46: floor for scores ≤ 7, ceil for scores > 7.",
+        "table": {
+          "5": -1, "6": -1,
+          "7": 0,
+          "8": 1, "9": 1,
+          "10": 2, "11": 2,
+          "12": 3, "13": 3, "14": 4
+        }
+      },
+
+      "derivedStats": {
+        "riflessi": {
+          "formula": "prudentia + mod(celeritas)",
+          "description": "Initiative and action economy. PDF p.46, p.90.",
+          "type": "integer"
+        },
+        "ferite": {
+          "formula": "fortitudo + mod(fortitudo) + gradi(forza)",
+          "description": "Total wound capacity distributed across 5 severity levels. PDF p.47.",
+          "type": "integer",
+          "levels": ["graffi", "leggere", "gravi", "critiche", "mortali"]
+        },
+        "fatica": {
+          "formula": "fortitudo + audacia",
+          "description": "Total fatigue capacity across 3 levels. PDF p.47-48.",
+          "type": "integer",
+          "levels": ["fresco", "stanco", "sfinito"]
+        },
+        "spirito": {
+          "formula": "audacia + mod(audacia) + gradi(volonta)",
+          "description": "Spirit points for combined maneuvers, valori, penalty cancellation. PDF p.48.",
+          "type": "integer"
+        },
+        "movimento": {
+          "description": "Movement rate in meters per second or km per hour. PDF p.47.",
+          "type": "integer",
+          "default": 5
+        },
+        "ingombro": {
+          "formula": "fortitudo + gradi(forza)",
+          "description": "Carrying capacity base value. Current carried weight compared against category thresholds to determine encumbrance penalty. PDF p.47.",
+          "type": "integer",
+          "categories": {
+            "leggero": { "multiplier": 2, "penalty": 0, "label": "Leggero (Light)" },
+            "moderato": { "multiplier": 4, "penalty": -1, "label": "Moderato (Moderate)" },
+            "pesante": { "multiplier": 6, "penalty": -2, "label": "Pesante (Heavy)" },
+            "massimo": { "multiplier": 8, "penalty": -3, "label": "Massimo (Maximum)" }
+          },
+          "penaltyApplication": "Encumbrance penalty applies to ALL checks AND Movement. Independent from armor skill penalty (they stack). PDF p.47: 'a) a tutte le prove b) al Movimento'.",
+          "computation": "carriedWeight = sum(item.weight * item.quantity for all carried items). Category = highest category where carriedWeight <= base * multiplier. If carriedWeight > base * 8, character cannot move."
+        }
+      },
+
+      "skills": {
+        "_pattern": {
+          "skillId": "string",
+          "label": "string",
+          "characteristicKey": "string",
+          "grade": { "type": "integer", "min": 0, "max": 6 },
+          "hasFocus": "boolean",
+          "focusDescription": "string|null",
+          "extraDice": { "type": "integer", "min": 0, "description": "Extra dice from non-focus sources (culture, items, fama, talents)." },
+          "armorPenalized": { "type": "boolean", "description": "If true, armor protection imposes 1 success penalty per protection point. PDF skill descriptions mark these with superscript A." },
+          "baseGrade": { "type": "integer", "min": 0, "max": 6, "default": 0, "description": "Grade at character creation. PE costs computed for grades above this baseline." }
+        },
+        "enumeration": [
+          { "id": "agilita", "label": "Agilita", "characteristicKey": "celeritas" },
+          { "id": "alchimia", "label": "Alchimia", "characteristicKey": "mens" },
+          { "id": "archi", "label": "Archi", "characteristicKey": "celeritas", "armorPenalized": true },
+          { "id": "armi_comuni", "label": "Armi comuni", "characteristicKey": "fortitudo" },
+          { "id": "armi_corte", "label": "Armi corte", "characteristicKey": "celeritas" },
+          { "id": "armi_da_guerra", "label": "Armi da guerra", "characteristicKey": "fortitudo" },
+          { "id": "arte_della_guerra", "label": "Arte della guerra", "characteristicKey": "audacia" },
+          { "id": "arti_arcane", "label": "Arti arcane", "characteristicKey": "mens" },
+          { "id": "arti_liberali", "label": "Arti liberali", "characteristicKey": "mens" },
+          { "id": "artigiano", "label": "Artigiano", "characteristicKey": "varies" },
+          { "id": "atletica", "label": "Atletica", "characteristicKey": "fortitudo", "armorPenalized": true },
+          { "id": "autorita", "label": "Autorita", "characteristicKey": "audacia" },
+          { "id": "balestre", "label": "Balestre", "characteristicKey": "prudentia" },
+          { "id": "carisma", "label": "Carisma", "characteristicKey": "gratia" },
+          { "id": "cavalcare", "label": "Cavalcare", "characteristicKey": "audacia" },
+          { "id": "empatia", "label": "Empatia", "characteristicKey": "prudentia" },
+          { "id": "forza", "label": "Forza", "characteristicKey": "fortitudo" },
+          { "id": "furtivita", "label": "Furtivita", "characteristicKey": "celeritas", "armorPenalized": true },
+          { "id": "guarigione", "label": "Guarigione", "characteristicKey": "prudentia" },
+          { "id": "intrattenere", "label": "Intrattenere", "characteristicKey": "gratia" },
+          { "id": "lotta", "label": "Lotta", "characteristicKey": "fortitudo" },
+          { "id": "manualita", "label": "Manualita", "characteristicKey": "celeritas", "armorPenalized": true },
+          { "id": "mercatura", "label": "Mercatura", "characteristicKey": "gratia" },
+          { "id": "percezione", "label": "Percezione", "characteristicKey": "prudentia" },
+          { "id": "professione", "label": "Professione", "characteristicKey": "varies" },
+          { "id": "raggirare", "label": "Raggirare", "characteristicKey": "gratia" },
+          { "id": "ragionamento", "label": "Ragionamento", "characteristicKey": "mens" },
+          { "id": "sopravvivenza", "label": "Sopravvivenza", "characteristicKey": "prudentia" },
+          { "id": "storia_e_leggende", "label": "Storia e leggende", "characteristicKey": "mens" },
+          { "id": "teologia", "label": "Teologia", "characteristicKey": "audacia" },
+          { "id": "usi_e_costumi", "label": "Usi e costumi", "characteristicKey": "gratia" },
+          { "id": "volonta", "label": "Volonta", "characteristicKey": "audacia" }
+        ],
+        "socialClassAccess": {
+          "umile": ["armi_corte", "empatia", "furtivita", "guarigione", "professione", "raggirare", "sopravvivenza"],
+          "popolano": ["archi", "armi_comuni", "artigiano", "atletica", "lotta", "manualita", "usi_e_costumi"],
+          "borghese": ["alchimia", "arti_liberali", "balestre", "intrattenere", "mercatura", "professione", "storia_e_leggende"],
+          "nobile": ["armi_da_guerra", "arte_della_guerra", "arti_arcane", "autorita", "cavalcare", "professione", "teologia"],
+          "common": ["agilita", "carisma", "forza", "percezione", "ragionamento", "volonta"]
+        }
+      },
+
+      "valori": {
+        "axes": [
+          { "positive": "fides", "negative": "impietas", "label": "Fede / Empieta" },
+          { "positive": "honor", "negative": "ego", "label": "Onore / Ego" },
+          { "positive": "superstitio", "negative": "ratio", "label": "Superstizione / Ragione" }
+        ],
+        "constraint": "Only one value per axis may be active. Maximum total Valore points = 3 + mod(audacia). PDF p.45, p.48, pp.72-74.",
+        "scoreRange": { "min": 0, "max": 3 },
+        "activation": {
+          "cost": 3,
+          "costType": "spirito",
+          "timing": "After rolling, only if basePassed == true",
+          "effect": "Add the Valore score as successBonus"
+        },
+        "pointTracking": {
+          "fides": { "type": "integer", "min": 0, "max": 3, "default": 0 },
+          "impietas": { "type": "integer", "min": 0, "max": 3, "default": 0 },
+          "honor": { "type": "integer", "min": 0, "max": 3, "default": 0 },
+          "ego": { "type": "integer", "min": 0, "max": 3, "default": 0 },
+          "superstitio": { "type": "integer", "min": 0, "max": 3, "default": 0 },
+          "ratio": { "type": "integer", "min": 0, "max": 3, "default": 0 }
+        }
+      },
+
+      "resources": {
+        "spirito": {
+          "current": "integer",
+          "max": { "formula": "audacia + mod(audacia) + gradi(volonta)" },
+          "recovery": "1 + mod(audacia) per rest period. PDF p.71."
+        },
+        "fatica": {
+          "current": "integer",
+          "max": { "formula": "fortitudo + audacia" },
+          "levels": {
+            "fresco": { "threshold": "above 2/3 max", "penalty": 0 },
+            "stanco": { "threshold": "between 1/3 and 2/3 max", "penalty": -1 },
+            "sfinito": { "threshold": "below 1/3 max", "penalty": -2 }
+          },
+          "source": "PDF p.70"
+        },
+        "ferite": {
+          "current": "integer",
+          "max": { "formula": "fortitudo + mod(fortitudo) + gradi(forza)" },
+          "levels": {
+            "graffi": { "penalty": 0 },
+            "leggere": { "penalty": 0 },
+            "gravi": { "penalty": -1 },
+            "critiche": { "penalty": -2 },
+            "mortali": { "penalty": -3 }
+          },
+          "capacityDistribution": {
+            "formula": "Each level gets floor(feriteMax / 5) slots; remainder distributed bottom-up (graffi first)",
+            "example": "feriteMax=12 → graffi:3, leggere:3, gravi:2, critiche:2, mortali:2",
+            "source": "Equal division confirmed — PDF p.47"
+          },
+          "source": "PDF p.68"
+        },
+        "riflessi": {
+          "current": "integer",
+          "max": { "formula": "prudentia + mod(celeritas)" },
+          "description": "Action economy in initiative. Recovered via Rifiatare (max(1, gradi(atletica)), costs 1 fatica). Errata line 2133. PDF p.90."
+        }
+      },
+
+      "modifiers": {
+        "successBonus": { "type": "integer", "min": 0, "default": 0 },
+        "successPenalty": { "type": "integer", "min": 0, "default": 0 },
+        "computedPenalties": {
+          "woundPenalty": { "source": "resources.ferite.levels", "description": "Derived from current wound severity level." },
+          "fatiguePenalty": { "source": "resources.fatica.levels", "description": "Derived from current fatigue level." },
+          "encumbrancePenalty": { "source": "derivedStats.ingombro.categories", "description": "Derived from current encumbrance category. Applies to ALL checks. PDF p.47." },
+          "armorSkillPenalty": { "condition": "skill.armorPenalized == true", "formula": "max(0, armorProtezione - armorPregiReduction_for_skill)", "description": "Success penalty on armor-penalized skills. Base = armor protezione, reduced by armor pregi that target the specific skill (agile for atletica, da_arciere for archi, da_geniere for manualita, furtiva for furtivita). Each such pregio reduces penalty by 2 (min 0). PDF pp.54-57, 128-129." }
+        }
+      },
+
+      "fama": {
+        "score": { "type": "integer", "min": 0, "max": 6 },
+        "description": "Renown in home region. Can be spent as extra dice in social checks. PDF p.76.",
+        "mechanic": "Each Fama point spent grants 1 extra die for the check."
+      },
+
+      "ceto": {
+        "type": "string",
+        "enum": ["umile", "popolano", "borghese", "nobile"],
+        "description": "Social class determining available skill training. PDF p.50."
+      },
+
+      "retaggio": {
+        "total": { "type": "integer", "min": 0, "default": 0, "description": "Total heritage points (3 + mod(gratia) + tentazione bonus). PDF p.60." },
+        "notes": { "type": "string", "default": "", "description": "Freeform notes about events chosen." },
+        "spiritoBonus": { "type": "integer", "min": 0, "default": 0, "description": "Permanent Spirito max bonus from events (e.g., Percorso spirituale)." },
+        "riflessiBonus": { "type": "integer", "min": 0, "default": 0, "description": "Permanent Riflessi max bonus from events (e.g., Istinto)." },
+        "indomito": { "type": "boolean", "default": false, "description": "Indomito event flag." },
+        "affinitaAnimale": { "type": "boolean", "default": false, "description": "Affinita animale event flag." },
+        "conoscenze": { "type": "boolean", "default": false, "description": "Conoscenze event flag." },
+        "nomea": { "type": "boolean", "default": false, "description": "Nomea event flag." },
+        "legame": { "type": "string", "default": "", "description": "Legame note/value chosen at creation." },
+        "cimelio": { "type": "string", "default": "", "description": "Cimelio note/value chosen at creation." },
+        "events": {
+          "type": "array",
+          "description": "15 event types: Addestramento marziale, Apprendistato, Affinita animale, Antico sapere, Cimelio, Conoscenze, Dedizione, Esperienza, Fascino, Indomito, Istinto, Legame, Nomea, Percorso spirituale, Talento naturale. PDF pp.60-62."
+        }
+      },
+
+      "pe": {
+        "total": { "type": "integer", "min": 0, "default": 0, "description": "Total PE earned across all sessions." },
+        "spent": { "type": "computed", "formula": "sum of costs for each skill above baseGrade", "description": "Derived in prepareDerivedData." },
+        "available": { "type": "computed", "formula": "total - spent", "description": "Derived in prepareDerivedData." }
+      },
+
+      "advancement": {
+        "gradeIncreaseCost": {
+          "formula": "2 * target_grade",
+          "description": "Cost to increase a skill by one grade. target_grade = the grade being increased TO. PDF p.138.",
+          "table": {
+            "1to2": 4,
+            "2to3": 6,
+            "3to4": 8,
+            "4to5": 10,
+            "5to6": 12
+          }
+        },
+        "newSkillCost": {
+          "value": 10,
+          "description": "PE cost to learn a new skill (grade 0 to 1). Requires a teacher with grade >= 3. PDF p.138."
+        }
+      },
+
+      "creationComplete": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether the character has completed the creation wizard."
+      },
+
+      "tentazione": {
+        "type": "string",
+        "default": "",
+        "enum": ["", "accidia", "avidita", "gola", "invidia", "ira", "lussuria", "superbia"],
+        "description": "Selected temptation (one of 7 deadly sins). If non-empty, grants +1 Retaggio point. PDF p.62."
+      },
+
+      "languages": {
+        "type": "array<string>",
+        "description": "Known languages. Meticcio adds one extra language marker at character creation."
+      },
+
+      "culture": {
+        "trait1": { "type": "string|null", "default": null, "description": "First cultural trait ID from cultures list." },
+        "trait2": { "type": "string|null", "default": null, "description": "Second cultural trait ID from cultures list." },
+        "description": "Each character selects 2 different traits. Each grants: 1 extra die in choice of skills, access to specific Valori axes, 1 unique advantage. Data source: module/data/cultures.mjs.",
+        "cultures": [
+          { "id": "antica", "skillChoices": ["carisma", "volonta"], "valori": ["fides", "superstitio"], "advantage": "audacia_mod_bonus", "advantageDesc": "+1 to Audacia modifier" },
+          { "id": "cortese", "skillChoices": ["carisma", "ragionamento"], "valori": ["fides", "honor"], "advantage": "extra_die_pick", "advantagePickFrom": ["arti_liberali", "autorita", "empatia"] },
+          { "id": "erudita", "skillChoices": ["percezione", "ragionamento"], "valori": ["ego", "ratio"], "advantage": "study_bonus", "advantageDesc": "+1 success on study/meditation" },
+          { "id": "guerresca", "skillChoices": ["agilita", "forza"], "valori": ["impietas", "honor"], "advantage": "wound_fatigue_bonus", "advantageDesc": "+1 graffi/leggere, +1 fresco/stanco" },
+          { "id": "intraprendente", "skillChoices": ["percezione", "volonta"], "valori": ["ego", "ratio"], "advantage": "retaggio_bonus", "advantageDesc": "+1 retaggio point" },
+          { "id": "laboriosa", "skillChoices": ["percezione", "ragionamento"], "valori": ["honor", "ratio"], "advantage": "double_wealth", "advantageDesc": "Starting wealth doubled" },
+          { "id": "meticcio", "skillChoices": null, "valori": null, "advantage": "mixed_heritage", "advantageDesc": "Extra language + extra die in storia_e_leggende + usi_e_costumi" },
+          { "id": "militare", "skillChoices": ["agilita", "volonta"], "valori": ["impietas", "honor"], "advantage": "quality_equipment", "advantageDesc": "Starting equipment Buona quality" },
+          { "id": "rurale", "skillChoices": ["forza", "percezione"], "valori": ["fides", "superstitio"], "advantage": "survival_bonus", "advantageDesc": "Extra die in sopravvivenza + usi_e_costumi" },
+          { "id": "spirituale", "skillChoices": ["carisma", "volonta"], "valori": ["fides", "superstitio"], "advantage": "spirito_bonus", "advantageDesc": "+4 Spirito" },
+          { "id": "tenace", "skillChoices": ["percezione", "volonta"], "valori": ["honor", "superstitio"], "advantage": "forza_extra_die", "advantageDesc": "Extra die in Forza" },
+          { "id": "urbana", "skillChoices": ["carisma", "ragionamento"], "valori": ["ego", "ratio"], "advantage": "ceto_distance_minus1", "advantageDesc": "Ceto skill distance -1 + contact bonus (partial)" }
+        ],
+        "valoriMaxAtCreation": "max(0, effectiveMod(Audacia)) — Antica adds +1 to Audacia modifier before computation",
+        "getCultureAllowedValori": "Union of both traits' valori arrays. If either trait is Meticcio (valori: null), all 6 axes available."
+      },
+
+      "talentCatalog": {
+        "description": "Reference only — implementation deferred. 58 talents across 6 categories. PDF pp.139-146.",
+        "categories": ["audacia_volonta", "celeritas_agilita", "fortitudo_forza", "gratia_carisma", "mens_ragionamento", "prudentia_percezione"]
+      }
+    },
+
+    "combatDataModel": {
+      "weaponSchema": {
+        "_pattern": {
+          "weaponId": "string",
+          "label": "string",
+          "skillId": "string",
+          "misura": { "type": "string", "enum": ["LL", "L", "M", "S", "A"], "description": "Combat range category: LL=Very Long 3-4m, L=Long 2-3m, M=Medium 1-2m, S=Close ≤1m, A=Grappling." },
+          "damageBase": { "type": "string", "description": "Base damage value with type suffix: T=Taglio(Slash), B=Botta(Blunt), P=Punta(Thrust). E.g. '+3T', '+2B', '+4P'." },
+          "damageType": { "type": "string", "enum": ["T", "B", "P"], "description": "T=Taglio(Slash): +1 wound if no Protection. B=Botta(Blunt): -1 Riflessi to target. P=Punta(Thrust): reduces armor Protection by 1." },
+          "parryModifier": { "type": "integer", "description": "Modifier to parry defense rolls with this weapon." },
+          "properties": { "type": "array<string>", "description": "Weapon properties: 'da_lancio' (throwable at 10m), 'pesante' (heavy), 'due_mani' (two-handed), etc." },
+          "rangedStats": {
+            "gittata": { "type": "integer|null", "description": "Range increment in meters. Null for melee-only." },
+            "rateOfFire": { "type": "string|null", "description": "Reload cadence. E.g. 'every turn', 'every 2 turns', 'every 5 turns'." }
+          }
+        },
+        "rangedWeaponTable": [
+          { "type": "Da lancio weapons", "gittata": 10, "rateOfFire": "every turn" },
+          { "type": "Thrown melee weapons", "gittata": 5, "rateOfFire": "every turn" },
+          { "type": "Arco (Bow)", "gittata": 30, "rateOfFire": "every 2 turns" },
+          { "type": "Balestra leggera (Light crossbow)", "gittata": 20, "rateOfFire": "every 5 turns" },
+          { "type": "Balestra a staffa (Staff crossbow)", "gittata": 20, "rateOfFire": "every 5 turns" },
+          { "type": "Balestrone a verricello (Vertical crossbow)", "gittata": 20, "rateOfFire": "every 7 turns" }
+        ]
+      },
+
+      "armorSchema": {
+        "_pattern": {
+          "armorId": "string",
+          "label": "string",
+          "protezione": { "type": "integer", "min": 0, "description": "Protection value subtracted from incoming wounds." }
+        },
+        "damageTypeInteractions": {
+          "T": { "label": "Taglio (Slash)", "effect": "Causes 1 additional wound if target has no remaining Protection." },
+          "B": { "label": "Botta (Blunt)", "effect": "Reduces target Riflessi by 1 regardless of Protection." },
+          "P": { "label": "Punta (Thrust)", "effect": "Reduces target armor Protection value by 1 for the rest of the encounter." }
+        }
+      },
+
+      "misuraEnum": {
+        "LL": { "label": "Larghissima (Very Long)", "range": "3-4 m", "minSpace": 4 },
+        "L": { "label": "Large (Long)", "range": "2-3 m", "minSpace": 3 },
+        "M": { "label": "Media (Medium)", "range": "1-2 m", "minSpace": 2 },
+        "S": { "label": "Stretta (Close)", "range": "≤1 m", "minSpace": 1 },
+        "A": { "label": "Abrazzar (Grappling)", "range": "contact", "minSpace": 0 }
+      },
+
+      "combatActions": {
+        "standardAttack": {
+          "type": "action",
+          "skill": "weapon skill",
+          "opposed": true,
+          "description": "Standard melee or ranged attack. Net successes = wounds dealt (+ weapon base damage, - armor Protection)."
+        },
+        "parry": {
+          "type": "defense",
+          "cost": "1 action + Riflessi = attacker successes",
+          "shieldFreeParry": "First shield parry per turn is free (no action cost).",
+          "onSuccess": "Attack misses. Attacker loses Riflessi = defender net successes."
+        },
+        "dodge": {
+          "type": "defense",
+          "cost": "Riflessi = attacker successes",
+          "onSuccess": "Attack misses."
+        },
+        "targetedAttack": {
+          "type": "action",
+          "difficultyTable": { "head_vitals": 4, "legs_shieldArm": 3, "weaponArm_chest": 2 },
+          "onSuccess": "Damage to specified location + Agilita Reaction for target."
+        },
+        "nonLethalStrike": {
+          "type": "action",
+          "difficulty": 2,
+          "effect": "Target loses Fatica instead of wounds. Blunt weapons get +1.",
+          "source": "PDF p.104"
+        },
+        "disarm": {
+          "type": "action",
+          "opposed": "Forza Reaction",
+          "onSuccess": "Weapon flies 1m per net success.",
+          "source": "PDF p.104"
+        },
+        "throwWeapon": {
+          "type": "action",
+          "difficulty": 2,
+          "skill": "Atletica",
+          "range": "5m (10m with Da lancio property)",
+          "source": "PDF p.105"
+        },
+        "push": {
+          "type": "action",
+          "misura": ["S", "A"],
+          "skill": "weapon skill or Lotta",
+          "opposed": "Agilita Reaction",
+          "onSuccess": "Push back + optionally change Misura.",
+          "source": "PDF p.105"
+        },
+        "studyBattlefield": {
+          "type": "action",
+          "limit": "once per combat",
+          "skill": "Arte della guerra",
+          "onSuccess": "Each success = 1 tactical advantage. Any ally may use for +1 bonus (one-time use per element).",
+          "source": "PDF p.105"
+        },
+        "closeMisura": {
+          "type": "action",
+          "methods": [
+            { "trigger": "Defense with 3+ successes", "effect": "Auto-close to own weapon range." },
+            { "trigger": "Dedicated Agilita action", "opposed": "Defender weapon skill", "effect": "Winner sets range. Defender gets free attack per attempt, -1 cumulative per additional attempt in same turn." }
+          ],
+          "source": "PDF p.106"
+        },
+        "rifiatare": {
+          "type": "turnStart",
+          "cost": "1 Fatica",
+          "effect": "Recover 1 + grades(Atletica) Riflessi, up to max.",
+          "source": "PDF p.90"
+        },
+        "grapple": {
+          "type": "action",
+          "skill": "Lotta",
+          "followUp": ["freeStrike", "throw", "lock"],
+          "freeStrike": { "damage": "+1B", "description": "Headbutt, knee, or elbow as free action." },
+          "throw": { "description": "Target falls prone. Victim must pass Reaction with -1 penalty to break free." },
+          "lock": { "description": "Victim cannot defend. Attacker may immobilize or apply restraints (3 actions)." },
+          "source": "PDF pp.109-110"
+        }
+      },
+
+      "damageResolution": {
+        "formula": "grossWounds = netSuccesses + weapon.damageValue; netWounds = max(0, grossWounds - armorProtezione) + slashBonus",
+        "steps": [
+          "1. grossWounds = netSuccesses + weapon.damageValue",
+          "2. armorAbsorbed = min(grossWounds, armor.protezione)",
+          "3. netWounds = grossWounds - armorAbsorbed",
+          "4. Damage type effects:",
+          "   T (Taglio): if armorProtezione == 0 OR grossWounds > armorProtezione → netWounds += 1",
+          "   B (Botta): target.riflessi -= 1 (regardless of armor)",
+          "   P (Punta): armor.protezione -= 1 for rest of encounter",
+          "5. armor.robustezzaCurrent -= armorAbsorbed",
+          "6. For every 10 total robustezza lost from max: armor.protezione -= 1 (permanent)"
+        ],
+        "source": "PDF pp.101-102, sword-rules-spec.md sections 8.4 + 8.7"
+      },
+
+      "actionCosts": {
+        "standardAttack": { "riflessi": 0, "actions": 1, "note": "Uses the character's one action per turn" },
+        "parata": { "riflessi": "attacker.finalSuccesses", "actions": 1, "note": "First shield parry per turn is free (requires armi_da_guerra grade >= 1)" },
+        "schivata": { "riflessi": "attacker.finalSuccesses", "actions": 0 },
+        "combinedManeuver": { "riflessi": 3, "spirito": 1 },
+        "rifiatare": { "riflessi": 0, "fatica": 1, "recovers": "1 + grades(atletica) Riflessi", "timing": "start of turn" }
+      },
+
+      "meleeModifiers": [
+        { "condition": "Attacker on higher ground", "modifier": "+1", "source": "PDF p.101" },
+        { "condition": "Defender senza fiato", "modifier": "+1", "source": "PDF p.101" },
+        { "condition": "Defender prone", "modifier": "+1", "source": "PDF p.101" },
+        { "condition": "Defender immobilized", "modifier": "+2", "source": "PDF p.101" },
+        { "condition": "Insufficient space per Misura", "modifier": "-1 per meter short", "source": "PDF p.101" }
+      ],
+
+      "rangedModifiers": [
+        { "condition": "Attacker moving", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Shooter in melee with target", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Mounted at gallop/charge", "modifier": "-3", "source": "PDF p.108" },
+        { "condition": "Range beyond Gittata", "modifier": "-1 per increment", "source": "PDF p.107" },
+        { "condition": "Rain", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Heavy rain or snowfall", "modifier": "-2", "source": "PDF p.108" },
+        { "condition": "Wind", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Very strong wind", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Light fog or full moon night", "modifier": "-1", "source": "PDF p.108" },
+        { "condition": "Waning or waxing moon", "modifier": "-2", "source": "PDF p.108" },
+        { "condition": "Heavy fog or moonless night", "modifier": "-3", "source": "PDF p.108" }
+      ],
+
+      "coverDifficulty": [
+        { "cover": "3/4 (merlon, arrow slit)", "difficulty": 4 },
+        { "cover": "1/2 (corner, window, log)", "difficulty": 3 },
+        { "cover": "1/3 (low wall, shrub)", "difficulty": 2 }
+      ],
+
+      "approachModifiers": [
+        { "approach": "Prudente (Cautious)", "checkMod": -1, "defMod": 1, "source": "PDF p.91" },
+        { "approach": "Corsa (Running)", "checkMod": 0, "defMod": 0, "source": "PDF p.91" },
+        { "approach": "Carica (Charge)", "checkMod": 1, "defMod": -1, "source": "PDF p.91" }
+      ],
+
+      "fearReactionTable": [
+        { "uncontested": 2, "label": "Scossi (Shaken)", "effect": "-1 penalty on Volonta checks" },
+        { "uncontested": 3, "label": "Spaventati (Frightened)", "effect": "-2 vs fear source, -1 to all other actions" },
+        { "uncontested": 4, "label": "Terrorizzati (Terrified)", "effect": "Must flee. Cannot attack source. -2 to all actions" },
+        { "uncontested": 5, "label": "Crollo (Breakdown)", "effect": "Paralyzed 1d6 x 10 minutes" },
+        { "uncontested": 6, "label": "Collasso (Collapse)", "effect": "Unconscious 1d6 hours" }
+      ],
+
+      "fatigueReactionFrequency": [
+        { "threat": "up to 2", "frequency": "every 8 hours" },
+        { "threat": "3-4", "frequency": "every 4 hours" },
+        { "threat": "5-6", "frequency": "every 2 hours" },
+        { "threat": "7+", "frequency": "every hour" }
+      ],
+
+      "resolveOutcomeTable": [
+        { "uncontested": 1, "label": "A denti stretti", "effect": "May resist but loses Spirito = total threat and -1 penalty for hours = threat" },
+        { "uncontested": 2, "label": "Tensione", "effect": "May resist with same penalties as above" },
+        { "uncontested": 3, "label": "Liberta di scelta", "effect": "If resists: lose 1 Valore point. If temptation: lose Spirito + Fatica = threat" },
+        { "uncontested": 4, "label": "Compelled", "effect": "Must obey Values / yield to Temptation for 1+ hour" },
+        { "uncontested": 5, "label": "Blasfemi", "effect": "Violently defends Values. Ready to abandon companions" },
+        { "uncontested": 6, "label": "Mia ira!", "effect": "Fanatical. Risks own life and others' to act on Values" }
+      ]
+    },
+
+    "itemDataSchema": {
+      "description": "Item document types for equipment. PDF Chapter 6, pp.112-135.",
+      "documentTypes": ["weapon", "armor", "shield", "gear"],
+
+      "currencySystem": {
+        "description": "Medieval Italian currency. 1 Lira (l) = 20 Soldi (s) = 240 Denari (d). PDF p.114.",
+        "denominations": {
+          "denaro": { "abbrev": "d", "inDenari": 1, "rarity": "common" },
+          "soldo": { "abbrev": "s", "inDenari": 12, "rarity": "sought-after" },
+          "lira": { "abbrev": "l", "inDenari": 240, "rarity": "luxury" }
+        },
+        "storage": "All costs stored as costDenari (integer). costDisplay preserves original denomination string (e.g. '8s', '2l')."
+      },
+
+      "qualitySystem": {
+        "description": "Item quality determines cost multiplier, pregi slots, and skill gear bonuses. PDF pp.116-117.",
+        "qualities": [
+          { "id": "scadente", "label": "Scadente", "costMultiplier": 0.5, "pregiSlots": 0, "skillGearBonus": -2, "penalties": "Weapons: -2 to skill characteristic. Armor: +1 protezione for penalty only, 7 robustezza/point instead of 10. Travel gear: may break (1d6, 6=broken). Alchemical: Forza reaction vs 3 successes or nausea." },
+          { "id": "normale", "label": "Normale", "costMultiplier": 1, "pregiSlots": 0, "skillGearBonus": 0 },
+          { "id": "buona", "label": "Buona", "costMultiplier": 3, "pregiSlots": 1, "pregiMaxCost": 1, "skillGearBonus": 1 },
+          { "id": "eccellente", "label": "Eccellente", "costMultiplier": 5, "pregiSlots": 2, "pregiMaxCost": 2, "skillGearBonus": 2, "denominationUpgrade": "d→s" },
+          { "id": "ottima", "label": "Ottima", "costMultiplier": 10, "pregiSlots": "combos up to 3 cost", "pregiMaxCost": 3, "skillGearBonus": 3, "denominationUpgrade": "s→l" },
+          { "id": "straordinaria", "label": "Straordinaria", "costMultiplier": 25, "pregiSlots": "combos up to 4 cost", "pregiMaxCost": 4, "skillGearBonus": 4, "denominationUpgrade": "l multiplied", "requirement": "Chiave della mappa talent" }
+        ],
+        "skillGearBonusNote": "Quality bonus applies to the linked characteristic score for skill checks using the gear. Scadente imposes -2 instead. PDF pp.116-117."
+      },
+
+      "weaponSchema": {
+        "_pattern": {
+          "weaponId": { "type": "string", "required": true },
+          "label": { "type": "string", "required": true },
+          "category": { "type": "string", "enum": ["archi", "balestre", "armi_corte", "armi_comuni", "armi_da_guerra"], "required": true },
+          "skillId": { "type": "string", "required": true, "description": "Skill used to wield: archi, balestre, armi_corte, armi_comuni, armi_da_guerra, or atletica (thrown)." },
+          "hands": { "type": "string", "enum": ["una_mano", "due_mani"], "required": true },
+          "costDenari": { "type": "integer", "min": 0, "required": true },
+          "costDisplay": { "type": "string", "required": true, "description": "Original cost string, e.g. '8s', '12d'." },
+          "weight": { "type": "number", "min": 0, "required": true, "description": "Weight in kg." },
+          "damageValue": { "type": "integer", "required": true, "description": "Numeric damage bonus (e.g. +3)." },
+          "damageType": { "type": "string", "enum": ["T", "B", "P"], "required": true, "description": "T=Taglio(Slash), B=Botta(Blunt), P=Punta(Thrust)." },
+          "parryModifier": { "type": "integer", "required": true },
+          "misura": { "type": "string", "enum": ["LL", "L", "M", "S"], "description": "Combat range. Null for ranged-only weapons." },
+          "pregi": { "type": "array<string>", "default": [], "description": "Innate pregi from weapon type." },
+          "quality": { "type": "string", "enum": ["scadente", "normale", "buona", "eccellente", "ottima", "straordinaria"], "default": "normale" },
+          "rangedStats": {
+            "gittata": { "type": "integer|null", "default": null, "description": "Range increment in meters. Null for melee-only." },
+            "ricarica": { "type": "integer|null", "default": null, "description": "Actions to reload. Null for melee-only. PDF p.107." }
+          }
+        }
+      },
+
+      "shieldSchema": {
+        "_pattern": {
+          "shieldId": { "type": "string", "required": true },
+          "label": { "type": "string", "required": true },
+          "costDenari": { "type": "integer", "min": 0, "required": true },
+          "costDisplay": { "type": "string", "required": true },
+          "weight": { "type": "number", "min": 0, "required": true },
+          "damageValue": { "type": "integer", "required": true },
+          "damageType": { "type": "string", "enum": ["B"], "default": "B", "description": "Shields always deal Blunt damage." },
+          "parryModifier": { "type": "integer", "required": true },
+          "misura": { "type": "string", "enum": ["S"], "default": "S" },
+          "pregi": { "type": "array<string>", "default": [] },
+          "quality": { "type": "string", "enum": ["scadente", "normale", "buona", "eccellente", "ottima", "straordinaria"], "default": "normale" }
+        },
+        "freeParryNote": "Shields require Armi da guerra grade >= 1 for free parry per turn. PDF p.125 sidebar."
+      },
+
+      "armorSchema": {
+        "_pattern": {
+          "armorId": { "type": "string", "required": true },
+          "label": { "type": "string", "required": true },
+          "costDenari": { "type": "integer", "min": 0, "required": true },
+          "costDisplay": { "type": "string", "required": true },
+          "weight": { "type": "number", "min": 0, "required": true, "description": "Weight in kg." },
+          "protezione": { "type": "integer", "min": 1, "max": 3, "required": true, "description": "Protection value: wounds absorbed per hit. Also determines armor skill penalty magnitude." },
+          "robustezza": { "type": "integer", "required": true, "description": "Durability. protezione * 10 for normale quality. Each damage absorbed reduces by 1; every 10 lost = -1 protezione. At 0, armor destroyed. PDF p.128." },
+          "pregi": { "type": "array<string>", "default": [] },
+          "quality": { "type": "string", "enum": ["scadente", "normale", "buona", "eccellente", "ottima", "straordinaria"], "default": "normale" }
+        },
+        "armorPenaltyNote": "Armor protezione is the penalty magnitude on armorPenalized skills (archi, atletica, furtivita, manualita). Armor pregi (agile, da_arciere, da_geniere, furtiva) each reduce penalty by 2 (min 0) for their specific skill. Formula: armorSkillPenalty = max(0, protezione - armorPregiReduction_for_skill). PDF pp.54-57, 128-129.",
+        "donTime": "1 minute per protezione point with helper, double alone. PDF p.128.",
+        "partialWear": "Armor with protezione > 1 can be worn partially: torso = half cost/weight, head/limbs = quarter each. PDF p.128.",
+        "scadenteSpecial": "Scadente armor: 7 robustezza per protezione point instead of 10. PDF p.117."
+      },
+
+      "gearSchema": {
+        "_pattern": {
+          "gearId": { "type": "string", "required": true },
+          "label": { "type": "string", "required": true },
+          "gearCategory": { "type": "string", "enum": ["skill_tool", "travel", "clothing", "container", "alchemical", "ammunition"], "required": true },
+          "costDenari": { "type": "integer", "min": 0, "required": true },
+          "costDisplay": { "type": "string", "required": true },
+          "weight": { "type": "number", "min": 0, "required": true },
+          "quantity": { "type": "integer", "min": 1, "default": 1 },
+          "quality": { "type": "string", "enum": ["scadente", "normale", "buona", "eccellente", "ottima", "straordinaria"], "default": "normale" },
+          "skillBonus": { "type": "object|null", "default": null, "description": "If skill tool: { skillId, value } where value is quality-dependent characteristic bonus." },
+          "description": { "type": "string", "default": "" }
+        }
+      },
+
+      "weaponPregi": {
+        "description": "Weapon pregi (qualities/enhancements). PDF pp.126-127.",
+        "ranged": [
+          { "id": "attrezzi_da_ricarica", "cost": 1, "appliesTo": "crossbows", "effect": "-1 ricarica" },
+          { "id": "da_guerra", "cost": "special", "appliesTo": "bows", "effect": "Add Fortitudo bonus to damage per quality tier" },
+          { "id": "flettenti_morbidi", "cost": 1, "appliesTo": "crossbows", "effect": "-1 ricarica (min 0)" },
+          { "id": "frecce_barbigli", "cost": 1, "appliesTo": "ranged", "effect": "+1 wound, causes bleeding" },
+          { "id": "frecce_sfondagiaco", "cost": 1, "appliesTo": "ranged", "effect": "-2 target Protection (vs -1 for P damage type)" },
+          { "id": "frecce_da_caccia", "cost": 1, "appliesTo": "ranged", "effect": "T damage, +1 wound vs unarmored" },
+          { "id": "frecce_da_volo", "cost": 1, "appliesTo": "bows", "effect": "+20m gittata" },
+          { "id": "ricurvo", "cost": 1, "appliesTo": "bows", "effect": "+10m gittata" }
+        ],
+        "melee": [
+          { "id": "agganciare", "cost": 1, "appliesTo": "melee", "effect": "Defender -1 Riflessi on parry (stacks to -2)" },
+          { "id": "benedetta", "cost": 2, "appliesTo": "melee", "effect": "+1 Fides bonus when invoked" },
+          { "id": "bilanciata", "cost": 1, "appliesTo": "melee", "effect": "Additional actions cost 2 Riflessi instead of 3" },
+          { "id": "compatta", "cost": 1, "appliesTo": "melee", "effect": "Use at one Misura less without penalty" },
+          { "id": "copertura", "cost": 1, "appliesTo": "shields", "effect": "Auto cover vs ranged; if already has Copertura, costs 2, cover 3" },
+          { "id": "da_cavallo", "cost": 1, "appliesTo": "melee+bows", "effect": "Extra die mounted" },
+          { "id": "da_lancio", "cost": 1, "appliesTo": "short/polearms", "effect": "Throwable 10m (+1 damage); if already has Da lancio, 20m" },
+          { "id": "da_sicario", "cost": 1, "appliesTo": "short only", "effect": "+1 die on surprise attacks" },
+          { "id": "demolitrice", "cost": 1, "appliesTo": "melee", "effect": "Doubled robustezza damage, +1 die Disarm" },
+          { "id": "difensiva", "cost": 1, "appliesTo": "melee", "effect": "+1 parry; shields cost 2" },
+          { "id": "feritrice", "cost": 1, "appliesTo": "melee", "effect": "T damage instead of normal; if already T, cost 2, +2 wounds vs no-Protection" },
+          { "id": "impugnatura_sicura", "cost": 1, "appliesTo": "all", "effect": "-1 wound/fatigue penalty, +1 die vs Disarm" },
+          { "id": "leggera", "cost": 1, "appliesTo": "Pesante only", "effect": "-0.5kg, no Riflessi cost for Pesante" },
+          { "id": "metallurgia_avanzata", "cost": 2, "appliesTo": "melee", "effect": "Choose extra damage type on hit" },
+          { "id": "occultabile", "cost": 1, "appliesTo": "short only", "effect": "Can hide, found with Percezione 3+" },
+          { "id": "onorevole", "cost": 2, "appliesTo": "melee", "effect": "+1 Honor bonus when invoked" },
+          { "id": "pavese", "cost": 1, "appliesTo": "large shields", "effect": "Pavise stand for cover" },
+          { "id": "pesante", "cost": 1, "appliesTo": "melee", "effect": "+1 damage, costs 1 Riflessi/use; stacks" },
+          { "id": "reliquia", "cost": 2, "appliesTo": "melee+bows", "effect": "+1 Superstitio bonus when invoked" },
+          { "id": "rostri_o_ali", "cost": 2, "appliesTo": "polearms", "effect": "+1 success on free attacks vs Misura closure" },
+          { "id": "sanguinaria", "cost": 1, "appliesTo": "melee", "effect": "Causes bleeding on 1+ wound" },
+          { "id": "sfondagiaco", "cost": 2, "appliesTo": "melee", "effect": "P damage, -2 Protection" },
+          { "id": "stordente", "cost": 2, "appliesTo": "melee", "effect": "B damage, target -2 Riflessi" },
+          { "id": "versatile", "cost": 1, "appliesTo": "not Pesante", "effect": "One-hand costs 1 Riflessi; two-hand +1 parry" }
+        ]
+      },
+
+      "armorPregi": {
+        "description": "Armor pregi (qualities/enhancements). PDF pp.128-129.",
+        "entries": [
+          { "id": "agile", "cost": 1, "effect": "Atletica armor penalty -2 (min 0)" },
+          { "id": "brigantina", "cost": 2, "effect": "+1 Protection torso only (XIV century)" },
+          { "id": "da_arciere", "cost": 1, "effect": "Archi armor penalty -2 (min 0)" },
+          { "id": "da_cavallo", "cost": 1, "effect": "+1 Protection when mounted" },
+          { "id": "da_geniere", "cost": 1, "effect": "Manualita armor penalty -2 (min 0)" },
+          { "id": "da_viaggio", "cost": 1, "effect": "Travel/sleep fatigue penalties -1 each" },
+          { "id": "dimessa", "cost": 1, "effect": "Armor appears common; wearer can reduce Fama by 1" },
+          { "id": "elmo_migliorato", "cost": 1, "effect": "Padded: Protection 2 helmet; others: +1 vs head" },
+          { "id": "furtiva", "cost": 1, "effect": "Furtivita armor penalty -2 (min 0)" },
+          { "id": "leggera", "cost": 1, "effect": "-1/4 weight, Fatigue Reaction -1" },
+          { "id": "opera_d_arte", "cost": 1, "effect": "+1 Fama, price doubled" },
+          { "id": "pratica", "cost": 1, "effect": "Halved don/doff time" },
+          { "id": "rinforzata", "cost": 1, "effect": "+1 Protection" },
+          { "id": "robusta", "cost": 1, "effect": "Robustezza doubled (lose 1 Protection every 20 damage)" },
+          { "id": "terrificante", "cost": "1-2", "effect": "+1 extra die on Autorita checks (not padded; 2 for infantry, 1 for cavalry)" }
+        ]
+      },
+
+      "compendiumData": {
+        "description": "Canonical equipment data from PDF tables pp.119-132. All costs normalized to denari.",
+
+        "weapons": [
+          { "weaponId": "arco_corto", "label": "Arco corto", "category": "archi", "skillId": "archi", "hands": "due_mani", "costDenari": 12, "costDisplay": "12d", "weight": 1, "damageValue": 2, "damageType": "P", "parryModifier": 1, "misura": null, "pregi": [], "rangedStats": { "gittata": 30, "ricarica": 1 } },
+          { "weaponId": "arco_lungo", "label": "Arco lungo", "category": "archi", "skillId": "archi", "hands": "due_mani", "costDenari": 24, "costDisplay": "24d", "weight": 1.5, "damageValue": 3, "damageType": "P", "parryModifier": 2, "misura": null, "pregi": ["pesante"], "rangedStats": { "gittata": 30, "ricarica": 1 } },
+
+          { "weaponId": "balestra_leggera", "label": "Balestra leggera", "category": "balestre", "skillId": "balestre", "hands": "due_mani", "costDenari": 36, "costDisplay": "3s", "weight": 3, "damageValue": 3, "damageType": "P", "parryModifier": 0, "misura": null, "pregi": [], "rangedStats": { "gittata": 20, "ricarica": 2 } },
+          { "weaponId": "balestra_a_staffa", "label": "Balestra a staffa", "category": "balestre", "skillId": "balestre", "hands": "due_mani", "costDenari": 72, "costDisplay": "6s", "weight": 4, "damageValue": 4, "damageType": "P", "parryModifier": 1, "misura": null, "pregi": [], "rangedStats": { "gittata": 20, "ricarica": 4 } },
+          { "weaponId": "balestra_a_verricello", "label": "Balestra a verricello", "category": "balestre", "skillId": "balestre", "hands": "due_mani", "costDenari": 120, "costDisplay": "10s", "weight": 6, "damageValue": 6, "damageType": "P", "parryModifier": 2, "misura": null, "pregi": [], "rangedStats": { "gittata": 20, "ricarica": 6 } },
+
+          { "weaponId": "accetta", "label": "Accetta", "category": "armi_corte", "skillId": "armi_corte", "hands": "una_mano", "costDenari": 3, "costDisplay": "3d", "weight": 1, "damageValue": 3, "damageType": "T", "parryModifier": 1, "misura": "S", "pregi": ["agganciare"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "bastoncello", "label": "Bastoncello", "category": "armi_corte", "skillId": "armi_corte", "hands": "una_mano", "costDenari": 0, "costDisplay": "na", "weight": 1, "damageValue": 1, "damageType": "B", "parryModifier": 1, "misura": "S", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "coltellaccio", "label": "Coltellaccio", "category": "armi_corte", "skillId": "armi_corte", "hands": "una_mano", "costDenari": 6, "costDisplay": "6d", "weight": 1, "damageValue": 2, "damageType": "T", "parryModifier": 2, "misura": "M", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "coltello", "label": "Coltello", "category": "armi_corte", "skillId": "armi_corte", "hands": "una_mano", "costDenari": 2, "costDisplay": "2d", "weight": 0.5, "damageValue": 1, "damageType": "T", "parryModifier": 1, "misura": "S", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+
+          { "weaponId": "bordone", "label": "Bordone", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "due_mani", "costDenari": 3, "costDisplay": "3d", "weight": 2, "damageValue": 2, "damageType": "B", "parryModifier": 3, "misura": "L", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "falce_da_guerra", "label": "Falce da guerra", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "due_mani", "costDenari": 12, "costDisplay": "12d", "weight": 6, "damageValue": 4, "damageType": "T", "parryModifier": 3, "misura": "L", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "lancia_da_fante", "label": "Lancia da fante", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "due_mani", "costDenari": 10, "costDisplay": "10d", "weight": 3, "damageValue": 3, "damageType": "P", "parryModifier": 3, "misura": "L", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "martello", "label": "Martello", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "una_mano", "costDenari": 6, "costDisplay": "6d", "weight": 2, "damageValue": 2, "damageType": "B", "parryModifier": 1, "misura": "S", "pregi": ["compatta"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "randello", "label": "Randello", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "una_mano", "costDenari": 2, "costDisplay": "2d", "weight": 2, "damageValue": 2, "damageType": "B", "parryModifier": 1, "misura": "M", "pregi": ["pesante"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "roncone", "label": "Roncone", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "due_mani", "costDenari": 12, "costDisplay": "12d", "weight": 5, "damageValue": 4, "damageType": "P", "parryModifier": 2, "misura": "L", "pregi": ["agganciare"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "scure", "label": "Scure", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "due_mani", "costDenari": 8, "costDisplay": "8d", "weight": 4, "damageValue": 5, "damageType": "T", "parryModifier": 2, "misura": "M", "pregi": ["agganciare"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "spiedo", "label": "Spiedo", "category": "armi_comuni", "skillId": "armi_comuni", "hands": "una_mano", "costDenari": 10, "costDisplay": "10d", "weight": 2, "damageValue": 3, "damageType": "P", "parryModifier": 2, "misura": "M", "pregi": ["da_lancio"], "rangedStats": { "gittata": null, "ricarica": null } },
+
+          { "weaponId": "ascia_normanna", "label": "Ascia normanna", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "una_mano", "costDenari": 96, "costDisplay": "8s", "weight": 2, "damageValue": 4, "damageType": "T", "parryModifier": 2, "misura": "M", "pregi": ["pesante", "agganciare"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "lancia_da_cavaliere", "label": "Lancia da cavaliere", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "due_mani", "costDenari": 24, "costDisplay": "2s", "weight": 4, "damageValue": 5, "damageType": "P", "parryModifier": 1, "misura": "LL", "pregi": ["pesante", "da_cavallo"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "mannaia_inastata", "label": "Mannaia inastata", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "due_mani", "costDenari": 24, "costDisplay": "2s", "weight": 5, "damageValue": 6, "damageType": "T", "parryModifier": 3, "misura": "L", "pregi": ["pesante"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "mazza_ferrata", "label": "Mazza ferrata", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "una_mano", "costDenari": 120, "costDisplay": "10s", "weight": 2, "damageValue": 3, "damageType": "B", "parryModifier": 1, "misura": "M", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "picca", "label": "Picca", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "due_mani", "costDenari": 36, "costDisplay": "3s", "weight": 4, "damageValue": 4, "damageType": "P", "parryModifier": 4, "misura": "LL", "pregi": ["pesante"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "pugnale", "label": "Pugnale", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "una_mano", "costDenari": 12, "costDisplay": "1s", "weight": 0.5, "damageValue": 2, "damageType": "P", "parryModifier": 1, "misura": "S", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "spada_da_guerra", "label": "Spada da guerra", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "una_mano", "costDenari": 480, "costDisplay": "40s", "weight": 2, "damageValue": 4, "damageType": "T", "parryModifier": 3, "misura": "M", "pregi": ["versatile"], "rangedStats": { "gittata": null, "ricarica": null } },
+          { "weaponId": "spada_d_arme", "label": "Spada d'arme", "category": "armi_da_guerra", "skillId": "armi_da_guerra", "hands": "una_mano", "costDenari": 240, "costDisplay": "20s", "weight": 1.5, "damageValue": 3, "damageType": "T", "parryModifier": 3, "misura": "M", "pregi": [], "rangedStats": { "gittata": null, "ricarica": null } }
+        ],
+
+        "shields": [
+          { "shieldId": "brocchiere", "label": "Brocchiere", "costDenari": 12, "costDisplay": "1s", "weight": 1, "damageValue": 1, "damageType": "B", "parryModifier": 1, "misura": "S", "pregi": [] },
+          { "shieldId": "scudo", "label": "Scudo", "costDenari": 12, "costDisplay": "1s", "weight": 3, "damageValue": 2, "damageType": "B", "parryModifier": 2, "misura": "S", "pregi": [] },
+          { "shieldId": "scudo_grande", "label": "Scudo grande", "costDenari": 24, "costDisplay": "2s", "weight": 5, "damageValue": 2, "damageType": "B", "parryModifier": 3, "misura": "S", "pregi": ["pesante", "copertura"] }
+        ],
+
+        "armor": [
+          { "armorId": "abiti_imbottiti", "label": "Abiti imbottiti", "costDenari": 24, "costDisplay": "24d", "weight": 2, "protezione": 1, "robustezza": 10, "pregi": [] },
+          { "armorId": "armatura_da_fanteria", "label": "Armatura da fanteria", "costDenari": 144, "costDisplay": "12s", "weight": 6, "protezione": 2, "robustezza": 20, "pregi": [] },
+          { "armorId": "armatura_da_cavalleria", "label": "Armatura da cavalleria", "costDenari": 1920, "costDisplay": "8l", "weight": 15, "protezione": 3, "robustezza": 30, "pregi": [] }
+        ],
+
+        "ammunition": [
+          { "gearId": "frecce_12", "label": "Frecce (12) con faretra", "gearCategory": "ammunition", "costDenari": 12, "costDisplay": "12d", "weight": 1, "quantity": 1 },
+          { "gearId": "dardi_12", "label": "Dardi (12) con faretra", "gearCategory": "ammunition", "costDenari": 24, "costDisplay": "2s", "weight": 2, "quantity": 1 }
+        ],
+
+        "gear": [
+          { "gearId": "attrezzi_alchimia", "label": "Attrezzi da alchimia", "gearCategory": "skill_tool", "costDenari": 240, "costDisplay": "1l", "weight": 5, "skillBonus": { "skillId": "alchimia" }, "description": "Required for Alchimia checks" },
+          { "gearId": "attrezzi_artigiano", "label": "Attrezzi da artigiano", "gearCategory": "skill_tool", "costDenari": 48, "costDisplay": "4s", "weight": 5, "skillBonus": { "skillId": "artigiano" }, "description": "Required for Artigiano checks" },
+          { "gearId": "attrezzi_guarigione", "label": "Attrezzi da guarigione", "gearCategory": "skill_tool", "costDenari": 120, "costDisplay": "10s", "weight": 2, "skillBonus": { "skillId": "guarigione" }, "description": "Required for Guarigione checks" },
+          { "gearId": "attrezzi_manualita", "label": "Attrezzi da manualita", "gearCategory": "skill_tool", "costDenari": 24, "costDisplay": "2s", "weight": 3, "skillBonus": { "skillId": "manualita" }, "description": "Required for Manualita checks (lockpicks, tools, etc.)" },
+          { "gearId": "strumento_musicale", "label": "Strumento musicale", "gearCategory": "skill_tool", "costDenari": 120, "costDisplay": "10s", "weight": 2, "skillBonus": { "skillId": "intrattenere" }, "description": "Required for Intrattenere (musical) checks" },
+          { "gearId": "materiale_scrittura", "label": "Materiale da scrittura", "gearCategory": "skill_tool", "costDenari": 60, "costDisplay": "5s", "weight": 1, "skillBonus": { "skillId": "arti_liberali" }, "description": "Quill, ink, parchment. Required for written Arti liberali" },
+
+          { "gearId": "corda_10m", "label": "Corda (10m)", "gearCategory": "travel", "costDenari": 6, "costDisplay": "6d", "weight": 2, "description": "Hemp rope, 10 meters" },
+          { "gearId": "torcia", "label": "Torcia", "gearCategory": "travel", "costDenari": 1, "costDisplay": "1d", "weight": 0.5, "description": "Burns for ~1 hour" },
+          { "gearId": "lanterna", "label": "Lanterna", "gearCategory": "travel", "costDenari": 12, "costDisplay": "1s", "weight": 1, "description": "Metal lantern, requires oil" },
+          { "gearId": "olio_lanterna", "label": "Olio per lanterna", "gearCategory": "travel", "costDenari": 3, "costDisplay": "3d", "weight": 0.5, "description": "Burns for ~4 hours" },
+          { "gearId": "sacco_a_pelo", "label": "Sacco a pelo / Coperta", "gearCategory": "travel", "costDenari": 6, "costDisplay": "6d", "weight": 2, "description": "Bedroll or blanket for camping" },
+          { "gearId": "tenda", "label": "Tenda (2 persone)", "gearCategory": "travel", "costDenari": 24, "costDisplay": "2s", "weight": 5, "description": "Canvas tent for 2 people" },
+          { "gearId": "acciarino", "label": "Acciarino e esca", "gearCategory": "travel", "costDenari": 3, "costDisplay": "3d", "weight": 0.25, "description": "Flint and tinder" },
+          { "gearId": "razioni_1giorno", "label": "Razioni (1 giorno)", "gearCategory": "travel", "costDenari": 2, "costDisplay": "2d", "weight": 1, "description": "Dried food for one day" },
+          { "gearId": "otre_acqua", "label": "Otre d'acqua", "gearCategory": "travel", "costDenari": 2, "costDisplay": "2d", "weight": 1, "description": "Waterskin, holds ~1 liter" },
+
+          { "gearId": "bisaccia", "label": "Bisaccia", "gearCategory": "container", "costDenari": 3, "costDisplay": "3d", "weight": 0.5, "description": "Saddlebag or small sack" },
+          { "gearId": "zaino", "label": "Zaino", "gearCategory": "container", "costDenari": 6, "costDisplay": "6d", "weight": 1, "description": "Backpack" },
+          { "gearId": "baule", "label": "Baule", "gearCategory": "container", "costDenari": 12, "costDisplay": "1s", "weight": 5, "description": "Wooden chest/trunk" },
+
+          { "gearId": "abiti_umili", "label": "Abiti da umile", "gearCategory": "clothing", "costDenari": 6, "costDisplay": "6d", "weight": 1, "description": "Humble-class clothing" },
+          { "gearId": "abiti_popolano", "label": "Abiti da popolano", "gearCategory": "clothing", "costDenari": 24, "costDisplay": "2s", "weight": 1, "description": "Commoner-class clothing" },
+          { "gearId": "abiti_borghese", "label": "Abiti da borghese", "gearCategory": "clothing", "costDenari": 120, "costDisplay": "10s", "weight": 1, "description": "Bourgeois-class clothing" },
+          { "gearId": "abiti_nobile", "label": "Abiti da nobile", "gearCategory": "clothing", "costDenari": 480, "costDisplay": "2l", "weight": 1.5, "description": "Noble-class clothing" },
+
+          { "gearId": "antidoto_generico", "label": "Antidoto generico", "gearCategory": "alchemical", "costDenari": 60, "costDisplay": "5s", "weight": 0.25, "description": "Reduces poison power by 2 for next reaction" },
+          { "gearId": "fuoco_greco", "label": "Fuoco greco", "gearCategory": "alchemical", "costDenari": 240, "costDisplay": "1l", "weight": 0.5, "description": "Incendiary; causes burning damage" },
+          { "gearId": "unguento_curativo", "label": "Unguento curativo", "gearCategory": "alchemical", "costDenari": 60, "costDisplay": "5s", "weight": 0.25, "description": "+1 success to Guarigione checks for wound treatment" },
+          { "gearId": "veleno_da_contatto", "label": "Veleno da contatto", "gearCategory": "alchemical", "costDenari": 120, "costDisplay": "10s", "weight": 0.25, "description": "Applied to blade; Forza Reaction vs power 3 on wound" },
+          { "gearId": "veleno_da_ingestione", "label": "Veleno da ingestione", "gearCategory": "alchemical", "costDenari": 120, "costDisplay": "10s", "weight": 0.25, "description": "In food/drink; Forza Reaction vs power 4" }
+        ],
+
+        "dataQualityNotes": [
+          "All data verified against PDF p.125 weapon tables, p.128 armor table, pp.119-122 gear tables.",
+          "No 'I' damage type exists — all weapons use T, B, or P. Earlier report of 'I' was an OCR artifact.",
+          "Mannaia inastata: Parry is +3 (confirmed from table).",
+          "Falce da guerra: No Pesante listed in pregi column on the table (two-handed but Pesante is not among its pregi).",
+          "Bastoncello: Cost 'na' (free/improvised) stored as 0 denari.",
+          "Gear costs and weights are approximate where PDF gives ranges; representative values chosen."
+        ]
+      }
+    },
+
+    "resolutionAPI": {
+      "functionName": "swordCheck",
+      "signature": {
+        "actorId": { "type": "string", "required": true },
+        "skillId": { "type": "string", "required": true },
+        "diceCount": { "type": "integer", "required": true, "min": 2 },
+        "options": {
+          "combinedManeuverSkillId": { "type": "string|null", "default": null },
+          "useFama": { "type": "boolean", "default": false },
+          "famaPoints": { "type": "integer", "default": 0 },
+          "useValore": { "type": "string|null", "default": null, "description": "Valore axis id (e.g. 'fides', 'honor')" },
+          "spiritoForPenaltyCancellation": { "type": "integer", "default": 0 },
+          "discardStrategy": { "type": "string", "enum": ["highest", "manual"], "default": "highest" },
+          "manualDiscardIndices": { "type": "array<integer>|null", "default": null },
+          "difficultyThreshold": { "type": "integer|null", "default": null },
+          "opposedSuccesses": { "type": "integer|null", "default": null },
+          "additionalBonus": { "type": "integer", "default": 0 },
+          "additionalPenalty": { "type": "integer", "default": 0 }
+        }
+      },
+      "preEngineSteps": [
+        {
+          "step": 1,
+          "action": "Resolve skill from actor.system.skills[skillId]. Get characteristicKey and grade."
+        },
+        {
+          "step": 2,
+          "action": "Get characteristicScore from actor.system.characteristics[skill.characteristicKey]."
+        },
+        {
+          "step": 3,
+          "action": "Compute effectiveGrade = skill.grade + (combinedManeuverSkillId ? actor.system.skills[combinedManeuverSkillId].grade : 0)."
+        },
+        {
+          "step": 4,
+          "action": "Compute effectiveExtraDice = skill.extraDice + (skill.hasFocus ? 1 : 0) + (useFama ? famaPoints : 0)."
+        },
+        {
+          "step": 5,
+          "action": "Validate: if skill.grade == 0, enforce diceCount == 2."
+        },
+        {
+          "step": 6,
+          "action": "Validate Spirito costs: combinedManeuver=1, valore=3, penaltyCancellation=N. Total must not exceed actor.system.resources.spirito.current."
+        },
+        {
+          "step": 7,
+          "action": "Compute totalPenalty = woundPenalty + fatiguePenalty + encumbrancePenalty + additionalPenalty + (skill.armorPenalized ? max(0, armorProtezione - armorPregiReduction_for_skill) : 0) - spiritoForPenaltyCancellation. Floor at 0. Note: encumbrancePenalty is independent from armorSkillPenalty and they stack."
+        },
+        {
+          "step": 8,
+          "action": "Roll (diceCount + effectiveExtraDice)d6 via Foundry Roll API."
+        },
+        {
+          "step": 9,
+          "action": "Call EngineCore.resolve() with: characteristicScore, diceCount, effectiveGrade, effectiveExtraDice, additionalBonus, totalPenalty, diceRolled, discardIndices, difficultyThreshold, opposedSuccesses."
+        },
+        {
+          "step": 10,
+          "action": "If useValore and engine result basePassed == true: re-invoke engine modifier step with successBonus += valoreScore. If basePassed == false, valore not activated, refund Spirito cost."
+        }
+      ],
+      "postEngineSteps": [
+        {
+          "step": 1,
+          "action": "Deduct all Spirito costs from actor (combined maneuver, valore if activated, penalty cancellation)."
+        },
+        {
+          "step": 2,
+          "action": "If in initiative context: deduct Riflessi costs (3 for combined maneuver)."
+        },
+        {
+          "step": 3,
+          "action": "Construct chat card data from engine output."
+        },
+        {
+          "step": 4,
+          "action": "Create Foundry ChatMessage with roll and rendered template."
+        }
+      ]
+    },
+
+    "uiContract": {
+      "rollDialog": {
+        "trigger": "Click skill name on character sheet OR macro invocation via game.sword.rollCheck(...).",
+        "fields": [
+          {
+            "name": "diceCount",
+            "type": "number-spinner",
+            "min": 2,
+            "max": "unbounded",
+            "default": 2,
+            "label": "Numero di dadi",
+            "description": "Risk betting: more dice = more potential successes but higher chance of exceeding characteristic."
+          },
+          {
+            "name": "combinedManeuverSkillId",
+            "type": "skill-dropdown",
+            "nullable": true,
+            "filter": "skills with grade >= 1 and correlatable to primary skill",
+            "label": "Manovra combinata",
+            "spiritoCost": 1
+          },
+          {
+            "name": "useFama",
+            "type": "checkbox",
+            "enabled": "actor.fama.score > 0 and skill is social",
+            "label": "Usa Fama"
+          },
+          {
+            "name": "famaPoints",
+            "type": "number-spinner",
+            "min": 0,
+            "max": "actor.fama.score",
+            "visible": "useFama == true",
+            "label": "Punti Fama"
+          },
+          {
+            "name": "useValore",
+            "type": "valore-selector",
+            "nullable": true,
+            "enabled": "actor.resources.spirito.current >= 3",
+            "label": "Metti in gioco Valore",
+            "spiritoCost": 3
+          },
+          {
+            "name": "spiritoForPenaltyCancellation",
+            "type": "number-spinner",
+            "min": 0,
+            "max": "actor.resources.spirito.current - otherSpiritoCosts",
+            "label": "Spirito per ignorare penalita"
+          },
+          {
+            "name": "difficultyThreshold",
+            "type": "number",
+            "nullable": true,
+            "label": "Difficolta (soglia successi)"
+          },
+          {
+            "name": "additionalBonus",
+            "type": "number",
+            "default": 0,
+            "label": "Bonus aggiuntivi ai successi"
+          },
+          {
+            "name": "additionalPenalty",
+            "type": "number",
+            "default": 0,
+            "label": "Penalita aggiuntive ai successi"
+          }
+        ],
+        "displayInfo": [
+          "Characteristic name and score",
+          "Effective grade (base + combined if selected)",
+          "Total extra dice (focus + fama + other)",
+          "Current wound and fatigue penalties",
+          "Spirito remaining after all costs",
+          "Riflessi remaining (if in initiative)"
+        ]
+      },
+      "discardDialog": {
+        "trigger": "After roll, if extraDice > 0 and discardStrategy == 'manual'.",
+        "description": "Display all rolled dice visually. Player clicks to select which dice to discard. Number of selections must equal extraDice count.",
+        "defaultBehavior": "If discardStrategy == 'highest', auto-select highest dice without showing dialog."
+      }
+    },
+
+    "chatCardContract": {
+      "templatePath": "systems/sword/templates/chat/check-result.hbs",
+      "dataFields": {
+        "actorName": "string",
+        "actorImg": "string",
+        "skillName": "string",
+        "skillId": "string",
+        "characteristicName": "string",
+        "characteristicScore": "integer",
+        "diceOriginal": "array<integer>",
+        "discardedDice": "array<integer>",
+        "diceAfterDiscards": "array<integer>",
+        "diceAfterReduction": "array<integer>",
+        "gradesUsed": "integer",
+        "gradesTotal": "integer",
+        "finalSum": "integer",
+        "basePassed": "boolean",
+        "onesCount": "integer",
+        "rawSuccesses": "integer",
+        "modifiersApplied": {
+          "bonus": "integer",
+          "penalty": "integer",
+          "valoreBonus": "integer|null",
+          "valoreName": "string|null"
+        },
+        "finalSuccesses": "integer",
+        "difficultyThreshold": "integer|null",
+        "difficultyPassed": "boolean|null",
+        "netSuccesses": "integer|null",
+        "isCombinedManeuver": "boolean",
+        "combinedSkillName": "string|null",
+        "isOpposed": "boolean",
+        "spiritoSpent": "integer"
+      },
+      "visualElements": [
+        "Dice pool: all original dice displayed, discarded dice shown with strikethrough/dimmed.",
+        "Reduction arrow: visual progression from diceAfterDiscards to diceAfterReduction showing grade application.",
+        "Final dice: each die showing 1 highlighted in gold/accent color.",
+        "Sum vs characteristic: 'finalSum / characteristicScore' with pass (green) or fail (red) indicator.",
+        "Success count: rawSuccesses with modifier breakdown (+bonus, -penalty, +valore).",
+        "Final successes: large prominent number.",
+        "Difficulty bar: if difficultyThreshold set, show threshold with pass/fail.",
+        "Opposed result: if opposed, show netSuccesses with win/lose/tie indicator."
+      ]
+    },
+
+    "validation": {
+      "preRoll": [
+        { "check": "diceCount >= 2", "error": "DICE_BELOW_MINIMUM", "message": "Il numero minimo di dadi e 2." },
+        { "check": "if grade == 0 then diceCount == 2", "error": "UNTRAINED_DICE_LIMIT", "message": "Senza addestramento si possono tirare solo 2 dadi." },
+        { "check": "spirito.current >= totalSpiritoCost", "error": "INSUFFICIENT_SPIRITO", "message": "Spirito insufficiente per le opzioni selezionate." },
+        { "check": "if combinedManeuver then both skills grade >= 1", "error": "COMBINED_MANEUVER_REQUIRES_GRADE", "message": "Entrambe le abilita devono avere almeno 1 grado per la manovra combinata." },
+        { "check": "if useValore then valoreScore > 0", "error": "NO_VALORE_SCORE", "message": "Il Valore selezionato ha punteggio 0." },
+        { "check": "if initiative and combinedManeuver then riflessi >= 3", "error": "INSUFFICIENT_RIFLESSI", "message": "Servono almeno 3 Riflessi per una manovra combinata in iniziativa." }
+      ],
+      "postRoll": [
+        { "check": "discardIndices.length <= extraDice", "error": "WRONG_DISCARD_COUNT", "message": "Numero di scarti superiore ai dadi extra." },
+        { "check": "all discardIndices are valid array indices", "error": "INVALID_DISCARD_INDEX", "message": "Indice di scarto non valido." }
+      ]
+    }
+  },
+
+  "Traceability": {
+    "entries": [
+      {
+        "ruleId": "CORE-001",
+        "enginePath": "EngineCore.pipeline[0].validateInput",
+        "rule": "Minimum 2 dice per check",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.minimumDice", "value": 2 },
+          { "source": "sword-system.md", "line": "58", "text": "Minimo: 2d6" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "78-79", "section": "Le Prove" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-002",
+        "enginePath": "EngineCore.pipeline[0].validateInput",
+        "rule": "Untrained characters limited to exactly 2 dice",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.untrainedDiceLimit", "value": 2 },
+          { "source": "sword-system.md", "line": "59", "text": "Non addestrato: solo 2d6" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "78-79", "section": "Le Prove" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-003",
+        "enginePath": "EngineCore.inputSchema.diceCount",
+        "rule": "Risk betting: player chooses number of dice >= 2",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.riskBetting", "text": "Player chooses number of dice >= 2. More dice increase risk of exceeding characteristic but increase potential number of 1s." },
+          { "source": "sword-system.md", "lines": "56-68", "section": "STEP 1 — Scelta del Numero di Dadi (Sistema a Scommessa)" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "78-79", "section": "Le Prove" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-004",
+        "enginePath": "EngineCore.pipeline[2].applyExtraDiceDiscards",
+        "rule": "Each extra die grants one discard of a rolled die",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.extraDice.discardRule", "text": "Player may discard one rolled die per extra die." },
+          { "source": "sword-system.md", "lines": "86-94", "section": "STEP 3 — Applicazione Dadi Extra" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "78-79", "section": "Le Prove" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": true,
+        "ambiguityNote": "PDF says 'scartare un risultato a scelta' (discard a result of choice). sword-system.md says 'normalmente il piu alto' (normally the highest). The spec says 'Player may discard one rolled die per extra die' without mandating which. Implementation: player-chosen with auto-highest as default strategy."
+      },
+      {
+        "ruleId": "CORE-005",
+        "enginePath": "EngineCore.pipeline[2].edgeCase",
+        "rule": "If all dice are discarded, automatic base success (sum = 0 <= characteristic)",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.extraDice.autoSuccessEdgeCase", "text": "If all dice are discarded, sum = 0, thus roll-under automatically passes and grants base success." },
+          { "source": "sword-system.md", "line": "96", "text": "Se i dadi scartati sono tutti, si ottiene automaticamente 1 successo (poiche il totale sara 0 <= C)." }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-006",
+        "enginePath": "EngineCore.pipeline[3].applyGradeReductions",
+        "rule": "Grade reduction strategy for reducing die values",
+        "sources": [
+          {
+            "source": "sword-check-spec.json",
+            "path": "algorithm.gradeReductionStrategy",
+            "text": "reduceLowestNonOneFirst: Select the die with the minimum value among dice > 1. Reduce that die by 1.",
+            "authoritative": true
+          },
+          {
+            "source": "sword-system.md",
+            "lines": "114-131",
+            "text": "Strategia ottimale suggerita: 1. Ordinare i dadi in ordine decrescente. 2. Ridurre prima i valori piu alti. 3. Portare i dadi a 1 quando possibile.",
+            "authoritative": false
+          },
+          {
+            "source": "Il Tempo della Spada 1.0.pdf",
+            "pages": "79-82",
+            "section": "Le Prove / Potenziare le abilita",
+            "text": "PDF does not specify an explicit algorithmic ordering for grade allocation. Player examples show grades being applied but do not mandate a specific selection order.",
+            "authoritative": false
+          }
+        ],
+        "conflict": true,
+        "conflictDescription": "sword-system.md specifies 'reduce highest first' (sort descending, iterate top-down). sword-check-spec.json specifies 'reduceLowestNonOneFirst' (always pick minimum value > 1). Both reduce total sum by the same amount, but produce different 1-distributions. Example: dice=[4,3,2], grades=4. JSON spec -> [3,1,1] with 2 ones. sword-system.md -> [1,2,2] with 1 one. The JSON spec strategy maximizes dice reaching 1, thus maximizing additional successes. It is strictly optimal for the player.",
+        "resolution": "JSON spec is authoritative per compiler rules. Engine uses reduceLowestNonOneFirst.",
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-007",
+        "enginePath": "EngineCore.pipeline[3].minimumDieValue",
+        "rule": "Die values cannot be reduced below 1",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.skillGrades.minimumDieValue", "value": 1 },
+          { "source": "sword-system.md", "line": "107", "text": "non possono ridurre un dado sotto 1" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-008",
+        "enginePath": "EngineCore.pipeline[5].computeSuccesses",
+        "rule": "Roll-under gate: base success only if sum <= characteristic",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.rollUnderRule.condition", "text": "sum(finalDiceResults) <= characteristicScore" },
+          { "source": "sword-system.md", "lines": "144-158", "section": "STEP 6 — Successo Base (Roll-under)" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "79-80", "section": "Le Prove" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-009",
+        "enginePath": "EngineCore.pipeline[5].computeSuccesses",
+        "rule": "Fail gate: if roll-under fails, no successes at all (including from 1s)",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.additionalSuccessRule.failGate", "text": "If roll-under fails, no successes are granted, including from 1s." },
+          { "source": "sword-system.md", "line": "158", "text": "Se il totale supera la caratteristica -> nessun successo, anche se presenti 1 naturali." }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-010",
+        "enginePath": "EngineCore.pipeline[5].computeSuccesses",
+        "rule": "Additional successes: +1 for each die showing 1 (if roll-under passed)",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.additionalSuccessRule.description", "text": "If the roll-under condition passes, add +1 success for each die showing 1 (natural or reduced via grades)." },
+          { "source": "sword-system.md", "lines": "163-175", "section": "STEP 7 — Successi Addizionali" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-011",
+        "enginePath": "EngineCore.pipeline[5].computeSuccesses",
+        "rule": "Dice reduced to 1 via grades count as 1s for additional successes",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.additionalSuccessRule.description", "text": "natural or reduced via grades" },
+          { "source": "sword-system.md", "lines": "171-174", "text": "Valgono: 1 naturali / 1 ottenuti tramite riduzione con gradi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-012",
+        "enginePath": "EngineCore.pipeline[6].applyModifiers",
+        "rule": "Modifiers applied to final successes, not to dice",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.modifiers.appliedTo", "value": "finalSuccesses" },
+          { "source": "sword-system.md", "lines": "179-203", "section": "STEP 8 — Applicazione Modificatori" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "80", "section": "Modificatori" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-013",
+        "enginePath": "EngineCore.pipeline[6].applyModifiers",
+        "rule": "Final successes cannot go below 0",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.modifiers.floor", "value": 0 },
+          { "source": "sword-system.md", "line": "203", "text": "I successi non possono scendere sotto 0." }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-014",
+        "enginePath": "EngineCore.pipeline[7].evaluateDifficulty",
+        "rule": "Difficulty is a threshold: finalSuccesses >= difficultyThreshold",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.difficulty.rule", "text": "finalSuccesses >= difficultyThreshold" },
+          { "source": "sword-system.md", "lines": "210-216", "section": "4. Difficolta" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "80", "section": "Modificatori / Difficolta" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-015",
+        "enginePath": "EngineCore.pipeline[8].evaluateOpposed",
+        "rule": "Opposed: net successes = A - B",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.opposed.rule", "text": "netSuccesses = finalSuccessesA - finalSuccessesB" },
+          { "source": "sword-system.md", "lines": "219-230", "section": "5. Confronti (Opposed Rolls)" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "79", "section": "I confronti" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-016",
+        "enginePath": "EngineCore.edgeCases.EDGE-004",
+        "rule": "Combined maneuver adds correlated skill grades, costs 1 Spirito",
+        "sources": [
+          { "source": "sword-system.md", "lines": "234-247", "section": "6. Manovre Combinate" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "82", "section": "Potenziare le abilita / Manovre combinate" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false,
+        "note": "Not in sword-check-spec.json but consistent with it. The engine receives effectiveGrade; the adapter handles Spirito deduction."
+      },
+      {
+        "ruleId": "CORE-017",
+        "enginePath": "EngineCore.edgeCases.EDGE-004 / FoundryAdapter.resolutionAPI.preEngineSteps[4]",
+        "rule": "Focus grants 1 extra die in applicable context",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "dataModel.actor.skills.skillId.hasFocus", "value": "boolean" },
+          { "source": "sword-system.md", "lines": "253-258", "section": "7. Focus" },
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "82", "section": "Focus" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-018",
+        "enginePath": "EngineCore.edgeCases.EDGE-007",
+        "rule": "Valore activation: 3 Spirito, adds Valore score as bonus, only after passing roll-under",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "75", "section": "Mettere in gioco un Valore" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": true,
+        "ambiguityNote": "PDF states activation only 'dopo aver lanciato i dadi per la prova e non aver fallito il tiro' (after rolling and not failing). The JSON spec modifier pipeline applies modifiers unconditionally. The adapter must gate Valore activation on basePassed before feeding successBonus to the engine."
+      },
+      {
+        "ruleId": "CORE-019",
+        "enginePath": "EngineCore.edgeCases.EDGE-008",
+        "rule": "Spirito cancels wound/fatigue penalty 1-for-1",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "71", "section": "Lo Spirito" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false,
+        "note": "Adapter-level mechanic. Spirito reduces successPenalty before calling engine."
+      },
+      {
+        "ruleId": "CORE-020",
+        "enginePath": "FoundryAdapter.actorDataSchema.resources.ferite.levels",
+        "rule": "Wound penalties by severity: graffi/leggere=0, gravi=-1, critiche=-2, mortali=-3",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "68-70", "section": "Le ferite" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-021",
+        "enginePath": "FoundryAdapter.actorDataSchema.resources.fatica.levels",
+        "rule": "Fatigue penalties by level: fresco=0, stanco=-1, sfinito=-2",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "70", "section": "La Fatica" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-022",
+        "enginePath": "EngineCore.pipeline",
+        "rule": "Order of operations: validate -> roll -> discard -> reduce -> sum -> successes -> modifiers -> difficulty -> opposed",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "algorithm.orderOfOperations", "value": ["validateInput","rollDice","applyExtraDiceDiscards","applyGradeReductions","computeSum","computeSuccesses","applyModifiers","evaluateDifficulty","evaluateOpposed"] },
+          { "source": "sword-system.md", "lines": "56-230", "text": "Steps 1-8 follow the same ordering." }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "CORE-023",
+        "enginePath": "FoundryAdapter.actorDataSchema.skills.armorPenalized",
+        "rule": "Certain skills suffer 1 success penalty per armor protection point",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "54-57", "section": "Skill descriptions (superscript A marking)" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": true,
+        "ambiguityNote": "The JSON spec does not model armor skill penalties. This rule is found only in the PDF skill descriptions. Skills marked include Archi, Atletica, Furtivita, Manualita. The adapter handles this as a computed penalty source."
+      },
+      {
+        "ruleId": "CORE-024",
+        "enginePath": "N/A (adapter-level restriction)",
+        "rule": "Reactions cannot use combined maneuvers",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "85", "section": "Reazioni" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": true,
+        "ambiguityNote": "PDF states 'Non e possibile potenziare una Reazione con una manovra combinata.' The JSON spec does not mention reactions. This is a PDF-only rule that must be enforced at the adapter validation layer."
+      },
+      {
+        "ruleId": "CORE-025",
+        "enginePath": "EngineCore.pipeline[3].costPerReduction",
+        "rule": "Each grade point reduces one die by 1",
+        "sources": [
+          { "source": "sword-check-spec.json", "path": "mechanic.skillGrades.costPerReduction", "value": 1 },
+          { "source": "sword-system.md", "lines": "103-110", "section": "STEP 4 — Applicazione dei Gradi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-001",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.rifiatare",
+        "rule": "Rifiatare: spend 1 Fatica to recover max(1, grades(Atletica)) Riflessi at start of turn. Errata line 2133.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "90", "section": "4.6 Iniziativa / Rifiatare" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-002",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.parry",
+        "rule": "Parry costs 1 action + Riflessi = attacker successes. First shield parry per turn is free.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "101", "section": "5.2 Illa mischia / Le difese" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-003",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.dodge",
+        "rule": "Dodge costs Riflessi = attacker successes",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "101", "section": "5.2 Illa mischia / Le difese" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-004",
+        "enginePath": "FoundryAdapter.combatDataModel.armorSchema.damageTypeInteractions",
+        "rule": "Damage types: Taglio +1 wound if no Protection, Botta -1 Riflessi, Punta reduces Protection by 1",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "102", "section": "5.2 Illa mischia / Armi e armature" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-005",
+        "enginePath": "FoundryAdapter.combatDataModel.misuraEnum",
+        "rule": "Five combat ranges: LL (3-4m), L (2-3m), M (1-2m), S (≤1m), A (grappling contact)",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "106", "section": "5.4 Ila Misura" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-006",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.closeMisura",
+        "rule": "Closing Misura: via 3+ success defense OR dedicated Agilita action (opposed, defender gets free attack per attempt with -1 cumulative)",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "106", "section": "5.4 Ila Misura / Chiudere la Misura" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-007",
+        "enginePath": "FoundryAdapter.combatDataModel.rangedWeaponTable",
+        "rule": "Ranged weapon ranges and rates of fire (Bow 30m/2 turns, Light XBow 20m/5 turns, etc.)",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "107-108", "section": "5.5 Armi da tiro e da lancio" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-008",
+        "enginePath": "FoundryAdapter.combatDataModel.coverDifficulty",
+        "rule": "Cover difficulty: 3/4=4, 1/2=3, 1/3=2",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "107-108", "section": "5.5 / Difficolta e copertura" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-009",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.targetedAttack",
+        "rule": "Targeted attack difficulty: head/vitals=4, legs/shield arm=3, weapon arm/chest=2",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "104", "section": "5.3 Mosse in mischia / Attacco mirato" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-010",
+        "enginePath": "FoundryAdapter.combatDataModel.fearReactionTable",
+        "rule": "Fear reaction outcomes: 2=shaken, 3=frightened, 4=terrified/flee, 5=paralyzed, 6+=unconscious",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "87", "section": "Reazioni di Paura" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-011",
+        "enginePath": "FoundryAdapter.combatDataModel.fatigueReactionFrequency",
+        "rule": "Fatigue reaction frequency scales: ≤2 every 8h, 3-4 every 4h, 5-6 every 2h, 7+ every 1h",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "85", "section": "Reazioni di Fatica" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-012",
+        "enginePath": "FoundryAdapter.combatDataModel.resolveOutcomeTable",
+        "rule": "Resolve confrontation outcomes by uncontested successes (1-6+): escalating compulsion",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "88-89", "section": "4.5 Risolutezza / Esiti del confronto" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-013",
+        "enginePath": "FoundryAdapter.combatDataModel.approachModifiers",
+        "rule": "Movement approach: Prudente (-1 check/+1 def), Corsa (0/0), Carica (+1 check/-1 def)",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "91", "section": "4.7 Movimento" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-014",
+        "enginePath": "FoundryAdapter.combatDataModel.combatActions.grapple",
+        "rule": "Grapple (Presa) uses targeted attack rules; success allows free strike (+1B), throw, or lock",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "109-110", "section": "5.6 Abrazzar" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-015",
+        "enginePath": "N/A (adapter-level: mounted combat)",
+        "rule": "Mounted combat: Cavalcare Reaction each turn (3 successes for untrained mount). Failed with 3+ uncontested = mount flees.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "102-103", "section": "Combattimento in sella" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "COMBAT-016",
+        "enginePath": "N/A (adapter-level: shooting into melee)",
+        "rule": "Shooting into melee: difficulty 3. Success with 1-2 successes hits random combatant.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "107", "section": "5.5 Armi da tiro / Tirare nella mischia" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-001",
+        "enginePath": "FoundryAdapter.itemDataSchema.currencySystem",
+        "rule": "Currency: 1 Lira = 20 Soldi = 240 Denari. Denomination encodes rarity.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "114", "section": "6.1 Moneta" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-002",
+        "enginePath": "FoundryAdapter.itemDataSchema.qualitySystem",
+        "rule": "Six quality tiers (Scadente through Straordinaria) with cost multipliers, pregi slots, and skill gear bonuses.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "116-117", "section": "6.2 Qualità" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-003",
+        "enginePath": "FoundryAdapter.actorDataSchema.derivedStats.ingombro",
+        "rule": "Encumbrance base = Fortitudo + grades(Forza). Categories: Leggero (x2, 0), Moderato (x4, -1), Pesante (x6, -2), Massimo (x8, -3). Penalty to all checks AND Movement.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "47", "section": "2.2 Statistiche derivate / Ingombro" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-004",
+        "enginePath": "FoundryAdapter.itemDataSchema.weaponSchema",
+        "rule": "Weapon item type with category, skill, hands, cost, weight, damage (value+type), parry, misura, pregi, ranged stats.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "125", "section": "6.4 Tabella delle armi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-005",
+        "enginePath": "FoundryAdapter.itemDataSchema.shieldSchema",
+        "rule": "Shield item type. Requires Armi da guerra grade >= 1 for free parry per turn.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "125", "section": "6.4 Tabella delle armi / Scudi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-006",
+        "enginePath": "FoundryAdapter.itemDataSchema.armorSchema",
+        "rule": "Armor item type with protezione (1-3), robustezza (protezione * 10). Each damage absorbed reduces robustezza by 1; every 10 lost = -1 protezione.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "page": "128", "section": "6.5 Armature" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-007",
+        "enginePath": "FoundryAdapter.actorDataSchema.modifiers.computedPenalties.armorSkillPenalty",
+        "rule": "Armor protezione is penalty on armorPenalized skills. Four armor pregi (agile, da_arciere, da_geniere, furtiva) each reduce penalty by 2 (min 0) for their specific skill.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "54-57, 128-129", "section": "Skill descriptions + Armature / Pregi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false,
+        "note": "Resolves AMB-003. The armor penalty formula is now fully specified: armorSkillPenalty = max(0, protezione - armorPregiReduction_for_skill)."
+      },
+      {
+        "ruleId": "EQUIP-008",
+        "enginePath": "FoundryAdapter.itemDataSchema.weaponPregi",
+        "rule": "Weapon pregi: 8 ranged + 24 melee enhancement types with cost and applicability constraints.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "126-127", "section": "6.4 Pregi delle armi" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-009",
+        "enginePath": "FoundryAdapter.itemDataSchema.armorPregi",
+        "rule": "Armor pregi: 15 enhancement types including 4 skill-specific penalty reducers.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "128-129", "section": "6.5 Pregi delle armature" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      },
+      {
+        "ruleId": "EQUIP-010",
+        "enginePath": "FoundryAdapter.itemDataSchema.compendiumData",
+        "rule": "Canonical equipment data: 22 weapons, 3 shields, 3 armor sets, 2 ammunition types, ~30 gear items.",
+        "sources": [
+          { "source": "Il Tempo della Spada 1.0.pdf", "pages": "119-132", "section": "Chapter 6 equipment tables" }
+        ],
+        "conflict": false,
+        "AmbiguityDetected": false
+      }
+    ]
+  },
+
+  "ReferenceMapping": {
+    "entries": [
+      {
+        "reference": "Year Zero Universal Roller (YZUR)",
+        "repo": "https://github.com/Stefouch/foundry-year-zero-roller",
+        "file": "foundry-year-zero-roller.js",
+        "usedFor": [
+          "Custom Roll class abstraction pattern (extending Foundry Roll for d6 pool)",
+          "Dice post-processing pipeline (discard, reduce, count — mirrors SwORD pipeline steps 3-6)",
+          "Chat card and tooltip template structure",
+          "Separation of roll logic from system-specific rules"
+        ]
+      },
+      {
+        "reference": "FitD Roller (Forged in the Dark)",
+        "repo": "https://github.com/drewg13/foundryvtt-fitdroller",
+        "file": "README (macro API, settings)",
+        "usedFor": [
+          "Roll dialog UI pattern (dice pool selection before rolling)",
+          "Macro API exposure for automation (game.sword.rollCheck(...))",
+          "Settings-driven dice limits (min dice, untrained cap) analogous to SwORD minimumDice/untrainedDiceLimit",
+          "Risk-betting UI analogy (pool size selection with risk indicator)"
+        ]
+      },
+      {
+        "reference": "Blades in the Dark (legacy, Megastruktur)",
+        "repo": "https://github.com/megastruktur/foundryvtt-blades-in-the-dark",
+        "file": "module/blades-roll.js",
+        "usedFor": [
+          "Roll handler function structure and organization",
+          "Chat message integration with roll result data",
+          "Result object formatting for chat card rendering"
+        ]
+      },
+      {
+        "reference": "Blades in the Dark (maintained, Dez384)",
+        "packagePage": "https://foundryvtt.com/packages/blades-in-the-dark",
+        "file": "N/A (package reference for modern conventions)",
+        "usedFor": [
+          "Modern Foundry VTT v12+ API conventions",
+          "Updated data model and document patterns"
+        ]
+      },
+      {
+        "reference": "Forbidden Lands (fvtt-fria-ligan)",
+        "repo": "https://github.com/fvtt-fria-ligan/forbidden-lands-foundry-vtt",
+        "file": "system.json, README.md",
+        "usedFor": [
+          "Full system architecture reference (folder organization, build pipeline)",
+          "Modifier layering pattern (stacking wound, fatigue, situational modifiers)",
+          "System manifest and packaging conventions (system.json structure)",
+          "Actor and Item data model organization"
+        ]
+      },
+      {
+        "reference": "Open Legends",
+        "repo": "https://github.com/drewg13/foundryvtt-openlegends",
+        "file": "N/A (system reference)",
+        "usedFor": [
+          "Modern Foundry system template patterns",
+          "Character sheet and action structure for non-d20 systems"
+        ]
+      },
+      {
+        "reference": "Foundry VTT Wiki – system.json tutorial",
+        "url": "https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD03-systemjson",
+        "file": "N/A (documentation)",
+        "usedFor": [
+          "system.json manifest structure and required fields",
+          "System metadata and compatibility version declarations"
+        ]
+      }
+    ]
+  }
+}

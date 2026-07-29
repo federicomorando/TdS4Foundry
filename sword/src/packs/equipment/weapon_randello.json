@@ -1,0 +1,42 @@
+{
+  "_id": "Ieyctz7fDHw4v9vT",
+  "_key": "!items!Ieyctz7fDHw4v9vT",
+  "name": "Randello",
+  "type": "weapon",
+  "img": "icons/weapons/clubs/club-simple-stone-brown.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 2,
+    "costDisplay": "2d",
+    "weight": 2,
+    "damageValue": 2,
+    "damageType": "B",
+    "parryModifier": 1,
+    "misura": "M",
+    "pregi": [
+      "pesante"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

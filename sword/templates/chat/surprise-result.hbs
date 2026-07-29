@@ -1,0 +1,53 @@
+<div class="sword chat-card surprise-result">
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      <h3><i class="fas fa-eye-slash"></i> {{localize "SWORD.Surprise.Label"}}</h3>
+      <span class="char-info">{{skillLabel}} vs. {{furtivitaSuccesses}}</span>
+    </div>
+  </header>
+
+  {{!-- Dice section (characters only) --}}
+  {{#unless isCreature}}
+  <div class="dice-section">
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  {{/unless}}
+
+  <div class="result-section {{#if passed}}passed{{else}}failed{{/if}}">
+    <div class="final-successes">
+      {{localize "SWORD.Chat.FinalSuccesses"}}:
+      <span class="final-successes-value">{{finalSuccesses}}</span>
+      vs. {{furtivitaSuccesses}}
+    </div>
+    <div class="defense-outcome">
+      {{#if passed}}
+      <span class="result-badge pass"><i class="fas fa-check"></i> {{localize "SWORD.Surprise.NotSurprised"}}</span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-times"></i> {{localize "SWORD.Surprise.Surprised"}}</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Penalty applied --}}
+  {{#if penalty}}
+  <div class="bonus-line">
+    <i class="fas fa-bolt"></i>
+    {{localize "SWORD.Resources.riflessi"}}: -{{penalty}}
+  </div>
+  {{/if}}
+
+  {{!-- No rifiatare warning --}}
+  {{#if noRifiatare}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-ban"></i>
+    {{localize "SWORD.Surprise.NoRifiatare"}}
+  </div>
+  {{/if}}
+</div>

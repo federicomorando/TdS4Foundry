@@ -1,0 +1,33 @@
+{
+  "_id": "POGrrudBjwLDpzTY",
+  "_key": "!items!POGrrudBjwLDpzTY",
+  "name": "Abiti da umile",
+  "type": "gear",
+  "img": "icons/equipment/chest/vest-cloth-tattered-tan.webp",
+  "system": {
+    "gearCategory": "clothing",
+    "costDenari": 6,
+    "costDisplay": "6d",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Humble-class clothing"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

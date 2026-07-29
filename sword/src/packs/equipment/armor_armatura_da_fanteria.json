@@ -1,0 +1,33 @@
+{
+  "_id": "smCunkDkVrrQgvip",
+  "_key": "!items!smCunkDkVrrQgvip",
+  "name": "Armatura da fanteria",
+  "type": "armor",
+  "img": "icons/equipment/chest/breastplate-banded-steel.webp",
+  "system": {
+    "costDenari": 144,
+    "costDisplay": "12s",
+    "weight": 6,
+    "protezione": 2,
+    "robustezza": 20,
+    "robustezzaCurrent": 20,
+    "pregi": [],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "_id": "jh8gGfuVFzPTpGdm",
+  "_key": "!items!jh8gGfuVFzPTpGdm",
+  "name": "Strumento musicale",
+  "type": "gear",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "gearCategory": "skill_tool",
+    "costDenari": 120,
+    "costDisplay": "10s",
+    "weight": 2,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": "intrattenere",
+    "description": "Required for Intrattenere (musical) checks"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

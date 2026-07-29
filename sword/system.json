@@ -1,0 +1,70 @@
+{
+  "id": "sword",
+  "title": "Il Tempo della Spada (SwORD)",
+  "description": "Un sistema per Foundry VTT basato sul regolamento Il Tempo della Spada.",
+  "version": "2.3.0",
+  "authors": [
+    {
+      "name": "Federico Morando",
+      "url": "https://github.com/federicomorando"
+    }
+  ],
+  "url": "https://github.com/federicomorando/TdS4Foundry",
+  "manifest": "https://github.com/federicomorando/TdS4Foundry/releases/latest/download/system.json",
+  "download": "https://github.com/federicomorando/TdS4Foundry/releases/download/v2.3.0/sword.zip",
+  "esmodules": [
+    "module/main.mjs"
+  ],
+  "styles": [
+    "styles/sword.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English (Italian labels)",
+      "path": "lang/it.json"
+    },
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "lang/it.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "creature": {}
+    },
+    "Item": {
+      "weapon": {},
+      "shield": {},
+      "armor": {},
+      "gear": {}
+    }
+  },
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14.360",
+    "maximum": "14"
+  },
+  "packs": [
+    {
+      "name": "equipment",
+      "label": "Equipaggiamento",
+      "path": "packs/equipment",
+      "type": "Item",
+      "system": "sword"
+    },
+    {
+      "name": "bestiary",
+      "label": "Bestiario",
+      "path": "packs/bestiary",
+      "type": "Actor",
+      "system": "sword"
+    }
+  ],
+  "initiative": "@resources.riflessi.value",
+  "primaryTokenAttribute": "resources.spirito",
+  "secondaryTokenAttribute": "resources.ferite",
+  "license": "AGPL-3.0-or-later"
+}

@@ -1,0 +1,40 @@
+{
+  "_id": "LOA82uDfOMuLaOec",
+  "_key": "!items!LOA82uDfOMuLaOec",
+  "name": "Balestra leggera",
+  "type": "weapon",
+  "img": "icons/weapons/crossbows/crossbow-simple-brown.webp",
+  "system": {
+    "category": "balestre",
+    "skillId": "balestre",
+    "weaponType": "balestra",
+    "hands": "due_mani",
+    "costDenari": 36,
+    "costDisplay": "3s",
+    "weight": 3,
+    "damageValue": 3,
+    "damageType": "P",
+    "parryModifier": 0,
+    "misura": null,
+    "pregi": [],
+    "quality": "normale",
+    "gittata": 20,
+    "ricarica": 2
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

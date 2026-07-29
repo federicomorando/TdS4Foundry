@@ -1,0 +1,33 @@
+{
+  "_id": "XoIb1tn8SlHY5u6h",
+  "_key": "!items!XoIb1tn8SlHY5u6h",
+  "name": "Corda (10m)",
+  "type": "gear",
+  "img": "icons/sundries/survival/rope-coiled-brown.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 6,
+    "costDisplay": "6d",
+    "weight": 2,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Hemp rope, 10 meters"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

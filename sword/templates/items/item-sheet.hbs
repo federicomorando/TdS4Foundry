@@ -1,0 +1,185 @@
+<div class="sword item-sheet {{itemType}}">
+
+  {{!-- Header: image + name + type --}}
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" data-action="editImage" title="{{item.name}}" height="48" width="48" />
+    <div class="item-header-fields">
+      <input name="name" type="text" value="{{item.name}}" placeholder="{{localize "SWORD.Item.Label"}}" />
+      <span class="item-type-label">{{typeLabel}}</span>
+    </div>
+  </header>
+
+  <div class="item-content">
+
+    {{!-- Common fields: quality, cost, weight --}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Quality"}}</label>
+        <select name="system.quality">
+          {{selectOptions qualityChoices selected=system.quality}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Cost"}}</label>
+        <input type="text" name="system.costDisplay" value="{{system.costDisplay}}" />
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Weight"}}</label>
+        <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.25" />
+      </div>
+    </section>
+
+    {{!-- ═══ WEAPON ═══ --}}
+    {{#if isWeapon}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Category"}}</label>
+        <select name="system.category">
+          {{selectOptions categoryChoices selected=system.category}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Hands"}}</label>
+        <select name="system.hands">
+          {{selectOptions handsChoices selected=system.hands}}
+        </select>
+      </div>
+    </section>
+
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Damage"}}</label>
+        <div class="inline-group">
+          <input type="number" name="system.damageValue" value="{{system.damageValue}}" min="0" />
+          <select name="system.damageType">
+            {{selectOptions damageTypeChoices selected=system.damageType}}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Parry"}}</label>
+        <input type="number" name="system.parryModifier" value="{{system.parryModifier}}" min="0" />
+      </div>
+    </section>
+
+    {{#if isMelee}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Misura"}}</label>
+        <select name="system.misura">
+          {{selectOptions misuraChoices selected=system.misura}}
+        </select>
+      </div>
+    </section>
+    {{else}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Gittata"}}</label>
+        <input type="number" name="system.gittata" value="{{system.gittata}}" min="0" />
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Ricarica"}}</label>
+        <input type="number" name="system.ricarica" value="{{system.ricarica}}" min="0" />
+      </div>
+    </section>
+    {{/if}}
+    {{/if}}
+
+    {{!-- ═══ SHIELD ═══ --}}
+    {{#if isShield}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Damage"}}</label>
+        <input type="number" name="system.damageValue" value="{{system.damageValue}}" min="0" />
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Parry"}}</label>
+        <input type="number" name="system.parryModifier" value="{{system.parryModifier}}" min="0" />
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- ═══ ARMOR ═══ --}}
+    {{#if isArmor}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Protezione"}}</label>
+        <input type="number" name="system.protezione" value="{{system.protezione}}" min="1" max="3" />
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Robustezza"}}</label>
+        <div class="inline-group">
+          <input type="number" name="system.robustezzaCurrent" value="{{system.robustezzaCurrent}}" min="0" />
+          <span class="separator">/</span>
+          <input type="number" name="system.robustezza" value="{{system.robustezza}}" min="0" />
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- ═══ GEAR ═══ --}}
+    {{#if isGear}}
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Category"}}</label>
+        <select name="system.gearCategory">
+          {{selectOptions gearCategoryChoices selected=system.gearCategory}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Quantity"}}</label>
+        <input type="number" name="system.quantity" value="{{system.quantity}}" min="1" />
+      </div>
+    </section>
+    <section class="item-form-row">
+      <div class="form-group">
+        <label>{{localize "SWORD.Item.Skill"}}</label>
+        <select name="system.skillBonusSkillId">
+          {{selectOptions skillChoices selected=system.skillBonusSkillId}}
+        </select>
+      </div>
+    </section>
+    <section class="item-form-row">
+      <div class="form-group full-width">
+        <label>{{localize "SWORD.Item.Description"}}</label>
+        <textarea name="system.description" rows="3">{{system.description}}</textarea>
+      </div>
+    </section>
+    {{/if}}
+
+    {{!-- ═══ PREGI (weapon, shield, armor) ═══ --}}
+    {{#unless isGear}}
+    <section class="pregi-section">
+      <h3 class="pregi-header">{{localize "SWORD.Item.Pregi"}}</h3>
+      {{#if pregiList.length}}
+      <ul class="pregi-list">
+        {{#each pregiList}}
+        <li class="pregio-row">
+          <span class="pregio-label" title="{{this.effect}}">{{this.label}}</span>
+          <button type="button" class="pregio-remove" data-action="removePregio" data-idx="{{this.idx}}" title="Rimuovi">
+            <i class="fas fa-times"></i>
+          </button>
+        </li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <p class="no-pregi">{{localize "SWORD.Item.NoPregi"}}</p>
+      {{/if}}
+      {{#if availablePregi.length}}
+      <div class="pregi-add">
+        <select class="pregio-select">
+          <option value="">— {{localize "SWORD.Item.AddPregio"}} —</option>
+          {{#each availablePregi}}
+          <option value="{{this.id}}" title="{{this.effect}}">{{this.label}}</option>
+          {{/each}}
+        </select>
+        <button type="button" class="pregio-add-btn" data-action="addPregio" title="{{localize "SWORD.Item.AddPregio"}}">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+      {{/if}}
+    </section>
+    {{/unless}}
+
+  </div>
+</div>

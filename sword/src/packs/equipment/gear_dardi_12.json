@@ -1,0 +1,33 @@
+{
+  "_id": "3FODIvZ7jd12Fx46",
+  "_key": "!items!3FODIvZ7jd12Fx46",
+  "name": "Dardi (12) con faretra",
+  "type": "gear",
+  "img": "icons/containers/ammunition/arrows-quiver-black.webp",
+  "system": {
+    "gearCategory": "ammunition",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 2,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "12 bolts with quiver"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

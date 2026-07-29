@@ -1,0 +1,116 @@
+{
+  "_id": "A0bd0anAmSARQcnL",
+  "_key": "!actors!A0bd0anAmSARQcnL",
+  "name": "Cane fatato",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 2,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 3,
+      "percezione": 4,
+      "volonta": 4,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 2,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 11,
+        "max": 11
+      },
+      "fatica": {
+        "value": 7,
+        "max": 7
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 7,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 2,
+    "attacks": [
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "+1T"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "ferocia"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [
+      "notturno"
+    ],
+    "woundCapacities": {
+      "graffi": 4,
+      "leggere": 3,
+      "gravi": 3,
+      "critiche": 3,
+      "mortali": 3
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 7,
+      "stanco": 7,
+      "sfinito": 7
+    },
+    "speciale": "Fascination (sight). Hinder: Agility or Force reaction vs 3 successes as vegetation grows, 5m radius. Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Cane fatato",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

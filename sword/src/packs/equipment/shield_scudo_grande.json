@@ -1,0 +1,35 @@
+{
+  "_id": "QmT26ODdDfFStJm4",
+  "_key": "!items!QmT26ODdDfFStJm4",
+  "name": "Scudo grande",
+  "type": "shield",
+  "img": "icons/equipment/shield/kite-wooden-boss-steel-brown.webp",
+  "system": {
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 5,
+    "damageValue": 2,
+    "parryModifier": 3,
+    "pregi": [
+      "pesante",
+      "copertura"
+    ],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_id": "zQQXnUZR7EvGcPQ2",
+  "_key": "!items!zQQXnUZR7EvGcPQ2",
+  "name": "Roncone",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/halberd-crescent-worn-steel.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "asta",
+    "hands": "due_mani",
+    "costDenari": 12,
+    "costDisplay": "12d",
+    "weight": 5,
+    "damageValue": 4,
+    "damageType": "P",
+    "parryModifier": 2,
+    "misura": "L",
+    "pregi": [
+      "agganciare"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "_id": "RtsfwRSYvRN9goCa",
+  "_key": "!actors!RtsfwRSYvRN9goCa",
+  "name": "Mastino",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 2,
+    "creatureType": "animale",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 2,
+      "forza": 3,
+      "percezione": 3,
+      "volonta": 3,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 3,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 11,
+        "max": 11
+      },
+      "fatica": {
+        "value": 6,
+        "max": 6
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "+2T"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "ferocia",
+      "senso_affinato"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 3,
+      "leggere": 3,
+      "gravi": 3,
+      "critiche": 3,
+      "mortali": 2
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 6,
+      "stanco": 6,
+      "sfinito": 6
+    },
+    "speciale": ""
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Mastino",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

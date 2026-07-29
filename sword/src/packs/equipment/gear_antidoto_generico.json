@@ -1,0 +1,33 @@
+{
+  "_id": "xYdMKZ2mgfH0y4fw",
+  "_key": "!items!xYdMKZ2mgfH0y4fw",
+  "name": "Antidoto generico",
+  "type": "gear",
+  "img": "icons/consumables/potions/potion-bottle-corked-white.webp",
+  "system": {
+    "gearCategory": "alchemical",
+    "costDenari": 60,
+    "costDisplay": "5s",
+    "weight": 0.25,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Reduces poison power by 2 for next reaction"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

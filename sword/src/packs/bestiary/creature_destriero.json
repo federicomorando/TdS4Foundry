@@ -1,0 +1,114 @@
+{
+  "_id": "JBMHlxnutRU9ky61",
+  "_key": "!actors!JBMHlxnutRU9ky61",
+  "name": "Destriero o cavallo da guerra",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 3,
+    "creatureType": "animale",
+    "sizeCategory": "grande",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 3,
+      "percezione": 3,
+      "volonta": 3,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 11,
+        "max": 11
+      },
+      "fatica": {
+        "value": 10,
+        "max": 10
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 7,
+      "gallop": 8,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 1,
+    "attacks": [
+      {
+        "name": "Zoccoli",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3B"
+      }
+    ],
+    "advantages": [
+      "ferocia",
+      "travolgere"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 4,
+      "leggere": 4,
+      "gravi": 4,
+      "critiche": 4,
+      "mortali": 4
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 10,
+      "stanco": 10,
+      "sfinito": 10
+    },
+    "speciale": ""
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Destriero o cavallo da guerra",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

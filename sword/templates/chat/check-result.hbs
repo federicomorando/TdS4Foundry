@@ -1,0 +1,167 @@
+<div class="sword chat-card check-result">
+
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      <h3>{{skillLabel}}</h3>
+      <span class="char-info">{{charLabel}} {{characteristicScore}}</span>
+    </div>
+  </header>
+
+  <div class="dice-section">
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.DiceRolled"}}</span>
+      <div class="dice-pool">
+        {{#each diceOriginal}}
+        <span class="die">{{this}}</span>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#if extraDice}}
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.AfterDiscards"}}</span>
+      <div class="dice-pool">
+        {{#each diceAfterDiscards}}
+        <span class="die">{{this}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if gradesUsed}}
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.AfterReduction"}} ({{gradesUsed}})</span>
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#unless gradesUsed}}
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/unless}}
+  </div>
+
+  <div class="result-section {{#if basePassed}}passed{{else}}failed{{/if}}">
+    <div class="sum-line">
+      {{localize "SWORD.Chat.Sum"}}: <strong>{{finalSum}}</strong>
+      {{localize "SWORD.Chat.VsChar"}} {{characteristicScore}}
+      {{#if basePassed}}
+      <span class="result-badge pass">{{localize "SWORD.Chat.Passed"}}</span>
+      {{else}}
+      <span class="result-badge fail">{{localize "SWORD.Chat.Failed"}}</span>
+      {{/if}}
+    </div>
+
+    {{#if basePassed}}
+    <div class="successes-detail">
+      {{localize "SWORD.Chat.OnesCount"}}: {{onesCount}} &middot;
+      {{localize "SWORD.Chat.RawSuccesses"}}: {{rawSuccesses}}
+    </div>
+    {{/if}}
+
+    <div class="final-successes">
+      {{localize "SWORD.Chat.FinalSuccesses"}}:
+      <span class="final-successes-value">{{finalSuccesses}}</span>
+    </div>
+  </div>
+
+  {{!-- Valore activation --}}
+  {{#if valoreUsed}}
+  <div class="bonus-line valore-line">
+    <i class="fas fa-sun"></i>
+    {{localize "SWORD.Chat.ValoreUsed"}}: <strong>{{valoreName}}</strong> (+{{valoreBonus}})
+  </div>
+  {{/if}}
+
+  {{!-- Combined Maneuver --}}
+  {{#if combinedUsed}}
+  <div class="bonus-line combined-line">
+    <i class="fas fa-link"></i>
+    {{localize "SWORD.Chat.CombinedUsed"}}: <strong>{{combinedSkillLabel}}</strong> (+{{combinedGrade}})
+  </div>
+  {{/if}}
+
+  {{!-- Erudita study bonus --}}
+  {{#if eruditaBonusUsed}}
+  <div class="bonus-line erudita-line">
+    <i class="fas fa-book"></i>
+    {{localize "SWORD.Chat.EruditaBonus"}}: +{{eruditaSuccessBonus}}
+  </div>
+  {{/if}}
+
+  {{#if contextualTalentDice}}
+  <div class="bonus-line talent-line">
+    <i class="fas fa-star"></i>
+    {{localize "SWORD.Chat.TalentExtraDice"}}: +{{contextualTalentDice}}d
+  </div>
+  {{/if}}
+
+  {{#if talentSuccessBonus}}
+  <div class="bonus-line talent-line">
+    <i class="fas fa-star"></i>
+    {{localize "SWORD.Chat.TalentSuccessBonus"}}: +{{talentSuccessBonus}}
+  </div>
+  {{/if}}
+
+  {{!-- Fama spending --}}
+  {{#if famaUsed}}
+  <div class="bonus-line fama-line">
+    <i class="fas fa-crown"></i>
+    {{localize "SWORD.Chat.FamaUsed"}}: <strong>{{famaPoints}}</strong> {{localize "SWORD.Chat.FamaDice"}}
+  </div>
+  {{/if}}
+
+  {{!-- Penalties (fatigue + wounds) --}}
+  {{#if hasFatiguePenalty}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-bed"></i>
+    {{localize "SWORD.Chat.PenaltyApplied"}}: -{{fatiguePenalty}}
+  </div>
+  {{/if}}
+  {{#if hasWoundPenalty}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-droplet"></i>
+    {{localize "SWORD.Combat.WoundPenalty"}}: -{{woundPenalty}}
+  </div>
+  {{/if}}
+  {{#if hasArmorPenalty}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-shield-halved"></i>
+    {{localize "SWORD.Combat.ArmorPenalty"}}: -{{armorPenalty}}
+  </div>
+  {{/if}}
+  {{#if fatiguePenaltyCancelled}}
+  <div class="bonus-line fatigue-line">
+    {{localize "SWORD.Chat.PenaltyCancelled"}}: {{fatiguePenaltyCancelled}}
+  </div>
+  {{/if}}
+
+  {{#if hasDifficulty}}
+  <div class="difficulty-section">
+    {{localize "SWORD.Chat.DifficultyThreshold"}}: {{difficultyThreshold}}
+    &mdash;
+    {{#if difficultyPassed}}
+    <span class="result-badge pass">{{localize "SWORD.Chat.DifficultyPassed"}}</span>
+    {{else}}
+    <span class="result-badge fail">{{localize "SWORD.Chat.DifficultyFailed"}}</span>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{#if hasOpposed}}
+  <div class="opposed-section">
+    {{localize "SWORD.Chat.NetSuccesses"}}: <strong>{{netSuccesses}}</strong>
+  </div>
+  {{/if}}
+
+</div>

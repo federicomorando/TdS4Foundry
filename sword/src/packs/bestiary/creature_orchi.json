@@ -1,0 +1,115 @@
+{
+  "_id": "C6M3RRM3EJ519xm7",
+  "_key": "!actors!C6M3RRM3EJ519xm7",
+  "name": "Orchi",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 3,
+    "creatureType": "fatato",
+    "sizeCategory": "grande",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 0,
+      "forza": 4,
+      "percezione": 2,
+      "volonta": 3,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 1,
+      "armi_comuni": 4,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 1,
+      "empatia": 2,
+      "raggirare": 2,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 9,
+        "max": 9
+      },
+      "fatica": {
+        "value": 10,
+        "max": 10
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 3,
+    "attacks": [
+      {
+        "name": "Lotta",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "+2B",
+        "parata": 1
+      }
+    ],
+    "advantages": [
+      "tocco_fatato",
+      "terzo_occhio"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 5,
+      "leggere": 5,
+      "gravi": 4,
+      "critiche": 4,
+      "mortali": 4
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 10,
+      "stanco": 10,
+      "sfinito": 10
+    },
+    "speciale": "Base weapon increases Reach by one category and damage and Parry by +1. Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Orchi",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

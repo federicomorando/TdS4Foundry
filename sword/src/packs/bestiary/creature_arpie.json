@@ -1,0 +1,118 @@
+{
+  "_id": "CRQ1h0pdxR34CVcs",
+  "_key": "!actors!CRQ1h0pdxR34CVcs",
+  "name": "Arpie",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 4,
+    "creatureType": "fatato",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 3,
+      "percezione": 3,
+      "volonta": 3,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 3,
+      "furtivita": 3,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 13,
+        "max": 13
+      },
+      "fatica": {
+        "value": 5,
+        "max": 5
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 21,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Artigli",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "+2T"
+      }
+    ],
+    "advantages": [
+      "afferrare",
+      "fascinazione",
+      "tocco_fatato",
+      "terzo_occhio"
+    ],
+    "advantageDetails": {
+      "fascinazione": 4
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 2,
+      "gravi": 2,
+      "critiche": 2,
+      "mortali": 2
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 5,
+      "stanco": 5,
+      "sfinito": 5
+    },
+    "speciale": "Fascination (hearing). Like all fae, they have Fae Touch, Third Eye, and Beyond the Veil."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Arpie",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

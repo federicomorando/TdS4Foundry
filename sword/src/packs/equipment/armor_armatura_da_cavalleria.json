@@ -1,0 +1,33 @@
+{
+  "_id": "qexzgeI7LgL23jbz",
+  "_key": "!items!qexzgeI7LgL23jbz",
+  "name": "Armatura da cavalleria",
+  "type": "armor",
+  "img": "icons/equipment/chest/breastplate-layered-steel.webp",
+  "system": {
+    "costDenari": 1920,
+    "costDisplay": "8l",
+    "weight": 15,
+    "protezione": 3,
+    "robustezza": 30,
+    "robustezzaCurrent": 30,
+    "pregi": [],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,324 @@
+<div class="tab scrollable sword character-sheet{{#if tab.active}} active{{/if}}"
+     data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+  {{!-- Creation banner --}}
+  {{#unless creationComplete}}
+  <div class="creation-banner">
+    <span>{{localize "SWORD.Creation.Banner"}}</span>
+    <button type="button" data-action="openWizard">{{localize "SWORD.Creation.StartWizard"}}</button>
+  </div>
+  {{/unless}}
+
+  {{!-- Header: portrait, name, ceto, fama, PE --}}
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" data-action="editImage" title="{{actor.name}}" height="70" width="70" />
+    <div class="header-fields">
+      <h1>
+        <input name="name" type="text" value="{{actor.name}}" placeholder="Nome" />
+      </h1>
+      <div class="header-row">
+        <div class="header-field">
+          <label>{{localize "SWORD.Ceto.Label"}}</label>
+          {{#if creationComplete}}
+          <span>{{cetoLabel}}</span>
+          {{else}}
+          <select name="system.ceto">
+            {{selectOptions cetoChoices selected=ceto}}
+          </select>
+          {{/if}}
+        </div>
+        <div class="header-field">
+          <label>{{localize "SWORD.Fama"}}</label>
+          <input type="number" name="system.fama" value="{{fama}}" min="0" max="6" />
+          {{#if hasSenzaVolto}}
+          <span class="fama-reduced-hint" title="{{localize "SWORD.Talent.SenzaVolto"}}">/ {{reducedFama}}</span>
+          {{/if}}
+        </div>
+        {{#if hasThirdCulturalTrait}}
+        <div class="header-field">
+          <label>{{localize "SWORD.Talent.ThirdCulturalTrait"}}</label>
+          <select name="system.culture.trait3">
+            <option value="">—</option>
+            {{selectOptions cultureTraitOptions selected=cultureTrait3}}
+          </select>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    {{#if creationComplete}}
+    <button type="button" class="export-pdf-btn" data-action="exportPDF" title="{{localize "SWORD.PDF.Export"}}">
+      <i class="fas fa-file-pdf"></i>
+    </button>
+    {{/if}}
+    <div class="header-actions">
+      {{!-- General actions --}}
+      <div class="action-group action-group-general">
+        <button type="button" class="rest-btn" data-action="rest" title="{{localize "SWORD.Rest.Label"}}">
+          <i class="fas fa-campground"></i> {{localize "SWORD.Rest.Label"}}
+        </button>
+        <button type="button" class="interlude-btn" data-action="interlude" title="{{localize "SWORD.Interlude.Label"}}">
+          <i class="fas fa-hourglass"></i> {{localize "SWORD.Interlude.Label"}}
+        </button>
+        <button type="button" class="healing-btn" data-action="healing" title="{{localize "SWORD.Healing.Label"}}">
+          <i class="fas fa-heart-pulse"></i> {{localize "SWORD.Healing.Label"}}
+        </button>
+        {{#if hasMeditation}}
+        <button type="button" class="meditate-btn" data-action="meditate" title="{{localize "SWORD.Meditation.Label"}}">
+          <i class="fas fa-om"></i> {{localize "SWORD.Meditation.Label"}}
+        </button>
+        {{/if}}
+        {{#if hasFattucchiere}}
+        <button type="button" class="fattucchiere-btn" data-action="fattucchiere" title="{{localize "SWORD.Talent.Fattucchiere"}}">
+          <i class="fas fa-hat-wizard"></i> {{localize "SWORD.Fattucchiere.Label"}}
+        </button>
+        {{/if}}
+      </div>
+      {{!-- Social / extended actions --}}
+      <div class="action-group action-group-social">
+        <button type="button" class="ars-oratoria-btn" data-action="arsOratoria" title="{{localize "SWORD.ArsOratoria.Label"}}">
+          <i class="fas fa-comments"></i> {{localize "SWORD.ArsOratoria.Label"}}
+        </button>
+        <button type="button" class="sfida-btn" data-action="sfida" title="{{localize "SWORD.Sfida.Label"}}">
+          <i class="fas fa-flag-checkered"></i> {{localize "SWORD.Sfida.Label"}}
+        </button>
+        <button type="button" class="contacts-btn" data-action="contacts" title="{{localize "SWORD.Contacts.Create"}}">
+          <i class="fas fa-address-book"></i> {{localize "SWORD.Contacts.Label"}}
+        </button>
+        {{#if hasInspire}}
+        <button type="button" class="inspire-btn" data-action="inspire" title="{{localize "SWORD.Inspire.Label"}}">
+          <i class="fas fa-hand-holding-heart"></i> {{localize "SWORD.Inspire.Label"}}
+        </button>
+        {{/if}}
+        {{#if hasStratega}}
+        {{#if (gt strategaPool 0)}}
+        <button type="button" class="stratega-btn" data-action="distributeRiflessi" title="{{localize "SWORD.Talent.StrategaDistribute"}}">
+          <i class="fas fa-chess-king"></i> {{localize "SWORD.Talent.StrategaDistribute"}} ({{strategaPool}})
+        </button>
+        {{/if}}
+        {{/if}}
+        {{#if hasCompagniFedeli}}
+        <button type="button" class="companion-boost-btn" data-action="companionBoost" title="{{localize "SWORD.Talent.CompagniFedeli"}}">
+          <i class="fas fa-paw"></i> {{localize "SWORD.Talent.CompagniFedeli"}}
+        </button>
+        {{/if}}
+      </div>
+      {{!-- Combat actions --}}
+      <div class="action-group action-group-combat">
+        <button type="button" class="unarmed-attack-btn" data-action="unarmedAttack"
+          title="{{localize "SWORD.Combat.UnarmedAttack"}}">
+          <i class="fas fa-fist-raised"></i> {{localize "SWORD.Combat.UnarmedAttack"}}
+        </button>
+        <button type="button" class="break-free-btn" data-action="breakFree"
+          title="{{localize "SWORD.Combat.BreakFree"}}">
+          <i class="fas fa-unlock"></i> {{localize "SWORD.Combat.BreakFree"}}
+        </button>
+        <button type="button" class="rifiatare-btn" data-action="rifiatare"
+          title="{{localize "SWORD.Combat.Rifiatare"}}">
+          <i class="fas fa-wind"></i> {{localize "SWORD.Combat.Rifiatare"}}
+        </button>
+        <button type="button" class="attesa-btn" data-action="attesa"
+          title="{{localize "SWORD.Combat.Attesa"}}">
+          <i class="fas fa-hourglass-half"></i> {{localize "SWORD.Combat.Attesa"}}
+        </button>
+        <button type="button" class="study-btn" data-action="studyBattlefield"
+          title="{{localize "SWORD.Combat.StudyBattlefield"}}">
+          <i class="fas fa-chess"></i> {{localize "SWORD.Combat.StudyBattlefield"}}
+        </button>
+        <button type="button" class="close-misura-btn" data-action="closeMisura"
+          title="{{localize "SWORD.Combat.CloseMisuraAction"}}">
+          <i class="fas fa-arrows-left-right"></i> {{localize "SWORD.Combat.CloseMisuraAction"}}
+        </button>
+        <button type="button" class="reaction-btn" data-action="reaction"
+          title="{{localize "SWORD.Reaction.Label"}}">
+          <i class="fas fa-shield-virus"></i> {{localize "SWORD.Reaction.Label"}}
+        </button>
+        {{#if (gt successReserve 0)}}
+        <button type="button" class="reserve-btn" data-action="spendReserve"
+          title="{{localize "SWORD.Reserve.Label"}}">
+          <i class="fas fa-star"></i> {{localize "SWORD.Reserve.Label"}} ({{successReserve}})
+        </button>
+        {{/if}}
+      </div>
+    </div>
+    <div class="header-pe">
+      <div class="header-pe-field">
+        <label>{{localize "SWORD.PE.Total"}}</label>
+        <input type="number" name="system.pe.total" value="{{pe.total}}" min="0" />
+      </div>
+      <div class="header-pe-field">
+        <label>{{localize "SWORD.PE.Spent"}}</label>
+        <span class="pe-value">{{pe.spent}}</span>
+      </div>
+      <div class="header-pe-field">
+        <label>{{localize "SWORD.PE.Available"}}</label>
+        <span class="pe-value {{#if peNegative}}pe-negative{{/if}}">{{pe.available}}</span>
+      </div>
+      {{#if (gt studyPEReward 2)}}
+      <div class="header-pe-field">
+        <span class="pe-study-hint" title="{{localize "SWORD.Talent.StudyBonus"}}">{{localize "SWORD.PE.Study"}}: {{studyPEReward}}</span>
+      </div>
+      {{/if}}
+    </div>
+  </header>
+
+  {{!-- Resources + Characteristics + Valori + Wound Track (side layout) --}}
+  <div class="char-wounds-row">
+    <div class="char-valori-col">
+      {{!-- Resources bar --}}
+      <section class="stats-bar">
+        {{#each resources}}
+        <div class="stats-field resource-field resource-{{this.key}}">
+          <div class="resource-fill" style="width: {{this.percent}}%"></div>
+          <label>{{this.label}}</label>
+          <div class="resource-values">
+            <a class="resource-adjust" data-action="adjustResource" data-resource-key="{{this.key}}" data-delta="-1" title="-1"><i class="fas fa-minus"></i></a>
+            <input type="number" name="system.resources.{{this.key}}.value" value="{{this.value}}" min="0" />
+            <span class="separator">/</span>
+            <span class="resource-max">{{this.max}}</span>
+            <a class="resource-adjust" data-action="adjustResource" data-resource-key="{{this.key}}" data-delta="1" title="+1"><i class="fas fa-plus"></i></a>
+          </div>
+        </div>
+        {{/each}}
+        <div class="penalty-badges">
+          <span class="fatigue-badge {{fatigueLevel}}">{{localize (concat "SWORD.Fatigue." fatigueLevel)}}{{#if fatiguePenalty}} -{{fatiguePenalty}}{{/if}}</span>
+          {{#if woundPenalty}}
+          <span class="wound-penalty-badge">{{localize "SWORD.Combat.WoundPenalty"}} -{{woundPenalty}}</span>
+          {{/if}}
+          {{#if encumbrancePenalty}}
+          <span class="encumbrance-badge">{{localize "SWORD.Encumbrance.Penalty"}} -{{encumbrancePenalty}}</span>
+          {{/if}}
+          <span class="movimento-badge" title="{{localize "SWORD.Encumbrance.Movimento"}}"><i class="fas fa-person-walking"></i> {{movimento}}</span>
+        </div>
+      </section>
+
+      <div class="char-valori-split">
+        {{!-- Characteristics: 3 rows (2 per row) --}}
+        <section class="characteristics-grid">
+          {{#each characteristics}}
+          <div class="characteristic">
+            <label class="char-label">{{this.label}}</label>
+            {{#if ../creationComplete}}
+            <span class="char-value {{#if this.increased}}increased{{else if this.decreased}}decreased{{/if}}" title="{{this.tooltip}}">{{this.effectiveScore}}</span>
+            <button type="button" class="char-adjust-btn" data-action="adjustCharacteristic" data-char-key="{{this.key}}" title="Modifica"><i class="fas fa-sliders-h"></i></button>
+            {{else}}
+            <input type="number" name="system.characteristics.{{this.key}}" value="{{this.score}}" min="5" max="13" />
+            {{/if}}
+            <span class="char-mod {{#if (gt this.mod 0)}}positive{{else if (lt this.mod 0)}}negative{{/if}}">({{#if (gte this.mod 0)}}+{{/if}}{{this.mod}})</span>
+          </div>
+          {{/each}}
+        </section>
+
+        {{!-- Valori Section --}}
+        <section class="valori-section">
+          <h3 class="valori-header">{{localize "SWORD.Valori.Label"}}
+            <span class="valori-total">{{valori.totalPoints}} / {{valori.maxPoints}} {{localize "SWORD.Valori.Points"}}</span>
+          </h3>
+          <div class="valori-axes">
+            <div class="valori-axis">
+              <label>{{localize "SWORD.Valori.fides"}}</label>
+              <input type="number" name="system.valori.fides" value="{{valori.fides}}" min="0" max="{{valori.perValueMax}}" />
+              <span class="valori-separator">/</span>
+              <input type="number" name="system.valori.impietas" value="{{valori.impietas}}" min="0" max="{{valori.perValueMax}}" />
+              <label>{{localize "SWORD.Valori.impietas"}}</label>
+            </div>
+            <div class="valori-axis">
+              <label>{{localize "SWORD.Valori.honor"}}</label>
+              <input type="number" name="system.valori.honor" value="{{valori.honor}}" min="0" max="{{valori.perValueMax}}" />
+              <span class="valori-separator">/</span>
+              <input type="number" name="system.valori.ego" value="{{valori.ego}}" min="0" max="{{valori.perValueMax}}" />
+              <label>{{localize "SWORD.Valori.ego"}}</label>
+            </div>
+            <div class="valori-axis">
+              <label>{{localize "SWORD.Valori.superstitio"}}</label>
+              <input type="number" name="system.valori.superstitio" value="{{valori.superstitio}}" min="0" max="{{valori.perValueMax}}" />
+              <span class="valori-separator">/</span>
+              <input type="number" name="system.valori.ratio" value="{{valori.ratio}}" min="0" max="{{valori.perValueMax}}" />
+              <label>{{localize "SWORD.Valori.ratio"}}</label>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    {{!-- Wound Track (vertical, right side) --}}
+    <section class="wound-track">
+      <h3 class="wound-track-header">{{localize "SWORD.Wounds.Label"}}</h3>
+      <div class="wound-levels">
+        {{#each woundLevelList}}
+        <div class="wound-level wound-level-{{this.key}}{{#if this.active}} wound-active{{/if}}">
+          <div class="wound-level-fill" style="width: {{this.percent}}%"></div>
+          <span class="wound-level-label">{{this.label}}{{#if this.penalty}} <span class="wound-level-penalty">-{{this.penalty}}</span>{{/if}}</span>
+          <div class="wound-level-bar">
+            <input type="number" name="system.woundLevels.{{this.key}}" value="{{this.current}}" min="0" max="{{this.max}}" class="wound-level-input" />
+            <span class="wound-level-max">/ {{this.max}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </section>
+  </div>
+
+  {{!-- Contacts list --}}
+  {{#if hasContacts}}
+  <section class="contacts-section">
+    <h3 class="contacts-header"><i class="fas fa-address-book"></i> {{localize "SWORD.Contacts.Label"}}</h3>
+    <div class="contacts-list">
+      {{#each contacts}}
+      <div class="contact-row">
+        <span class="contact-name"><strong>{{this.name}}</strong></span>
+        {{#if this.profession}}<span class="contact-profession">{{this.profession}}</span>{{/if}}
+        <span class="contact-ceto">({{this.cetoLabel}})</span>
+        {{#if this.settlement}}<span class="contact-settlement">{{this.settlement}}</span>{{/if}}
+        <span class="contact-stats">F:{{this.familiarita}} I:{{this.influenza}}</span>
+        <button type="button" class="contact-delete-btn" data-action="deleteContact" data-contact-index="{{this.index}}" title="{{localize "SWORD.Contacts.Delete"}}">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- Languages --}}
+  <section class="languages-section">
+    <h3 class="languages-header">
+      <i class="fas fa-language"></i> {{localize "SWORD.Languages.Label"}}
+      <span class="languages-count{{#if languagesOver}} over-limit{{/if}}">{{languages.length}} / {{languageSlots}}</span>
+      <button type="button" class="language-add-btn" data-action="addLanguage" title="{{localize "SWORD.Languages.Add"}}"><i class="fas fa-plus"></i></button>
+    </h3>
+    {{#if languages.length}}
+    <div class="languages-list">
+      {{#each languages}}
+      <span class="language-tag">
+        {{this}}
+        <a class="language-delete" data-action="deleteLanguage" data-lang-index="{{@index}}" title="{{localize "SWORD.Languages.Remove"}}"><i class="fas fa-times"></i></a>
+      </span>
+      {{/each}}
+    </div>
+    {{/if}}
+  </section>
+
+  {{!-- Travel talent hints --}}
+  {{#if hasBattipista}}
+  <div class="travel-hint">
+    <i class="fas fa-hiking"></i> {{localize "SWORD.Talent.BattipistaHint"}}: +{{battipistKmBonus}} km/giorno
+  </div>
+  {{/if}}
+  {{#if hasCarovaniere}}
+  <div class="travel-hint">
+    <i class="fas fa-caravan"></i> {{localize "SWORD.Talent.CarovaniereHint"}}
+  </div>
+  {{/if}}
+
+  {{!-- Compact skill summary table --}}
+  <div class="skill-summary-grid">
+    {{#each skillSummary}}
+    <div class="skill-summary-cell {{#if this.isMestiere}}mestiere{{/if}}{{#if this.isOutsideCeto}} outside-ceto{{/if}}">
+      <button type="button" class="skill-summary-roll" data-action="rollSkill" data-skill-id="{{this.id}}" title="Tira {{this.label}}"><i class="fas fa-dice-d6"></i></button>
+      <span class="skill-summary-name">{{this.label}}{{#if this.charScore}} ({{this.charScore}}){{/if}}</span>
+      <span class="skill-summary-grade">{{this.grade}}</span>
+    </div>
+    {{/each}}
+  </div>
+
+</div>

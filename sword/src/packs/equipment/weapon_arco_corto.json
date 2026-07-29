@@ -1,0 +1,40 @@
+{
+  "_id": "xk0M8DCXlmy2zgk4",
+  "_key": "!items!xk0M8DCXlmy2zgk4",
+  "name": "Arco corto",
+  "type": "weapon",
+  "img": "icons/weapons/bows/shortbow-recurve-yellow.webp",
+  "system": {
+    "category": "archi",
+    "skillId": "archi",
+    "weaponType": "arco",
+    "hands": "due_mani",
+    "costDenari": 12,
+    "costDisplay": "12d",
+    "weight": 1,
+    "damageValue": 2,
+    "damageType": "P",
+    "parryModifier": 1,
+    "misura": null,
+    "pregi": [],
+    "quality": "normale",
+    "gittata": 30,
+    "ricarica": 1
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

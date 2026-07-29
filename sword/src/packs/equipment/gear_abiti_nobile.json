@@ -1,0 +1,33 @@
+{
+  "_id": "EJl445Gh3WUvjq0T",
+  "_key": "!items!EJl445Gh3WUvjq0T",
+  "name": "Abiti da nobile",
+  "type": "gear",
+  "img": "icons/equipment/chest/coat-collared-red-gold.webp",
+  "system": {
+    "gearCategory": "clothing",
+    "costDenari": 480,
+    "costDisplay": "2l",
+    "weight": 1.5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Noble-class clothing"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

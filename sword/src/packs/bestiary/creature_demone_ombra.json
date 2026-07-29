@@ -1,0 +1,125 @@
+{
+  "_id": "lnJqWnZDn43rVy6R",
+  "_key": "!actors!lnJqWnZDn43rVy6R",
+  "name": "Demone dell'ombra",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 6,
+    "creatureType": "demone",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 4,
+      "forza": 0,
+      "percezione": 4,
+      "volonta": 4,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 4,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 13,
+        "max": 13
+      },
+      "fatica": {
+        "value": 4,
+        "max": 4
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Tocco corruttore",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "speciale"
+      }
+    ],
+    "advantages": [
+      "aura_infernale",
+      "aura_letale",
+      "immunita_freddo",
+      "incorporeo",
+      "mente_vacua",
+      "non_vita",
+      "paura"
+    ],
+    "advantageDetails": {
+      "aura_infernale": 1,
+      "aura_letale": 3,
+      "paura": 3
+    },
+    "disadvantages": [
+      "notturno"
+    ],
+    "woundCapacities": {
+      "graffi": 3,
+      "leggere": 3,
+      "gravi": 3,
+      "critiche": 3,
+      "mortali": 3
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 4,
+      "stanco": 4,
+      "sfinito": 4
+    },
+    "speciale": "Corrupting touch: deals no damage but causes loss of 1 Fatigue per net success. Lethal aura: Force reaction vs 3 successes for gusts of freezing air, 10m radius."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Demone dell'ombra",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

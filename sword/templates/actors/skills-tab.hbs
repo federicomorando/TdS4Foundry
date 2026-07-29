@@ -1,0 +1,44 @@
+<div class="tab scrollable sword character-sheet{{#if tab.active}} active{{/if}}"
+     data-group="{{tab.group}}" data-tab="{{tab.id}}">
+
+  <section class="skills-list">
+    {{#each skillGroups}}
+    <div class="skill-group">
+      <h3 class="skill-group-header">{{this.label}}</h3>
+      <div class="skill-rows-grid">
+        {{#each this.skills}}
+        <div class="skill-row">
+          <button type="button" class="roll-btn" data-action="rollSkill" data-skill-id="{{this.id}}" title="Tira {{this.label}}">
+            <i class="fas fa-dice-d6"></i>
+          </button>
+          {{#if (gte this.grade 1)}}
+          <button type="button" class="combined-btn" data-action="combinedManeuver" data-skill-id="{{this.id}}" title="{{localize "SWORD.Combined.Label"}}">
+            <i class="fas fa-link"></i>
+          </button>
+          {{/if}}
+          <span class="skill-name {{#if this.isMestiere}}mestiere{{/if}}{{#if this.isOutsideCeto}} outside-ceto{{/if}}">{{this.label}}</span>
+          {{#if this.canSpecialize}}
+          <span class="skill-specialty {{#unless this.specialty}}empty{{/unless}}" data-action="editSpecialty" data-skill-id="{{this.id}}" title="{{localize 'SWORD.Specialty.Edit'}}">{{#if this.specialty}}{{this.specialty}}{{else}}({{localize "SWORD.Specialty.Label"}}){{/if}}</span>
+          {{else if this.specialty}}
+          <span class="skill-specialty" data-action="editSpecialty" data-skill-id="{{this.id}}" title="{{localize 'SWORD.Specialty.Edit'}}">{{this.specialty}}</span>
+          {{/if}}
+          {{#each this.foci}}
+          <span class="skill-focus-badge" title="Focus: {{this.name}}">{{this.name}}</span>
+          {{/each}}
+          {{#if (gt this.focusSlots this.focusCount)}}
+          <button type="button" class="add-focus-btn" data-action="addFocus" data-skill-id="{{this.id}}" title="{{localize "SWORD.Focus.Add"}}">+F</button>
+          {{/if}}
+          {{#if this.extraDice}}
+          <span class="skill-extra-dice-badge" title="+{{this.extraDice}} dadi extra">+{{this.extraDice}}d</span>
+          {{/if}}
+          <input type="number" class="skill-grade" name="system.skills.{{this.id}}.grade"
+                 value="{{this.grade}}" min="0" max="6"
+                 title="{{#if this.nextGradeCost}}{{localize "SWORD.PE.NextCost"}}: {{this.nextGradeCost}} PE{{else}}{{localize "SWORD.Grade"}}{{/if}}" />
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </section>
+
+</div>

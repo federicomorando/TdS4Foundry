@@ -1,0 +1,217 @@
+{{!-- Creature stat block sheet --}}
+<div class="sword creature-sheet">
+  {{!-- Header --}}
+  <div class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" width="64" height="64" data-edit="img" data-action="editImage" />
+    <div class="header-fields">
+      <h1><input type="text" name="name" value="{{actor.name}}" /></h1>
+      <div class="header-row">
+        <span class="creature-badge rango-badge" title="Rango">R{{rango}}</span>
+        <span class="creature-badge type-badge">{{sizeCategoryLabel}}</span>
+        <span class="creature-badge type-badge">{{creatureTypeLabel}}</span>
+        {{#if isTemplate}}
+        <span class="creature-badge template-badge">Modello</span>
+        {{/if}}
+        {{#if woundPenalty}}
+        <span class="wound-penalty-badge">-{{woundPenalty}} ferite</span>
+        {{/if}}
+        {{#if fatiguePenalty}}
+        <span class="fatigue-badge {{fatigueLevel}}">{{localize (concat "SWORD.Fatigue." fatigueLevel)}} (-{{fatiguePenalty}})</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+  <div class="creature-body">
+    {{!-- Resources bar --}}
+    <div class="creature-resources">
+      <div class="creature-resource">
+        <label>{{localize "SWORD.Resources.riflessi"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.resources.riflessi.value" value="{{riflessi.value}}" min="0" />
+          <span class="separator">/</span>
+          <span class="resource-max">{{riflessi.max}}</span>
+        </div>
+      </div>
+      <div class="creature-resource">
+        <label>{{localize "SWORD.Resources.fatica"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.resources.fatica.value" value="{{fatica.value}}" min="0" />
+          <span class="separator">/</span>
+          <span class="resource-max">{{fatica.max}}</span>
+        </div>
+      </div>
+      <div class="creature-resource">
+        <label>{{localize "SWORD.Resources.spirito"}}</label>
+        <div class="resource-values">
+          <input type="number" name="system.resources.spirito.value" value="{{spirito.value}}" min="0" />
+          <span class="separator">/</span>
+          <span class="resource-max">{{spirito.max}}</span>
+        </div>
+      </div>
+      <div class="creature-resource">
+        <label>{{localize "SWORD.Creature.Protezione"}}</label>
+        <span class="protezione-value">{{protezione}}</span>
+      </div>
+      <button type="button" class="unarmed-attack-btn" data-action="unarmedAttack"
+        title="{{localize "SWORD.Combat.UnarmedAttack"}}">
+        <i class="fas fa-fist-raised"></i>
+      </button>
+      <button type="button" class="break-free-btn" data-action="breakFree"
+        title="{{localize "SWORD.Combat.BreakFree"}}">
+        <i class="fas fa-unlock"></i>
+      </button>
+      <button type="button" class="rifiatare-btn" data-action="rifiatare"
+        title="{{localize "SWORD.Combat.Rifiatare"}}">
+        <i class="fas fa-wind"></i>
+      </button>
+      <button type="button" class="attesa-btn" data-action="attesa"
+        title="{{localize "SWORD.Combat.Attesa"}}">
+        <i class="fas fa-hourglass-half"></i>
+      </button>
+      <button type="button" class="study-btn" data-action="studyBattlefield"
+        title="{{localize "SWORD.Combat.StudyBattlefield"}}">
+        <i class="fas fa-chess"></i>
+      </button>
+      <button type="button" class="close-misura-btn" data-action="closeMisura"
+        title="{{localize "SWORD.Combat.CloseMisuraAction"}}">
+        <i class="fas fa-arrows-left-right"></i>
+      </button>
+      <button type="button" class="reaction-btn" data-action="reaction"
+        title="{{localize "SWORD.Reaction.Label"}}">
+        <i class="fas fa-shield-virus"></i>
+      </button>
+    </div>
+
+    {{!-- Abilities --}}
+    {{#if abilities.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.BaseAbilities"}}</h3>
+      <div class="creature-stat-row">
+        {{#each abilities}}
+        <div class="creature-stat">
+          <span class="stat-label">{{this.label}}</span>
+          <span class="stat-value">{{this.value}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Skills --}}
+    {{#if skills.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Skills"}}</h3>
+      <div class="creature-stat-row">
+        {{#each skills}}
+        <div class="creature-stat">
+          <span class="stat-label">{{this.label}}</span>
+          <span class="stat-value">{{this.value}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Movement --}}
+    {{#if movementModes.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Movement"}}</h3>
+      <div class="creature-stat-row">
+        {{#each movementModes}}
+        <div class="creature-stat">
+          <span class="stat-label">{{this.label}}</span>
+          <span class="stat-value">{{this.value}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Attacks --}}
+    {{#if attacks.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Attacks"}}</h3>
+      <table class="creature-attacks-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>{{localize "SWORD.Creature.AttackName"}}</th>
+            <th>{{localize "SWORD.Creature.AttackSkill"}}</th>
+            <th>{{localize "SWORD.Item.Misura"}}</th>
+            <th>{{localize "SWORD.Item.Damage"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each attacks}}
+          <tr>
+            <td class="attack-action">
+              <button type="button" data-action="creatureAttack" data-attack-index="{{@index}}"
+                title="{{localize 'SWORD.Combat.AttackBtn'}}">
+                <i class="fas fa-swords"></i>
+              </button>
+            </td>
+            <td>{{this.name}}</td>
+            <td>{{this.skill}}</td>
+            <td>{{#if this.misura}}{{this.misura}}{{else}}—{{/if}}</td>
+            <td>{{this.damage}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{/if}}
+
+    {{!-- Wound Track --}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Wounds.Label"}}</h3>
+      <div class="wound-levels">
+        {{#each woundLevelList}}
+        <div class="wound-level wound-level-{{this.key}}">
+          <span class="wound-level-label">{{this.label}}</span>
+          <div class="wound-level-bar">
+            <input class="wound-level-input" type="number"
+                   name="system.woundLevels.{{this.key}}" value="{{this.current}}" min="0" />
+            <span class="wound-level-max">/ {{this.max}}</span>
+          </div>
+          {{#if this.penalty}}
+          <span class="wound-level-penalty">-{{this.penalty}}</span>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    {{!-- Advantages --}}
+    {{#if advantages.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Advantages"}}</h3>
+      <div class="creature-tags">
+        {{#each advantages}}
+        <span class="creature-tag advantage-tag">{{this.label}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Disadvantages --}}
+    {{#if disadvantages.length}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Disadvantages"}}</h3>
+      <div class="creature-tags">
+        {{#each disadvantages}}
+        <span class="creature-tag disadvantage-tag">{{this.label}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Speciale --}}
+    {{#if speciale}}
+    <div class="creature-section">
+      <h3 class="creature-section-header">{{localize "SWORD.Creature.Speciale"}}</h3>
+      <p class="creature-speciale">{{speciale}}</p>
+    </div>
+    {{/if}}
+  </div>
+</div>

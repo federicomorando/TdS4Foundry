@@ -1,0 +1,121 @@
+{
+  "_id": "h7dEvuQoZISU8MXJ",
+  "_key": "!actors!h7dEvuQoZISU8MXJ",
+  "name": "Demone dell'aria",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 3,
+    "creatureType": "demone",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 2,
+      "percezione": 5,
+      "volonta": 4,
+      "ragionamento": 4,
+      "carisma": 4
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 4,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 3,
+      "empatia": 4,
+      "raggirare": 4,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 13,
+        "max": 13
+      },
+      "fatica": {
+        "value": 5,
+        "max": 5
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 18,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Tocco corruttore",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "speciale"
+      }
+    ],
+    "advantages": [
+      "aura_infernale",
+      "fascinazione",
+      "ferocia",
+      "incorporeo",
+      "invisibilita",
+      "ostacolare"
+    ],
+    "advantageDetails": {
+      "aura_infernale": 1,
+      "fascinazione": 5
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 2,
+      "gravi": 2,
+      "critiche": 1,
+      "mortali": 1
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 5,
+      "stanco": 5,
+      "sfinito": 5
+    },
+    "speciale": "An attack that deals at least one wound also causes bleeding. Hinder: Agility reaction vs 4 successes for a small tremor, 10m radius. Lethal gaze (confusion). Once per day, whisper lies: Willpower reaction vs the demon's Deceive. In spirit form: immune to mundane damage, Incorporeal, Invisible, Third Eye, Night Vision."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Demone dell'aria",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "_id": "pNYGjP9QuXcWksao",
+  "_key": "!items!pNYGjP9QuXcWksao",
+  "name": "Pugnale",
+  "type": "weapon",
+  "img": "icons/weapons/daggers/dagger-curved-guard.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "spada",
+    "hands": "una_mano",
+    "costDenari": 12,
+    "costDisplay": "1s",
+    "weight": 0.5,
+    "damageValue": 2,
+    "damageType": "P",
+    "parryModifier": 1,
+    "misura": "S",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_id": "ZYSY7QxiH4EdqiJT",
+  "_key": "!items!ZYSY7QxiH4EdqiJT",
+  "name": "Picca",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/pike-flared-brown.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "asta",
+    "hands": "due_mani",
+    "costDenari": 36,
+    "costDisplay": "3s",
+    "weight": 4,
+    "damageValue": 4,
+    "damageType": "P",
+    "parryModifier": 4,
+    "misura": "LL",
+    "pregi": [
+      "pesante"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

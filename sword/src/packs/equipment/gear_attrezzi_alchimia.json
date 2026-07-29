@@ -1,0 +1,33 @@
+{
+  "_id": "Mm0LJjAATlv2tmov",
+  "_key": "!items!Mm0LJjAATlv2tmov",
+  "name": "Attrezzi da alchimia",
+  "type": "gear",
+  "img": "icons/tools/cooking/mortar-herbs-yellow.webp",
+  "system": {
+    "gearCategory": "skill_tool",
+    "costDenari": 240,
+    "costDisplay": "1l",
+    "weight": 5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": "alchimia",
+    "description": "Required for Alchimia checks"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

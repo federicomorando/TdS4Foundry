@@ -1,0 +1,33 @@
+{
+  "_id": "anS9QdGmZpcVE0xv",
+  "_key": "!items!anS9QdGmZpcVE0xv",
+  "name": "Tenda (2 persone)",
+  "type": "gear",
+  "img": "icons/environment/settlement/tent.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Canvas tent for 2 people"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

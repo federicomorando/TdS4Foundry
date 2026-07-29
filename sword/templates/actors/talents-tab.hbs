@@ -1,0 +1,39 @@
+<div class="tab scrollable{{#if tab.active}} active{{/if}}"
+     data-group="{{tab.group}}" data-tab="{{tab.id}}">
+  <div class="talents-list">
+    <h3 class="talents-header">
+      {{localize "SWORD.Talents.Label"}}
+      <span class="talent-count">{{talentCount}}</span>
+    </h3>
+    {{#each talentGroups}}
+    <div class="talent-group">
+      <h4 class="talent-group-header">{{this.label}}</h4>
+      {{#each this.talents}}
+      {{#if this.unlocked}}
+      <div class="talent-row-detail">
+        <span class="talent-grade-badge grade-{{this.grade}}">{{this.grade}}</span>
+        <div class="talent-info">
+          <span class="talent-name-detail">{{this.name}}</span>
+          <p class="talent-description">{{this.effectsRaw}}</p>
+          {{#if this.choiceField}}
+          <select name="{{this.choiceField}}" class="talent-choice-select">
+            <option value="">— {{localize "SWORD.Talents.ChooseDie"}} —</option>
+            {{#each this.choiceOptions}}
+            <option value="{{this.value}}" {{#if (eq this.value ../choiceValue)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          {{/if}}
+        </div>
+      </div>
+      {{else if this.partial}}
+      <div class="talent-row-partial" title="{{this.effectsRaw}}">
+        <span class="talent-grade-badge-partial grade-{{this.grade}}">{{this.grade}}</span>
+        <span class="talent-name-partial">{{this.name}}</span>
+        <span class="talent-missing-reqs">— {{this.missingSummary}}</span>
+      </div>
+      {{/if}}
+      {{/each}}
+    </div>
+    {{/each}}
+  </div>
+</div>

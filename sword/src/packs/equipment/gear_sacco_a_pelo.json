@@ -1,0 +1,33 @@
+{
+  "_id": "LH5c2GP2o0x7MdQZ",
+  "_key": "!items!LH5c2GP2o0x7MdQZ",
+  "name": "Sacco a pelo / Coperta",
+  "type": "gear",
+  "img": "icons/sundries/survival/bedroll-tan.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 6,
+    "costDisplay": "6d",
+    "weight": 2,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Bedroll or blanket for camping"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

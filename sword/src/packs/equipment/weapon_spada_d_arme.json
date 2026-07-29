@@ -1,0 +1,40 @@
+{
+  "_id": "UzCKoYTizPxIlbVm",
+  "_key": "!items!UzCKoYTizPxIlbVm",
+  "name": "Spada d'arme",
+  "type": "weapon",
+  "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "spada",
+    "hands": "una_mano",
+    "costDenari": 240,
+    "costDisplay": "20s",
+    "weight": 1.5,
+    "damageValue": 3,
+    "damageType": "T",
+    "parryModifier": 3,
+    "misura": "M",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

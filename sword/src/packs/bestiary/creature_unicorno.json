@@ -1,0 +1,114 @@
+{
+  "_id": "zOeHd008NDxZGA79",
+  "_key": "!actors!zOeHd008NDxZGA79",
+  "name": "Unicorno",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 3,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 4,
+      "percezione": 3,
+      "volonta": 4,
+      "ragionamento": 3,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 2,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 11,
+        "max": 11
+      },
+      "fatica": {
+        "value": 8,
+        "max": 8
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 8,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 1,
+    "attacks": [
+      {
+        "name": "Incornata",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3P"
+      }
+    ],
+    "advantages": [
+      "immunita_veleni",
+      "terzo_occhio"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 4,
+      "leggere": 4,
+      "gravi": 4,
+      "critiche": 3,
+      "mortali": 3
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 8,
+      "stanco": 8,
+      "sfinito": 8
+    },
+    "speciale": "+1 success to any defense and reaction against demons and beings that hold Impiety points."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Unicorno",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

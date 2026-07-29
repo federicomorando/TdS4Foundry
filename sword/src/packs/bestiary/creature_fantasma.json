@@ -1,0 +1,113 @@
+{
+  "_id": "2IjQ9ovTl6XHLYyB",
+  "_key": "!actors!2IjQ9ovTl6XHLYyB",
+  "name": "Fantasma",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 0,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "media",
+    "isTemplate": true,
+    "abilities": {
+      "agilita": 0,
+      "forza": 0,
+      "percezione": 0,
+      "volonta": 0,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 0,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 0,
+        "max": 0
+      },
+      "fatica": {
+        "value": 0,
+        "max": 0
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 0,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [],
+    "advantages": [
+      "invisibilita",
+      "non_vita",
+      "paura",
+      "immunita_danni_mondani"
+    ],
+    "advantageDetails": {
+      "paura": 3
+    },
+    "disadvantages": [
+      "vincolo"
+    ],
+    "woundCapacities": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 0,
+      "stanco": 0,
+      "sfinito": 0
+    },
+    "speciale": "Template creature. Uses the deceased's stats with XP+75. Gains: one Value of choice at 3; +24 Spirit; immunity to mundane damage; spirit copies of the weapons and armor held in life; attacks cause +1 Fatigue per wound and ignore non-magical Protection. By spending 5 Spirit plus an action, may attempt possession (victim: Willpower reaction vs 4 successes; on failure, possessed for 1d6 hours)."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Fantasma",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

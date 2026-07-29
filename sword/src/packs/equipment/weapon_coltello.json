@@ -1,0 +1,40 @@
+{
+  "_id": "hF5T4rcLAVFGTW50",
+  "_key": "!items!hF5T4rcLAVFGTW50",
+  "name": "Coltello",
+  "type": "weapon",
+  "img": "icons/weapons/daggers/dagger-simple-black.webp",
+  "system": {
+    "category": "armi_corte",
+    "skillId": "armi_corte",
+    "weaponType": "spada",
+    "hands": "una_mano",
+    "costDenari": 2,
+    "costDisplay": "2d",
+    "weight": 0.5,
+    "damageValue": 1,
+    "damageType": "T",
+    "parryModifier": 1,
+    "misura": "S",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

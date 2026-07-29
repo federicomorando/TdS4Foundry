@@ -1,0 +1,114 @@
+{
+  "_id": "q3yghjqPDJ2B4Jai",
+  "_key": "!actors!q3yghjqPDJ2B4Jai",
+  "name": "Gatto",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 1,
+    "creatureType": "animale",
+    "sizeCategory": "piccola",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 0,
+      "percezione": 3,
+      "volonta": 2,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 2,
+      "furtivita": 3,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 16,
+        "max": 16
+      },
+      "fatica": {
+        "value": 3,
+        "max": 3
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 6,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Unghie",
+        "skill": "lotta",
+        "misura": "Abbrazzar",
+        "damage": "+1T"
+      }
+    ],
+    "advantages": [
+      "senso_affinato",
+      "vista_notturna"
+    ],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 0,
+      "gravi": 2,
+      "critiche": 2,
+      "mortali": 1
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 3,
+      "stanco": 3,
+      "sfinito": 3
+    },
+    "speciale": ""
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Gatto",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

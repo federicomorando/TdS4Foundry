@@ -1,0 +1,43 @@
+{
+  "_id": "7QD9zCMb337BoSpO",
+  "_key": "!items!7QD9zCMb337BoSpO",
+  "name": "Ascia normanna",
+  "type": "weapon",
+  "img": "icons/weapons/axes/axe-battle.webp",
+  "system": {
+    "category": "armi_da_guerra",
+    "skillId": "armi_da_guerra",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 96,
+    "costDisplay": "8s",
+    "weight": 2,
+    "damageValue": 4,
+    "damageType": "T",
+    "parryModifier": 2,
+    "misura": "M",
+    "pregi": [
+      "pesante",
+      "agganciare"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

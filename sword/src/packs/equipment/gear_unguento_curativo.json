@@ -1,0 +1,33 @@
+{
+  "_id": "QspC6SEE5DS7HDxF",
+  "_key": "!items!QspC6SEE5DS7HDxF",
+  "name": "Unguento curativo",
+  "type": "gear",
+  "img": "icons/consumables/potions/potion-jar-corked-green.webp",
+  "system": {
+    "gearCategory": "alchemical",
+    "costDenari": 60,
+    "costDisplay": "5s",
+    "weight": 0.25,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "+1 success to Guarigione checks for wound treatment"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

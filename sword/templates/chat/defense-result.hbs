@@ -1,0 +1,319 @@
+<div class="sword chat-card defense-result">
+
+  <header class="card-header">
+    <img src="{{actorImg}}" width="36" height="36" />
+    <div class="card-header-text">
+      <h3><i class="fas fa-shield"></i> {{defenseLabel}}</h3>
+      <span class="char-info">{{skillLabel}} vs. {{attackWeaponName}} ({{attackSuccesses}} {{localize "SWORD.Chat.Successes"}})</span>
+      {{#if defenseItemName}}
+      <span class="char-info">{{defenseItemName}}</span>
+      {{/if}}
+    </div>
+  </header>
+
+  {{#if isCreature}}
+  {{!-- Creature: fixed successes, no dice --}}
+  <div class="result-section {{#if defenseSucceeded}}passed{{else}}failed{{/if}}">
+    <div class="successes-detail">
+      {{localize "SWORD.Chat.FinalSuccesses"}}: <strong>{{effectiveSuccesses}}</strong>
+      vs. {{attackSuccesses}}
+    </div>
+
+    <div class="defense-outcome">
+      {{#if defenseSucceeded}}
+      <span class="result-badge pass"><i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.DefenseSuccess"}}</span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-burst"></i> {{localize "SWORD.Combat.DefenseFail"}}</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{else}}
+  {{!-- Character: dice roll --}}
+  <div class="dice-section">
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.DiceRolled"}}</span>
+      <div class="dice-pool">
+        {{#each diceOriginal}}
+        <span class="die">{{this}}</span>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#if extraDice}}
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.AfterDiscards"}}</span>
+      <div class="dice-pool">
+        {{#each diceAfterDiscards}}
+        <span class="die">{{this}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#if gradesUsed}}
+    <div class="dice-row">
+      <span class="dice-label">{{localize "SWORD.Chat.AfterReduction"}} ({{gradesUsed}})</span>
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{else}}
+    <div class="dice-row">
+      <div class="dice-pool">
+        {{#each diceAfterReductionDisplay}}
+        <span class="die {{#if this.isOne}}is-one{{/if}}">{{this.value}}</span>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="result-section {{#if defenseSucceeded}}passed{{else}}failed{{/if}}">
+    <div class="sum-line">
+      {{localize "SWORD.Chat.Sum"}}: <strong>{{finalSum}}</strong>
+      {{localize "SWORD.Chat.VsChar"}} {{characteristicScore}}
+      {{#if basePassed}}
+      <span class="result-badge pass">{{localize "SWORD.Chat.Passed"}}</span>
+      {{else}}
+      <span class="result-badge fail">{{localize "SWORD.Chat.Failed"}}</span>
+      {{/if}}
+    </div>
+
+    {{#if basePassed}}
+    <div class="successes-detail">
+      {{localize "SWORD.Chat.FinalSuccesses"}}: {{finalSuccesses}}
+      vs. {{attackSuccesses}}
+    </div>
+    {{/if}}
+
+    <div class="defense-outcome">
+      {{#if defenseSucceeded}}
+      <span class="result-badge pass"><i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.DefenseSuccess"}}</span>
+      {{else}}
+      <span class="result-badge fail"><i class="fas fa-burst"></i> {{localize "SWORD.Combat.DefenseFail"}}</span>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Action cost --}}
+  {{#if isFreeAction}}
+  <div class="bonus-line free-parry-line">
+    <i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.FreeActionSpent"}}
+  </div>
+  {{else if isStandardAction}}
+  <div class="bonus-line action-cost-line">
+    <i class="fas fa-circle-check"></i> {{localize "SWORD.Combat.ActionSpent"}}
+  </div>
+  {{/if}}
+
+  {{#if pesanteRiflessiCost}}
+  <div class="bonus-line pesante-cost-line">
+    <i class="fas fa-weight-hanging"></i> {{localize "SWORD.Combat.PesanteCost"}}: -{{pesanteRiflessiCost}} {{localize "SWORD.Resources.riflessi"}}
+  </div>
+  {{/if}}
+
+  {{#if talentParryBonus}}
+  <div class="bonus-line talent-line">
+    <i class="fas fa-star"></i> {{localize "SWORD.Combat.TalentParryBonus"}}: +{{talentParryBonus}}
+  </div>
+  {{/if}}
+
+  {{#if talentSuccessBonus}}
+  <div class="bonus-line talent-line">
+    <i class="fas fa-star"></i> {{localize "SWORD.Chat.TalentSuccessBonus"}}: +{{talentSuccessBonus}}
+  </div>
+  {{/if}}
+
+  {{#if tacticalAdvantageUsed}}
+  <div class="bonus-line tactical-advantage-line">
+    <i class="fas fa-chess"></i> {{localize "SWORD.Combat.TacticalAdvantageUsed"}} (+1)
+  </div>
+  {{/if}}
+
+  {{!-- Riflessi cost --}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-bolt"></i>
+    {{localize "SWORD.Combat.RiflessiCost"}}: -{{riflessiCost}}
+  </div>
+
+  {{#if hasPenalty}}
+  <div class="bonus-line fatigue-line">
+    <i class="fas fa-bed"></i>
+    {{#if fatiguePenalty}}{{localize "SWORD.Chat.PenaltyApplied"}}: -{{fatiguePenalty}}{{/if}}
+    {{#if woundPenalty}} {{localize "SWORD.Combat.WoundPenalty"}}: -{{woundPenalty}}{{/if}}
+    {{#if armorPenalty}} {{localize "SWORD.Combat.ArmorPenalty"}}: -{{armorPenalty}}{{/if}}
+    {{#if penaltyCancelled}}
+    &middot; {{localize "SWORD.Chat.PenaltyCancelled"}}: {{penaltyCancelled}}
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Standard damage section (normal and targeted attacks) --}}
+  {{#if hasDamage}}
+  <div class="damage-section">
+    <h4>{{localize "SWORD.Combat.DamageDealt"}}</h4>
+    <div class="damage-details">
+      <div class="damage-line">
+        {{localize "SWORD.Combat.GrossWounds"}}: <strong>{{damageResult.grossWounds}}</strong>
+      </div>
+      {{#if talentDamageBonus}}
+      <div class="damage-line talent-line">
+        <i class="fas fa-star"></i> {{localize "SWORD.Combat.TalentDamageBonus"}}: +{{talentDamageBonus}}
+      </div>
+      {{/if}}
+      {{#if talentProtBonus}}
+      <div class="damage-line talent-line">
+        <i class="fas fa-star"></i> {{localize "SWORD.Combat.TalentProtectionBonus"}}: +{{talentProtBonus}}
+      </div>
+      {{/if}}
+      {{#if damageResult.armorAbsorbed}}
+      <div class="damage-line">
+        {{localize "SWORD.Combat.ArmorAbsorbed"}}: -{{damageResult.armorAbsorbed}}
+      </div>
+      {{/if}}
+      {{#if damageResult.slashBonus}}
+      <div class="damage-line damage-type-effect">
+        <i class="fas fa-cut"></i> Taglio: +1
+      </div>
+      {{/if}}
+      <div class="damage-line damage-total">
+        {{localize "SWORD.Combat.WoundsInflicted"}}: <strong class="wounds-value">{{damageResult.netWounds}}</strong>
+      </div>
+      {{#if damageResult.bluntRiflessi}}
+      <div class="damage-line damage-type-effect">
+        <i class="fas fa-hand-fist"></i> Botta: -{{damageResult.bluntRiflessi}} {{localize "SWORD.Resources.riflessi"}}
+      </div>
+      {{/if}}
+      {{#if damageResult.thrustReduction}}
+      <div class="damage-line damage-type-effect">
+        <i class="fas fa-crosshairs"></i> Punta: -{{damageResult.thrustReduction}} {{localize "SWORD.Item.Protezione"}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Special move: Non-Lethal --}}
+  {{#if isNonLethal}}
+  <div class="damage-section">
+    <div class="damage-details">
+      <div class="damage-line damage-total">
+        <i class="fas fa-bed"></i>
+        {{localize "SWORD.Combat.FaticaInflicted"}}: <strong class="wounds-value">{{specialMoveResult.faticaInflicted}}</strong>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Special move: Feint --}}
+  {{#if isFeint}}
+  <div class="damage-section">
+    <div class="damage-details">
+      <div class="damage-line damage-total">
+        <i class="fas fa-bolt"></i>
+        {{localize "SWORD.Combat.RiflessiLost"}}: <strong class="wounds-value">{{specialMoveResult.riflessiLost}}</strong>
+      </div>
+      {{#if specialMoveResult.agganciare}}
+      <div class="damage-line damage-type-effect">
+        <i class="fas fa-link"></i> {{localize "SWORD.Combat.AgganciareBonus"}}: +1
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Special move: Disarm result --}}
+  {{#if isDisarmResult}}
+  <div class="damage-section">
+    <div class="damage-details">
+      {{#if specialMoveResult.success}}
+      <div class="damage-line damage-total">
+        <i class="fas fa-hand-holding"></i>
+        {{localize "SWORD.Combat.DisarmSuccess"}} <strong>{{specialMoveResult.flyDistance}}m</strong>
+      </div>
+      {{else}}
+      <div class="damage-line">
+        <i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.DisarmFail"}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Special move: Push result --}}
+  {{#if isPushResult}}
+  <div class="damage-section">
+    <div class="damage-details">
+      {{#if specialMoveResult.success}}
+      <div class="damage-line damage-total">
+        <i class="fas fa-hand-point-right"></i>
+        {{localize "SWORD.Combat.PushSuccess"}} {{localize "SWORD.Combat.RiflessiLost"}}: <strong>{{specialMoveResult.riflessiLost}}</strong>
+      </div>
+      {{#if specialMoveResult.thrown}}
+      <div class="damage-line damage-type-effect">
+        <i class="fas fa-person-falling"></i> {{localize "SWORD.Combat.PushThrown"}}: {{specialMoveResult.pushWounds}}
+      </div>
+      {{/if}}
+      {{else}}
+      <div class="damage-line">
+        <i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.PushResisted"}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Special move: Grapple (Presa) --}}
+  {{#if isGrapple}}
+  <div class="damage-section">
+    <div class="damage-details">
+      {{#if defenseSucceeded}}
+      <div class="damage-line">
+        <i class="fas fa-shield-check"></i> {{localize "SWORD.Combat.GrappleFail"}}
+      </div>
+      {{else}}
+      <div class="damage-line damage-total">
+        <i class="fas fa-hand-rock"></i>
+        {{localize "SWORD.Combat.GrappleSuccess"}}
+      </div>
+      {{#if specialMoveResult.followUpGradeBonus}}
+      <div class="damage-line">
+        <i class="fas fa-arrow-up"></i>
+        {{localize "SWORD.Combat.GrappleFollowUpBonus"}} <strong>+{{specialMoveResult.followUpGradeBonus}}</strong>
+      </div>
+      {{/if}}
+      <div class="combat-defend-buttons">
+        <button type="button" class="defend-btn" data-action="grapple-free-strike"
+          data-attacker-actor-id="{{specialMoveResult.attackerActorId}}"
+          data-defender-actor-id="{{specialMoveResult.defenderActorId}}"
+          data-bonus="{{specialMoveResult.freeStrikeBonus}}">
+          <i class="fas fa-fist-raised"></i> {{localize "SWORD.Combat.GrappleFreeStrike"}} (+{{specialMoveResult.freeStrikeBonus}})
+        </button>
+        <button type="button" class="defend-btn" data-action="grapple-lock"
+          data-attacker-actor-id="{{specialMoveResult.attackerActorId}}"
+          data-defender-actor-id="{{specialMoveResult.defenderActorId}}">
+          <i class="fas fa-lock"></i> {{localize "SWORD.Combat.GrappleLock"}}
+        </button>
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Close Misura button --}}
+  {{#if canCloseMisura}}
+  <div class="combat-defend-buttons">
+    <button type="button" class="defend-btn" data-action="close-misura"
+      data-defender-actor-id="{{closeMisuraDefenderActorId}}"
+      data-attacker-actor-id="{{closeMisuraAttackerActorId}}"
+      data-new-misura="{{closeMisuraNewMisura}}">
+      <i class="fas fa-arrows-left-right"></i> {{localize "SWORD.Combat.CloseMisura"}}
+    </button>
+  </div>
+  {{/if}}
+
+</div>

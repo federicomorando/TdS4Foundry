@@ -1,0 +1,111 @@
+{
+  "_id": "NwbwuTaivYW0LyFY",
+  "_key": "!actors!NwbwuTaivYW0LyFY",
+  "name": "Mulo o cavallo da tiro",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 2,
+    "creatureType": "animale",
+    "sizeCategory": "grande",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 2,
+      "forza": 3,
+      "percezione": 3,
+      "volonta": 2,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 3,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 9,
+        "max": 9
+      },
+      "fatica": {
+        "value": 10,
+        "max": 10
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 5,
+      "trot": 6,
+      "gallop": 7,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 1,
+    "attacks": [
+      {
+        "name": "Zoccoli",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+2B"
+      }
+    ],
+    "advantages": [],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 5,
+      "leggere": 5,
+      "gravi": 4,
+      "critiche": 4,
+      "mortali": 4
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 10,
+      "stanco": 10,
+      "sfinito": 10
+    },
+    "speciale": ""
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Mulo o cavallo da tiro",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

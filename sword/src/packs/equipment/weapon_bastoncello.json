@@ -1,0 +1,40 @@
+{
+  "_id": "a4JkZ6b4HkptegS8",
+  "_key": "!items!a4JkZ6b4HkptegS8",
+  "name": "Bastoncello",
+  "type": "weapon",
+  "img": "icons/weapons/clubs/club-baton-brown.webp",
+  "system": {
+    "category": "armi_corte",
+    "skillId": "armi_corte",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 0,
+    "costDisplay": "na",
+    "weight": 1,
+    "damageValue": 1,
+    "damageType": "B",
+    "parryModifier": 1,
+    "misura": "S",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

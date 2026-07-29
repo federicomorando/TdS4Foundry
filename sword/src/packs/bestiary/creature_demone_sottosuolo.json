@@ -1,0 +1,129 @@
+{
+  "_id": "eXvYAxSSMYCdBGes",
+  "_key": "!actors!eXvYAxSSMYCdBGes",
+  "name": "Demone del sottosuolo",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 10,
+    "creatureType": "demone",
+    "sizeCategory": "grande",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 4,
+      "forza": 4,
+      "percezione": 5,
+      "volonta": 5,
+      "ragionamento": 3,
+      "carisma": 2
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 3,
+      "empatia": 3,
+      "raggirare": 4,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 10,
+        "max": 10
+      },
+      "fatica": {
+        "value": 8,
+        "max": 8
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 5,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 4,
+    "attacks": [
+      {
+        "name": "Artiglio",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3T",
+        "parata": 2
+      },
+      {
+        "name": "Secondo artiglio",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3T",
+        "parata": 2
+      }
+    ],
+    "advantages": [
+      "aura_infernale",
+      "ferocia",
+      "ostacolare",
+      "paura",
+      "sguardo_letale"
+    ],
+    "advantageDetails": {
+      "aura_infernale": 2,
+      "ostacolare": 4,
+      "paura": 3
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 4,
+      "leggere": 3,
+      "gravi": 3,
+      "critiche": 3,
+      "mortali": 3
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 8,
+      "stanco": 8,
+      "sfinito": 8
+    },
+    "speciale": "At least one wound also causes bleeding. Hinder: Agility reaction vs 4 successes for an earthquake, 10m radius. Lethal gaze (confusion). In spirit form: immune to mundane damage, Incorporeal, Invisible, Third Eye, Night Vision."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Demone del sottosuolo",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

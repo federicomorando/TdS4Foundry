@@ -1,0 +1,33 @@
+{
+  "_id": "jC1qB2DiGV8UtfCg",
+  "_key": "!items!jC1qB2DiGV8UtfCg",
+  "name": "Veleno da contatto",
+  "type": "gear",
+  "img": "icons/consumables/potions/bottle-conical-corked-labeled-skull-poison-green.webp",
+  "system": {
+    "gearCategory": "alchemical",
+    "costDenari": 120,
+    "costDisplay": "10s",
+    "weight": 0.25,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Applied to blade; Forza Reaction vs power 3 on wound"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

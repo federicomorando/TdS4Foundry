@@ -1,0 +1,120 @@
+{
+  "_id": "7aBgLaWberwmT3IQ",
+  "_key": "!actors!7aBgLaWberwmT3IQ",
+  "name": "Demone del fuoco",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 7,
+    "creatureType": "demone",
+    "sizeCategory": "media",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 3,
+      "percezione": 4,
+      "volonta": 3,
+      "ragionamento": 3,
+      "carisma": 3
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 4,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 3,
+      "empatia": 3,
+      "raggirare": 4,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 9,
+        "max": 9
+      },
+      "fatica": {
+        "value": 6,
+        "max": 6
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 5,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 15,
+      "swim": 0
+    },
+    "protezione": 2,
+    "attacks": [
+      {
+        "name": "Arma infuocata",
+        "skill": "armi_da_guerra",
+        "misura": "Larga",
+        "damage": "+1 fuoco"
+      }
+    ],
+    "advantages": [
+      "aura_infernale",
+      "aura_letale",
+      "immunita_fuoco",
+      "paura"
+    ],
+    "advantageDetails": {
+      "aura_infernale": 2,
+      "aura_letale": 3,
+      "paura": 3
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 3,
+      "leggere": 3,
+      "gravi": 3,
+      "critiche": 3,
+      "mortali": 2
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 6,
+      "stanco": 6,
+      "sfinito": 6
+    },
+    "speciale": "Two-handed flaming weapon (Wide reach, normal stats +1 fire damage). Flame burst: 4 successes, Agility reaction, 2 fire wounds per uncontested success, 10m range. Lethal aura: fire, 3 successes, 10m radius. Phantastikos: attacks dreams and manifests in mirrors/polished metal even by day. The only demon that tolerates sunlight. In spirit form: immune to mundane damage, Incorporeal, Invisible, Third Eye, Night Vision."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Demone del fuoco",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

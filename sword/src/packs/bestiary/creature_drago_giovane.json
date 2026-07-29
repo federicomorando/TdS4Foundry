@@ -1,0 +1,130 @@
+{
+  "_id": "GsYIBtJ1bov6LTF5",
+  "_key": "!actors!GsYIBtJ1bov6LTF5",
+  "name": "Drago giovane",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 12,
+    "creatureType": "creatura_fantastica",
+    "sizeCategory": "grande",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 4,
+      "forza": 4,
+      "percezione": 3,
+      "volonta": 4,
+      "ragionamento": 2,
+      "carisma": 2
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 2,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 3,
+      "empatia": 3,
+      "raggirare": 3,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 12,
+        "max": 12
+      },
+      "fatica": {
+        "value": 7,
+        "max": 7
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 7,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 21,
+      "swim": 0
+    },
+    "protezione": 6,
+    "attacks": [
+      {
+        "name": "Artiglio",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3T"
+      },
+      {
+        "name": "Secondo artiglio",
+        "skill": "lotta",
+        "misura": "Media",
+        "damage": "+3T"
+      },
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Stretta",
+        "damage": "+5T"
+      }
+    ],
+    "advantages": [
+      "aura_letale",
+      "ferocia",
+      "paura"
+    ],
+    "advantageDetails": {
+      "aura_letale": 2,
+      "paura": 3
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 5,
+      "leggere": 5,
+      "gravi": 4,
+      "critiche": 4,
+      "mortali": 4
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 7,
+      "stanco": 7,
+      "sfinito": 7
+    },
+    "speciale": "Breath: 5m x 10m cone, 4 successes, Agility reaction, 2 wounds per uncontested success. Sweep: 4 successes, Wide reach, 2m radius, 3 wounds per uncontested success."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Drago giovane",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

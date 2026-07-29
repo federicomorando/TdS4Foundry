@@ -1,0 +1,33 @@
+{
+  "_id": "TtzaUMGXC7BDEb9R",
+  "_key": "!items!TtzaUMGXC7BDEb9R",
+  "name": "Frecce (12) con faretra",
+  "type": "gear",
+  "img": "icons/containers/ammunition/arrows-quiver-brown.webp",
+  "system": {
+    "gearCategory": "ammunition",
+    "costDenari": 12,
+    "costDisplay": "12d",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "12 arrows with quiver"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

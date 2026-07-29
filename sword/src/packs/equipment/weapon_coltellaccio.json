@@ -1,0 +1,40 @@
+{
+  "_id": "kk4pjOugtDdvTFv3",
+  "_key": "!items!kk4pjOugtDdvTFv3",
+  "name": "Coltellaccio",
+  "type": "weapon",
+  "img": "icons/weapons/daggers/knife-engraved-black.webp",
+  "system": {
+    "category": "armi_corte",
+    "skillId": "armi_corte",
+    "weaponType": "spada",
+    "hands": "una_mano",
+    "costDenari": 6,
+    "costDisplay": "6d",
+    "weight": 1,
+    "damageValue": 2,
+    "damageType": "T",
+    "parryModifier": 2,
+    "misura": "M",
+    "pregi": [],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

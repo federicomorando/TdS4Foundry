@@ -1,0 +1,111 @@
+{
+  "_id": "0iAIUb7z54QO8DEG",
+  "_key": "!actors!0iAIUb7z54QO8DEG",
+  "name": "Serpe",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 1,
+    "creatureType": "animale",
+    "sizeCategory": "piccola",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 3,
+      "forza": 0,
+      "percezione": 3,
+      "volonta": 2,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 3,
+      "furtivita": 3,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 16,
+        "max": 16
+      },
+      "fatica": {
+        "value": 2,
+        "max": 2
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 4,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 0,
+    "attacks": [
+      {
+        "name": "Morso",
+        "skill": "lotta",
+        "misura": "Abbrazzar",
+        "damage": "+1T"
+      }
+    ],
+    "advantages": [],
+    "advantageDetails": {},
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 2,
+      "leggere": 0,
+      "gravi": 1,
+      "critiche": 1,
+      "mortali": 1
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 2,
+      "stanco": 2,
+      "sfinito": 2
+    },
+    "speciale": "Injects venom of Power 3 (wounding, onset 1d6 hours). Can spook mounts (the animal makes a Fear reaction vs 3 successes)."
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Serpe",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

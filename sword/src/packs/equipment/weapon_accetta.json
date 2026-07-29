@@ -1,0 +1,42 @@
+{
+  "_id": "ee55h13ki9BUEiFn",
+  "_key": "!items!ee55h13ki9BUEiFn",
+  "name": "Accetta",
+  "type": "weapon",
+  "img": "icons/weapons/axes/shortaxe-simple-black.webp",
+  "system": {
+    "category": "armi_corte",
+    "skillId": "armi_corte",
+    "weaponType": "ascia",
+    "hands": "una_mano",
+    "costDenari": 3,
+    "costDisplay": "3d",
+    "weight": 1,
+    "damageValue": 3,
+    "damageType": "T",
+    "parryModifier": 1,
+    "misura": "S",
+    "pregi": [
+      "agganciare"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

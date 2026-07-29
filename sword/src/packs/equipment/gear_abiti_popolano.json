@@ -1,0 +1,33 @@
+{
+  "_id": "UawcuWRB9LpelA8r",
+  "_key": "!items!UawcuWRB9LpelA8r",
+  "name": "Abiti da popolano",
+  "type": "gear",
+  "img": "icons/equipment/chest/shirt-collared-brown.webp",
+  "system": {
+    "gearCategory": "clothing",
+    "costDenari": 24,
+    "costDisplay": "2s",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Commoner-class clothing"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

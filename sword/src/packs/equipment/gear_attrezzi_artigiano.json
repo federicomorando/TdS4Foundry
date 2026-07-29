@@ -1,0 +1,33 @@
+{
+  "_id": "yAhK0MzWSuMTmrFl",
+  "_key": "!items!yAhK0MzWSuMTmrFl",
+  "name": "Attrezzi da artigiano",
+  "type": "gear",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "gearCategory": "skill_tool",
+    "costDenari": 48,
+    "costDisplay": "4s",
+    "weight": 5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": "artigiano",
+    "description": "Required for Artigiano checks"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

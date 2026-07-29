@@ -1,0 +1,33 @@
+{
+  "_id": "3MxgXQtwAA0vNNk3",
+  "_key": "!items!3MxgXQtwAA0vNNk3",
+  "name": "Torcia",
+  "type": "gear",
+  "img": "icons/sundries/lights/torch-brown-lit.webp",
+  "system": {
+    "gearCategory": "travel",
+    "costDenari": 1,
+    "costDisplay": "1d",
+    "weight": 0.5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Burns for ~1 hour"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

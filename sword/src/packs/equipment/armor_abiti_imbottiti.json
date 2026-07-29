@@ -1,0 +1,33 @@
+{
+  "_id": "7RSETLFD02ZDKckT",
+  "_key": "!items!7RSETLFD02ZDKckT",
+  "name": "Abiti imbottiti",
+  "type": "armor",
+  "img": "icons/equipment/chest/breastplate-quilted-brown.webp",
+  "system": {
+    "costDenari": 24,
+    "costDisplay": "24d",
+    "weight": 2,
+    "protezione": 1,
+    "robustezza": 10,
+    "robustezzaCurrent": 10,
+    "pregi": [],
+    "quality": "normale"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

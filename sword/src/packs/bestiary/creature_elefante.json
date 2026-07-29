@@ -1,0 +1,117 @@
+{
+  "_id": "RGljzWiyFshexOql",
+  "_key": "!actors!RGljzWiyFshexOql",
+  "name": "Elefante",
+  "type": "creature",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "rango": 6,
+    "creatureType": "animale",
+    "sizeCategory": "enorme",
+    "isTemplate": false,
+    "abilities": {
+      "agilita": 0,
+      "forza": 6,
+      "percezione": 3,
+      "volonta": 4,
+      "ragionamento": 0,
+      "carisma": 0
+    },
+    "skills": {
+      "lotta": 4,
+      "furtivita": 0,
+      "armi_comuni": 0,
+      "armi_da_guerra": 0,
+      "armi_corte": 0,
+      "archi": 0,
+      "autorita": 0,
+      "empatia": 0,
+      "raggirare": 0,
+      "sopravvivenza": 0
+    },
+    "resources": {
+      "riflessi": {
+        "value": 7,
+        "max": 7
+      },
+      "fatica": {
+        "value": 13,
+        "max": 13
+      },
+      "spirito": {
+        "value": 0,
+        "max": 0
+      }
+    },
+    "movement": {
+      "walk": 4,
+      "trot": 0,
+      "gallop": 0,
+      "fly": 0,
+      "swim": 0
+    },
+    "protezione": 4,
+    "attacks": [
+      {
+        "name": "Zanna",
+        "skill": "lotta",
+        "misura": "Larga",
+        "damage": "+3P"
+      }
+    ],
+    "advantages": [
+      "ferocia",
+      "paura",
+      "travolgere"
+    ],
+    "advantageDetails": {
+      "paura": 4
+    },
+    "disadvantages": [],
+    "woundCapacities": {
+      "graffi": 7,
+      "leggere": 7,
+      "gravi": 7,
+      "critiche": 7,
+      "mortali": 6
+    },
+    "woundLevels": {
+      "graffi": 0,
+      "leggere": 0,
+      "gravi": 0,
+      "critiche": 0,
+      "mortali": 0
+    },
+    "fatigueThresholds": {
+      "fresco": 13,
+      "stanco": 13,
+      "sfinito": 13
+    },
+    "speciale": ""
+  },
+  "items": [],
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "prototypeToken": {
+    "name": "Elefante",
+    "displayName": 20,
+    "actorLink": false,
+    "disposition": -1,
+    "width": 1,
+    "height": 1
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

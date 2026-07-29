@@ -1,0 +1,33 @@
+{
+  "_id": "3Vz9Woj24isljznl",
+  "_key": "!items!3Vz9Woj24isljznl",
+  "name": "Fuoco greco",
+  "type": "gear",
+  "img": "icons/consumables/potions/bottle-round-corked-orange.webp",
+  "system": {
+    "gearCategory": "alchemical",
+    "costDenari": 240,
+    "costDisplay": "1l",
+    "weight": 0.5,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "Incendiary; causes burning damage"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

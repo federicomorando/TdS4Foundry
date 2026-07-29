@@ -1,0 +1,570 @@
+<div class="sword-creation-wizard">
+
+  {{!-- Step indicators --}}
+  <div class="wizard-steps">
+    {{#each steps}}
+    <div class="wizard-step-indicator {{#if this.active}}active{{else if this.completed}}completed{{/if}}">
+      {{this.num}}. {{this.label}}
+    </div>
+    {{/each}}
+  </div>
+
+  {{!-- Step content --}}
+  <div class="wizard-content">
+
+    {{!-- Step 1: Ceto --}}
+    {{#if (eq currentStep 1)}}
+    <div class="wizard-step-ceto">
+      <div class="ceto-cards">
+        {{#each cetoOptions}}
+        <div class="ceto-card {{#if this.selected}}selected{{/if}}" data-action="selectCeto" data-ceto="{{this.id}}">
+          <h4>{{this.label}}</h4>
+          <p>{{this.desc}}</p>
+          <span class="ceto-cost">
+            {{#if this.cost}}Retaggio: {{this.cost}} | +{{this.cost}} Fama{{else}}Gratuito{{/if}}
+          </span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Step 2: Characteristics --}}
+    {{#if (eq currentStep 2)}}
+    <div class="wizard-step-chars">
+      <div class="char-spinners">
+        {{#each charSpinners}}
+        <div class="char-spinner">
+          <label>{{this.label}}</label>
+          <button type="button" class="char-btn" data-action="charDec" data-char="{{this.key}}" {{#if (eq this.value 5)}}disabled{{/if}}>−</button>
+          <span class="char-value">{{this.value}}</span>
+          <button type="button" class="char-btn" data-action="charInc" data-char="{{this.key}}" {{#if (eq this.value 13)}}disabled{{/if}}>+</button>
+          <span class="char-mod-preview {{#if (gte this.mod 0)}}positive{{else}}negative{{/if}}">
+            {{#if (gte this.mod 0)}}+{{/if}}{{this.mod}}
+          </span>
+        </div>
+        {{/each}}
+      </div>
+      <div class="char-points-total {{#if charPointsValid}}valid{{else}}invalid{{/if}}">
+        {{localize "SWORD.Creation.CharPoints"}}: {{charPointsUsed}} / 54
+        ({{localize "SWORD.Creation.CharPointsRemaining"}}: {{charPointsRemaining}})
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Step 3: Culture --}}
+    {{#if (eq currentStep 3)}}
+    <div class="wizard-step-culture">
+      <div class="culture-trait-section">
+        <h4>{{localize "SWORD.Creation.CultureTrait1"}}</h4>
+        <select data-action="setCultureTrait1">
+          <option value="">—</option>
+          {{#each cultureOptions}}
+          <option value="{{this.id}}" {{#if (eq this.id ../cultureTrait1)}}selected{{/if}}
+            {{#if (eq this.id ../cultureTrait2)}}disabled{{/if}}>{{this.label}}</option>
+          {{/each}}
+        </select>
+        {{#if trait1Def}}
+        <div class="culture-detail">
+          <p class="culture-desc">{{trait1Def.desc}}</p>
+          <div class="culture-skill-pick">
+            <label>{{localize "SWORD.Creation.CultureSkillPick"}}</label>
+            <select data-action="setTrait1Skill">
+              <option value="">—</option>
+              {{#each trait1Def.skillOptions}}
+              <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="culture-info-row">
+            <span class="culture-info-label">{{localize "SWORD.Creation.CultureValori"}}:</span>
+            <span>{{trait1Def.valoriLabels}}</span>
+          </div>
+          <div class="culture-info-row">
+            <span class="culture-info-label">{{localize "SWORD.Creation.CultureAdvantage"}}:</span>
+            <span>{{trait1Def.advantageDesc}}</span>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+
+      <div class="culture-trait-section">
+        <h4>{{localize "SWORD.Creation.CultureTrait2"}}</h4>
+        <select data-action="setCultureTrait2">
+          <option value="">—</option>
+          {{#each cultureOptions}}
+          <option value="{{this.id}}" {{#if (eq this.id ../cultureTrait2)}}selected{{/if}}
+            {{#if (eq this.id ../cultureTrait1)}}disabled{{/if}}>{{this.label}}</option>
+          {{/each}}
+        </select>
+        {{#if trait2Def}}
+        <div class="culture-detail">
+          <p class="culture-desc">{{trait2Def.desc}}</p>
+          <div class="culture-skill-pick">
+            <label>{{localize "SWORD.Creation.CultureSkillPick"}}</label>
+            <select data-action="setTrait2Skill">
+              <option value="">—</option>
+              {{#each trait2Def.skillOptions}}
+              <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="culture-info-row">
+            <span class="culture-info-label">{{localize "SWORD.Creation.CultureValori"}}:</span>
+            <span>{{trait2Def.valoriLabels}}</span>
+          </div>
+          <div class="culture-info-row">
+            <span class="culture-info-label">{{localize "SWORD.Creation.CultureAdvantage"}}:</span>
+            <span>{{trait2Def.advantageDesc}}</span>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+
+      {{!-- Cortese advantage: extra skill pick --}}
+      {{#if hasCortese}}
+      <div class="culture-cortese-section">
+        <h4>{{localize "SWORD.Creation.CultureAdvantage"}} (Cortese)</h4>
+        <select data-action="setCorteseAdvSkill">
+          <option value="">—</option>
+          {{#each corteseAdvOptions}}
+          <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- Step 4: Derived Stats --}}
+    {{#if (eq currentStep 4)}}
+    <div class="wizard-step-derived">
+      <div class="derived-stats">
+        {{#each derivedStats}}
+        <div class="derived-stat">
+          <label>{{this.label}}</label>
+          <span class="derived-value">{{this.value}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Step 5: Skills --}}
+    {{#if (eq currentStep 5)}}
+    <div class="wizard-step-skills">
+      {{!-- Base skills --}}
+      <div class="skill-picker-section">
+        <h4>{{localize "SWORD.Grade"}} 1 — Base</h4>
+        <div class="skill-picker-grid">
+          {{#each baseSkillDisplay}}
+          <div class="skill-pick base-skill">
+            <span>{{this.label}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Mestiere picks --}}
+      <div class="skill-picker-section">
+        <h4>{{localize "SWORD.Creation.MestiereTitle"}} ({{mestierePicksUsed}}/6)</h4>
+        <div class="skill-picker-grid">
+          {{#each mestiereOptions}}
+          <div class="skill-pick {{#if this.selected}}selected{{/if}} {{#if this.disabled}}disabled{{/if}}"
+               data-action="toggleMestiere" data-skill="{{this.id}}">
+            <span>{{this.label}}</span>
+            <span class="pick-cost">{{this.costLabel}}</span>
+          </div>
+          {{#if (and this.selected this.needsSpecialty)}}
+          <div class="specialty-inputs" style="display:flex; gap:4px; padding:2px 4px;">
+            <input type="text" data-action="setSpecialtyName" data-skill="{{this.id}}"
+                   placeholder="{{localize 'SWORD.Specialty.Placeholder'}}" value="{{this.specialtyName}}"
+                   style="flex:1; min-width:80px;" />
+            <select data-action="setSpecialtyChar" data-skill="{{this.id}}" style="width:auto;">
+              {{#each this.characteristicOptions}}
+              <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+          </div>
+          {{/if}}
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Free skills --}}
+      <div class="skill-picker-section">
+        <h4>{{localize "SWORD.Creation.FreeSkillsTitle"}} ({{freePicksUsed}}/{{freePicksTotal}})</h4>
+        <div class="skill-picker-grid">
+          {{#each freeSkillOptions}}
+          <div class="skill-pick {{#if this.selected}}selected{{/if}}"
+               data-action="toggleFreeSkill" data-skill="{{this.id}}">
+            <span>{{this.label}}</span>
+            <span class="pick-cost">{{this.effect}} · {{this.costLabel}}</span>
+          </div>
+          {{#if (and this.selected this.needsSpecialty)}}
+          <div class="specialty-inputs" style="display:flex; gap:4px; padding:2px 4px;">
+            <input type="text" data-action="setSpecialtyName" data-skill="{{this.id}}"
+                   placeholder="{{localize 'SWORD.Specialty.Placeholder'}}" value="{{this.specialtyName}}"
+                   style="flex:1; min-width:80px;" />
+            <select data-action="setSpecialtyChar" data-skill="{{this.id}}" style="width:auto;">
+              {{#each this.characteristicOptions}}
+              <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+          </div>
+          {{/if}}
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Training --}}
+      <div class="skill-picker-section training-section">
+        <h4>{{localize "SWORD.Creation.TrainingTitle"}}</h4>
+        <p style="font-size:11px; color:#666;">{{localize "SWORD.Creation.TrainingGrade3"}}:</p>
+        {{#each grade3Slots}}
+        <div class="training-row">
+          <select data-action="setGrade3" data-slot="{{this.index}}">
+            <option value="">—</option>
+            {{#each this.options}}
+            <option value="{{this.id}}" {{#if (eq this.id ../selected)}}selected{{/if}}>
+              {{this.label}}{{#if this.focusEligible}} (Focus){{/if}}
+            </option>
+            {{/each}}
+          </select>
+        </div>
+        {{/each}}
+        <p style="font-size:11px; color:#666; margin-top:6px;">{{localize "SWORD.Creation.TrainingGrade2"}}:</p>
+        {{#each grade2Slots}}
+        <div class="training-row">
+          <select data-action="setGrade2" data-slot="{{this.index}}">
+            <option value="">—</option>
+            {{#each this.options}}
+            <option value="{{this.id}}" {{#if (eq this.id ../selected)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+        {{/each}}
+      </div>
+
+      {{!-- Skill overlap warnings --}}
+      {{#if skillWarnings.length}}
+      <div class="skill-warnings">
+        {{#each skillWarnings}}
+        <p class="warn">{{this}}</p>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{!-- Talent preview --}}
+      {{#if talentPreview.length}}
+      <div class="talent-preview">
+        <h4>{{localize "SWORD.Creation.TalentPreview"}} ({{talentPreviewCount}})</h4>
+        <div class="talent-preview-list">
+          {{#each talentPreview}}
+          <span class="talent-preview-chip grade-{{this.grade}}">{{this.name}}</span>
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- Step 6: Valori --}}
+    {{#if (eq currentStep 6)}}
+    <div class="wizard-step-valori">
+      <div class="valori-picker">
+        <div class="retaggio-info">
+          {{valoriPointsUsed}} / {{valoriPointsMax}} {{localize "SWORD.Valori.Points"}}
+        </div>
+        {{#each valoriAxes}}
+        <div class="valori-axis-picker {{#if this.leftDisabled}}left-disabled{{/if}} {{#if this.rightDisabled}}right-disabled{{/if}}">
+          <label class="valori-label-left {{#if this.leftDisabled}}disabled{{/if}}">{{this.leftLabel}}</label>
+          <button type="button" class="char-btn" data-action="valoreDec" data-valore="{{this.leftKey}}" {{#if (eq this.leftVal 0)}}disabled{{/if}}>−</button>
+          <span class="valori-value">{{this.leftVal}}</span>
+          <button type="button" class="char-btn" data-action="valoreInc" data-valore="{{this.leftKey}}" {{#if this.leftMaxed}}disabled{{/if}}>+</button>
+          <span class="valori-separator">/</span>
+          <button type="button" class="char-btn" data-action="valoreDec" data-valore="{{this.rightKey}}" {{#if (eq this.rightVal 0)}}disabled{{/if}}>−</button>
+          <span class="valori-value">{{this.rightVal}}</span>
+          <button type="button" class="char-btn" data-action="valoreInc" data-valore="{{this.rightKey}}" {{#if this.rightMaxed}}disabled{{/if}}>+</button>
+          <label class="valori-label-right {{#if this.rightDisabled}}disabled{{/if}}">{{this.rightLabel}}</label>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Step 7: Retaggio --}}
+    {{#if (eq currentStep 7)}}
+    <div class="wizard-step-retaggio">
+      <div class="retaggio-section">
+        <div class="retaggio-info">
+          {{localize "SWORD.Creation.RetaggioPoints"}}: {{retaggioAvailable}}
+        </div>
+
+        <div class="tentazione-pick" style="display:flex; align-items:center; gap:8px; padding:4px;">
+          <label style="font-weight:bold; font-size:12px; white-space:nowrap;">{{localize "SWORD.Creation.Temptation"}}</label>
+          <select data-action="setTentazione" style="flex:1;">
+            <option value="" {{#unless tentazione}}selected{{/unless}}>{{localize "SWORD.Creation.TemptationNone"}}</option>
+            {{#each tentazioneOptions}}
+            <option value="{{this.id}}" {{#if this.selected}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <h4>{{localize "SWORD.Creation.Events"}} ({{eventsUsed}}/{{retaggioAvailable}})</h4>
+        <div class="event-list">
+          {{#each eventSlots}}
+          <div class="event-slot">
+            <div class="event-row">
+              <select data-action="setEvent" data-slot="{{this.index}}">
+                <option value="">—</option>
+                {{#each this.eventTypeOptions}}
+                <option value="{{this.id}}" {{#if this.selected}}selected{{/if}} {{#if this.disabled}}disabled{{/if}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+              <input type="text" data-action="setEventNote" data-slot="{{this.index}}" value="{{this.note}}" placeholder="Note..." />
+            </div>
+
+            {{!-- Effect label for simple events --}}
+            {{#if this.effectLabel}}
+            <div class="event-sub-ui">
+              <span class="event-effect-label">{{this.effectLabel}}</span>
+            </div>
+            {{/if}}
+
+            {{!-- Apprendistato mode selector --}}
+            {{#if this.hasMode}}
+            <div class="event-sub-ui">
+              <div class="event-mode">
+                {{#each this.modes}}
+                <button type="button" class="event-mode-btn {{#if this.selected}}selected{{/if}}"
+                        data-action="setEventMode" data-slot="{{../index}}" data-mode="{{this.id}}">
+                  {{this.label}}
+                </button>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+
+            {{!-- Skill pick grid --}}
+            {{#if this.needsSkillPicks}}
+            <div class="event-sub-ui">
+              <p class="event-pick-label">{{localize "SWORD.Creation.EventPickSkills"}} ({{this.picksCount}}/{{this.pickMax}})</p>
+              <div class="event-pick-grid">
+                {{#each this.pickOptions}}
+                <div class="skill-pick {{#if this.selected}}selected{{/if}}"
+                     data-action="setEventPick" data-slot="{{../index}}" data-skill="{{this.id}}">
+                  <span>{{this.label}}</span>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+
+            {{!-- Percorso Spirituale valore picker --}}
+            {{#if this.isPercorsoSpirituale}}
+            <div class="event-sub-ui">
+              <div class="event-valore-pick">
+                <label>{{localize "SWORD.Creation.EventPickValore"}}</label>
+                <select data-action="setEventValore" data-slot="{{this.index}}">
+                  <option value="">—</option>
+                  {{#each this.valoreOptions}}
+                  <option value="{{this.key}}" {{#if (eq this.key ../currentValoreKey)}}selected{{/if}}>{{this.label}}</option>
+                  {{/each}}
+                </select>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+
+        {{!-- Esperienza extra training slots --}}
+        {{#if espGrade3Slots}}
+        <div class="event-training">
+          <h4>{{localize "SWORD.Creation.EsperienzaTraining"}}</h4>
+          <p style="font-size:11px; color:#666;">{{localize "SWORD.Creation.EsperienzaGrade3"}}:</p>
+          {{#each espGrade3Slots}}
+          <div class="training-row">
+            <select data-action="setEspGrade3" data-slot="{{this.index}}">
+              <option value="">—</option>
+              {{#each this.options}}
+              <option value="{{this.id}}" {{#if (eq this.id ../selected)}}selected{{/if}}>
+                {{this.label}}{{#if this.focusEligible}} (Focus){{/if}}
+              </option>
+              {{/each}}
+            </select>
+          </div>
+          {{/each}}
+          <p style="font-size:11px; color:#666; margin-top:6px;">{{localize "SWORD.Creation.EsperienzaGrade2"}}:</p>
+          {{#each espGrade2Slots}}
+          <div class="training-row">
+            <select data-action="setEspGrade2" data-slot="{{this.index}}">
+              <option value="">—</option>
+              {{#each this.options}}
+              <option value="{{this.id}}" {{#if (eq this.id ../selected)}}selected{{/if}}>{{this.label}}</option>
+              {{/each}}
+            </select>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Step 8: Equipment --}}
+    {{#if (eq currentStep 8)}}
+    <div class="wizard-step-equipment">
+      {{!-- Wealth display --}}
+      <div class="equip-wealth-header">
+        <span class="equip-wealth-label">{{localize "SWORD.Creation.Equipment.Wealth"}}:</span>
+        <span class="equip-wealth-value">{{wealthDisplay}}</span>
+        {{#if hasLaboriosa}}<span class="equip-laboriosa-note">({{localize "SWORD.Creation.Equipment.Laboriosa"}})</span>{{/if}}
+        <button type="button" data-action="rerollWealth" class="equip-reroll-btn">
+          {{localize "SWORD.Creation.Equipment.Reroll"}}
+        </button>
+      </div>
+
+      {{!-- Militare banner --}}
+      {{#if hasMilitare}}
+      <div class="equip-militare-banner">{{localize "SWORD.Creation.Equipment.MilitareBanner"}}</div>
+      {{/if}}
+
+      {{!-- Mode toggle --}}
+      <div class="equip-mode-toggle">
+        <button type="button" class="equip-mode-btn {{#if (eq equipMode 'manual')}}active{{/if}}"
+                data-action="setEquipMode" data-mode="manual">
+          {{localize "SWORD.Creation.Equipment.Manual"}}
+        </button>
+        <button type="button" class="equip-mode-btn {{#if (eq equipMode 'random')}}active{{/if}}"
+                data-action="setEquipMode" data-mode="random">
+          {{localize "SWORD.Creation.Equipment.Random"}}
+        </button>
+      </div>
+
+      {{!-- Random mode --}}
+      {{#if (eq equipMode "random")}}
+      <div class="equip-random-controls">
+        <button type="button" data-action="randomEquipment" class="equip-regenerate-btn">
+          {{localize "SWORD.Creation.Equipment.Regenerate"}}
+        </button>
+        <span class="equip-random-hint">{{localize "SWORD.Creation.Equipment.SwitchToManual"}}</span>
+      </div>
+      {{/if}}
+
+      {{!-- Manual mode: catalog --}}
+      {{#if (eq equipMode "manual")}}
+      <div class="equip-catalog">
+        {{!-- Weapons by category --}}
+        {{#each weaponCategories}}
+        <div class="equip-category-section">
+          <h5 class="equip-category-label">{{this.label}}</h5>
+          {{#each this.items}}
+          <div class="equip-item-row {{#unless this.affordable}}unaffordable{{/unless}} {{#if this.inCart}}in-cart{{/if}}">
+            <span class="equip-item-name">{{this.label}}</span>
+            <span class="equip-item-cost">{{this.costDisplay}}</span>
+            <button type="button" data-action="addToCart" data-type="{{this.type}}" data-item-id="{{this.itemId}}"
+                    {{#if this.inCart}}disabled{{/if}} {{#unless this.affordable}}disabled{{/unless}}>+</button>
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+
+        {{!-- Shields --}}
+        <div class="equip-category-section">
+          <h5 class="equip-category-label">{{localize "TYPES.Item.shield"}}</h5>
+          {{#each shieldItems}}
+          <div class="equip-item-row {{#unless this.affordable}}unaffordable{{/unless}} {{#if this.inCart}}in-cart{{/if}}">
+            <span class="equip-item-name">{{this.label}}</span>
+            <span class="equip-item-cost">{{this.costDisplay}}</span>
+            <button type="button" data-action="addToCart" data-type="{{this.type}}" data-item-id="{{this.itemId}}"
+                    {{#if this.inCart}}disabled{{/if}} {{#unless this.affordable}}disabled{{/unless}}>+</button>
+          </div>
+          {{/each}}
+        </div>
+
+        {{!-- Armor --}}
+        <div class="equip-category-section">
+          <h5 class="equip-category-label">{{localize "TYPES.Item.armor"}}</h5>
+          {{#each armorItems}}
+          <div class="equip-item-row {{#unless this.affordable}}unaffordable{{/unless}} {{#if this.inCart}}in-cart{{/if}}">
+            <span class="equip-item-name">{{this.label}}</span>
+            <span class="equip-item-cost">{{this.costDisplay}}</span>
+            <button type="button" data-action="addToCart" data-type="{{this.type}}" data-item-id="{{this.itemId}}"
+                    {{#if this.inCart}}disabled{{/if}} {{#unless this.affordable}}disabled{{/unless}}>+</button>
+          </div>
+          {{/each}}
+        </div>
+
+        {{!-- Gear by category --}}
+        {{#each gearCategories}}
+        <div class="equip-category-section">
+          <h5 class="equip-category-label">{{this.label}}</h5>
+          {{#each this.items}}
+          <div class="equip-item-row {{#unless this.affordable}}unaffordable{{/unless}}">
+            <span class="equip-item-name">{{this.label}}</span>
+            <span class="equip-item-cost">{{this.costDisplay}}</span>
+            <button type="button" data-action="addToCart" data-type="{{this.type}}" data-item-id="{{this.itemId}}"
+                    {{#unless this.affordable}}disabled{{/unless}}>+</button>
+          </div>
+          {{/each}}
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{!-- Cart (always visible) --}}
+      <div class="equip-cart">
+        <h5 class="equip-cart-title">{{localize "SWORD.Creation.Equipment.Cart"}}</h5>
+        {{#if cartItems.length}}
+        <div class="equip-cart-list">
+          {{#each cartItems}}
+          <div class="equip-cart-item">
+            <span class="equip-cart-name">
+              {{this.label}}{{#if (gt this.qty 1)}} ×{{this.qty}}{{/if}}
+              {{#if this.militareTag}}<span class="equip-militare-tag">Buona</span>{{/if}}
+            </span>
+            <span class="equip-cart-cost">{{this.costDisplay}}</span>
+            <button type="button" data-action="removeFromCart" data-type="{{this.type}}" data-item-id="{{this.itemId}}">−</button>
+          </div>
+          {{/each}}
+        </div>
+        <div class="equip-cart-summary">
+          <div class="equip-cart-total">
+            {{localize "SWORD.Creation.Equipment.Total"}}: {{cartTotalDisplay}}
+          </div>
+          <div class="equip-cart-remaining {{#if overBudget}}over-budget{{/if}}">
+            {{localize "SWORD.Creation.Equipment.Remaining"}}: {{remainingDisplay}}
+          </div>
+        </div>
+        {{else}}
+        <p class="equip-empty-cart">{{localize "SWORD.Creation.Equipment.EmptyCart"}}</p>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- Validation message --}}
+    {{#if validationMsg}}
+    <div class="validation-msg">{{validationMsg}}</div>
+    {{/if}}
+  </div>
+
+  {{!-- Navigation --}}
+  <div class="wizard-nav">
+    <button type="button" data-action="wizardBack" {{#if (eq currentStep 1)}}disabled{{/if}}>
+      {{localize "SWORD.Creation.Back"}}
+    </button>
+    {{#if (eq currentStep 8)}}
+    <button type="button" data-action="wizardFinish" {{#if finishDisabled}}disabled{{/if}}>
+      {{localize "SWORD.Creation.Finish"}}
+    </button>
+    {{else}}
+    <button type="button" data-action="wizardNext" {{#if nextDisabled}}disabled{{/if}}>
+      {{localize "SWORD.Creation.Next"}}
+    </button>
+    {{/if}}
+  </div>
+
+</div>

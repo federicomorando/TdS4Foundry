@@ -1,0 +1,40 @@
+{
+  "_id": "TV2Es5p1VI3ZOlu2",
+  "_key": "!items!TV2Es5p1VI3ZOlu2",
+  "name": "Balestra a staffa",
+  "type": "weapon",
+  "img": "icons/weapons/crossbows/crossbow-simple-black.webp",
+  "system": {
+    "category": "balestre",
+    "skillId": "balestre",
+    "weaponType": "balestra",
+    "hands": "due_mani",
+    "costDenari": 72,
+    "costDisplay": "6s",
+    "weight": 4,
+    "damageValue": 4,
+    "damageType": "P",
+    "parryModifier": 1,
+    "misura": null,
+    "pregi": [],
+    "quality": "normale",
+    "gittata": 20,
+    "ricarica": 4
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

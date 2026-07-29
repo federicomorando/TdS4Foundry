@@ -1,0 +1,33 @@
+{
+  "_id": "AIqz5hGydwQctiJH",
+  "_key": "!items!AIqz5hGydwQctiJH",
+  "name": "Materiale da scrittura",
+  "type": "gear",
+  "img": "icons/tools/scribal/ink-quill-red.webp",
+  "system": {
+    "gearCategory": "skill_tool",
+    "costDenari": 60,
+    "costDisplay": "5s",
+    "weight": 1,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": "arti_liberali",
+    "description": "Quill, ink, parchment. Required for written Arti liberali"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

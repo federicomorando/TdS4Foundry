@@ -1,0 +1,42 @@
+{
+  "_id": "CiRTF2A70WY8G4Kb",
+  "_key": "!items!CiRTF2A70WY8G4Kb",
+  "name": "Scure",
+  "type": "weapon",
+  "img": "icons/weapons/axes/axe-battle-simple.webp",
+  "system": {
+    "category": "armi_comuni",
+    "skillId": "armi_comuni",
+    "weaponType": "ascia",
+    "hands": "due_mani",
+    "costDenari": 8,
+    "costDisplay": "8d",
+    "weight": 4,
+    "damageValue": 5,
+    "damageType": "T",
+    "parryModifier": 2,
+    "misura": "M",
+    "pregi": [
+      "agganciare"
+    ],
+    "quality": "normale",
+    "gittata": null,
+    "ricarica": null
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}

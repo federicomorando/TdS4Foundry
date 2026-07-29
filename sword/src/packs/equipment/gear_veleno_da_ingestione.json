@@ -1,0 +1,33 @@
+{
+  "_id": "BDBxTonF0ZYZ0cIg",
+  "_key": "!items!BDBxTonF0ZYZ0cIg",
+  "name": "Veleno da ingestione",
+  "type": "gear",
+  "img": "icons/consumables/potions/potion-bottle-skull-label-poison-teal.webp",
+  "system": {
+    "gearCategory": "alchemical",
+    "costDenari": 120,
+    "costDisplay": "10s",
+    "weight": 0.25,
+    "quantity": 1,
+    "quality": "normale",
+    "skillBonusSkillId": null,
+    "description": "In food/drink; Forza Reaction vs power 4"
+  },
+  "effects": [],
+  "flags": {},
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "duplicateSource": null,
+    "coreVersion": "13.351",
+    "systemId": "sword",
+    "systemVersion": "2.1.0",
+    "createdTime": null,
+    "modifiedTime": null,
+    "lastModifiedBy": null
+  }
+}
