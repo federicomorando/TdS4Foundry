@@ -240,9 +240,13 @@ async function _resolveStudy(actor, diceCount, goldBonus, studyPE) {
 async function _resolveWork(actor, skillId, diceCount, doubleEarnings) {
   const system = actor.system;
   const ec = system.effectiveCharacteristics ?? system.characteristics;
-  const charKey = SKILL_MAP[skillId];
-  const charScore = ec[charKey];
   const skillData = system.skills[skillId];
+  const charKey = SKILL_MAP[skillId];
+  // artigiano/professione map to "varies" — resolve to the specialty's characteristic
+  // (falling back to mens), like every other roll adapter. Otherwise charScore is
+  // undefined and the check evaluates to NaN.
+  const effectiveCharKey = charKey === "varies" ? (skillData?.specialtyChar || "mens") : charKey;
+  const charScore = ec[effectiveCharKey];
   const grade = skillData?.grade || 0;
   const extraDice = skillData?.extraDice || 0;
   const isUntrained = grade === 0 && extraDice === 0;

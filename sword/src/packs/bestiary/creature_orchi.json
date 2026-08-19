@@ -35,8 +35,8 @@
         "max": 9
       },
       "fatica": {
-        "value": 10,
-        "max": 10
+        "value": 30,
+        "max": 30
       },
       "spirito": {
         "value": 0,

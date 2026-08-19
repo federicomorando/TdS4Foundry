@@ -185,6 +185,12 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
 
   // --- Action economy gate ---
   const isFreeGrapple = !!options.freeGrapple;
+  // Grapple free strike: a free bonus unarmed punch after a successful grapple.
+  // Unlike freeGrapple it is a normal strike (not another grapple); it bypasses
+  // the action gate (the grapple attack already spent the action), does not
+  // consume an action, and carries the +1 grapple free-strike bonus.
+  const isFreeStrike = !!options.freeStrike;
+  const freeStrikeBonus = isFreeStrike ? (Number(options.situationalMod) || 0) : 0;
   let isExtraAttack3Riflessi = false;
 
   // Off-hand attack uses the free action slot (combat only)
@@ -197,7 +203,7 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
     }
   }
 
-  if (game.combat && !isFreeGrapple && !isDualWieldAttack && !game.combat.hasActionAvailable(actor)) {
+  if (game.combat && !isFreeGrapple && !isFreeStrike && !isDualWieldAttack && !game.combat.hasActionAvailable(actor)) {
     // Fulmine / Occhio di falco: extra attack for 3 riflessi (once per turn)
     const combatant = game.combat.resolveCombatant(actor);
     const hasExtraMelee = !isRanged && !!actor.system.talentSpecials?.has("extra_attack_3riflessi");
@@ -333,7 +339,7 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
   const modifierHtml = `
     <div class="form-group">
       <label>${game.i18n.localize("SWORD.Combat.SituationalMod")}</label>
-      <input type="number" name="situationalMod" value="0" />
+      <input type="number" name="situationalMod" value="${freeStrikeBonus}" />
     </div>
   `;
 
@@ -876,8 +882,9 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
     }
   });
 
-  // Consume standard action or extra attack riflessi (skip for free grapple — already paid 1 Fatica)
-  if (game.combat && !isFreeGrapple) {
+  // Consume standard action or extra attack riflessi (skip for free grapple — already
+  // paid 1 Fatica — and for the grapple free strike, which is free after the grapple)
+  if (game.combat && !isFreeGrapple && !isFreeStrike) {
     if (isDualWieldAttack) {
       await game.combat.consumeFreeAction(actor);
     } else if (isExtraAttack3Riflessi) {

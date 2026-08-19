@@ -306,8 +306,11 @@ function buildCreature(c) {
     };
   }
 
-  // Fatica: 3-element array → fatica.max = first threshold, thresholds stored separately
-  const faticaMax = c.fatica[0] || 0;
+  // Fatica: 3-element array [fresco, stanco, sfinito] = the three fatigue-band sizes.
+  // The total capacity is their sum; the band boundaries are derived at runtime by
+  // computeFatigueLevel (floor(max*2/3), floor(max/3)), matching the character model.
+  // The per-band values are also stored under fatigueThresholds for reference.
+  const faticaMax = (c.fatica[0] || 0) + (c.fatica[1] || 0) + (c.fatica[2] || 0);
 
   // Build all abilities with defaults of 0
   const abilities = {

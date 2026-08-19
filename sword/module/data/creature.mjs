@@ -7,7 +7,7 @@
  * Source: sword-rules-spec.md Section 16, PDF Chapter 11.
  */
 
-import { computeWoundPenalty } from "../engine.mjs";
+import { computeWoundPenalty, computeFatigueLevel } from "../engine.mjs";
 
 export class CreatureDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -127,21 +127,13 @@ export class CreatureDataModel extends foundry.abstract.TypeDataModel {
     // For piccola creatures: leggere capacity is 0, so gravi = -1, critiche = -2, mortali = -3
     this.woundPenalty = computeWoundPenalty(wl);
 
-    // Fatigue level + penalty
+    // Fatigue level + penalty — same model as characters: fatica.max is the total
+    // capacity (sum of the [fresco, stanco, sfinito] bands), and computeFatigueLevel
+    // derives the stanco/sfinito boundaries as floor(max*2/3) and floor(max/3).
     const fatica = this.resources.fatica;
-    const thresholds = this.fatigueThresholds;
-    if (thresholds.fresco > 0 && fatica.value <= Math.floor(thresholds.fresco * 2 / 3)) {
-      if (fatica.value <= Math.floor(thresholds.fresco / 3)) {
-        this.fatiguePenalty = 2;
-        this.fatigueLevel = "sfinito";
-      } else {
-        this.fatiguePenalty = 1;
-        this.fatigueLevel = "stanco";
-      }
-    } else {
-      this.fatiguePenalty = 0;
-      this.fatigueLevel = "fresco";
-    }
+    const { fatiguePenalty, fatigueLevel } = computeFatigueLevel(fatica.value, fatica.max);
+    this.fatiguePenalty = fatiguePenalty;
+    this.fatigueLevel = fatigueLevel;
 
     // Total ferite capacity
     const wc = this.woundCapacities;
