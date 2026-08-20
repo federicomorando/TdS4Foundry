@@ -158,6 +158,7 @@ function computeSpecialMoveDifficulty(specialMove, specialMoveTarget) {
   if (specialMove === "nonLethal") return 2;
   if (specialMove === "feint") return 2;
   if (specialMove === "hitShield") return 2;
+  if (specialMove === "disarm") return 2;
   return null;
 }
 function resolveDamage(input) {
@@ -513,8 +514,9 @@ function computeResourceDeductions({
     currentSpirito = Math.max(0, currentSpirito - spiritoCancelPenalty);
     updateData["system.resources.spirito.value"] = currentSpirito;
   }
-  if (famaSpend > 0) {
-    updateData["system.fama"] = (famaValue ?? 0) - famaSpend;
+  const effectiveFama = Math.min(Math.max(famaSpend, 0), famaValue ?? 0);
+  if (effectiveFama > 0) {
+    updateData["system.fama"] = (famaValue ?? 0) - effectiveFama;
   }
   return updateData;
 }
@@ -2390,7 +2392,7 @@ function deriveCharacter(sheet) {
   const mensModPositive = Math.max(0, modifiers.mens || 0);
   const usiGrade = skills.usi_e_costumi?.grade || 0;
   const artiGrade = skills.arti_liberali?.grade || 0;
-  const meticcioBonus = culture.trait1 === "meticcia" || culture.trait2 === "meticcia" || culture.trait3 === "meticcia" ? 1 : 0;
+  const meticcioBonus = culture.trait1 === "meticcio" || culture.trait2 === "meticcio" || culture.trait3 === "meticcio" ? 1 : 0;
   const languageSlots = 1 + mensModPositive + Math.floor(usiGrade / 2) + Math.floor(artiGrade / 2) + meticcioBonus;
   return {
     ...sheet,
@@ -2541,7 +2543,7 @@ function computeProgressionSummary(baseSkillState, currentGrades, peTotal = 0) {
     const isMestiere = Boolean(baseSkillState[id]?.isMestiere);
     const extraDice = Number(baseSkillState[id]?.extraDice ?? 0);
     if (current > base) peSpent += peGradeCost(base, current);
-    const focusThresholds = isMestiere ? [3, 6] : [4, 6];
+    const focusThresholds = isMestiere ? [3, 6] : [4];
     const focusCount = focusThresholds.filter((t) => current >= t).length;
     skillView[id] = {
       id,
@@ -3635,7 +3637,8 @@ function resolveCheck(intent, state, diceRolled) {
     spiritoCancelPenalty: cancelRequested
   });
   const effectivePenalty = basePenalty - budget.spiritoCancelPenalty;
-  const totalExtraDice = extraDice + famaSpend + mondanoBonus + contextualDice + focusDice;
+  const effectiveFama = Math.min(Math.max(famaSpend, 0), state.fama);
+  const totalExtraDice = extraDice + effectiveFama + mondanoBonus + contextualDice + focusDice;
   const effectiveGrade = grade + combinedGrade;
   const engineOutput = swordCheckResolve({
     characteristicScore,
@@ -3658,8 +3661,8 @@ function resolveCheck(intent, state, diceRolled) {
   if (budget.spiritoTotal > 0) {
     patches["resources.spirito"] = state.spirito - budget.spiritoTotal;
   }
-  if (famaSpend > 0) {
-    patches["fama"] = state.fama - famaSpend;
+  if (effectiveFama > 0) {
+    patches["fama"] = state.fama - effectiveFama;
   }
   if (combinedFaticaCost > 0) {
     patches["resources.fatica"] = Math.max(0, state.fatica - combinedFaticaCost);
