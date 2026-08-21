@@ -393,9 +393,11 @@ export class SwordCombat extends Combat {
     if (!combatant) return;
     const grappling = combatant.getFlag("sword", "grappling");
     const grappledBy = combatant.getFlag("sword", "grappledBy");
-    // Clear own flags
+    // Clear own flags (including the lock-successes bonus, so a later grapple
+    // without a fresh lock doesn't inherit the stale break-free difficulty)
     if (grappling) await combatant.unsetFlag("sword", "grappling");
     if (grappledBy) await combatant.unsetFlag("sword", "grappledBy");
+    if (combatant.getFlag("sword", "lockSuccesses") !== undefined) await combatant.unsetFlag("sword", "lockSuccesses");
     // Clear opponent's flags
     const opponentId = grappling || grappledBy;
     if (opponentId) {
@@ -403,6 +405,7 @@ export class SwordCombat extends Combat {
       if (opCombatant) {
         if (opCombatant.getFlag("sword", "grappling")) await opCombatant.unsetFlag("sword", "grappling");
         if (opCombatant.getFlag("sword", "grappledBy")) await opCombatant.unsetFlag("sword", "grappledBy");
+        if (opCombatant.getFlag("sword", "lockSuccesses") !== undefined) await opCombatant.unsetFlag("sword", "lockSuccesses");
       }
     }
   }

@@ -615,7 +615,8 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
   let successiveShotBonus = 0;
   if (isRanged && skillId === "archi" && targetActorId && system.talentSpecials?.has("successive_shot_bonus") && game.combat) {
     const combatant = game.combat.resolveCombatant(actor);
-    if (combatant?.getFlag("sword", "lastRangedTarget") === targetActorId) {
+    // Key by token first: two unlinked tokens of the same actor are distinct targets.
+    if (combatant?.getFlag("sword", "lastRangedTarget") === (targetTokenId || targetActorId)) {
       successiveShotBonus = 1;
     }
   }
@@ -901,10 +902,11 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
     }
   }
 
-  // Track last ranged target for successive shot bonus (Aggiustare il tiro)
+  // Track last ranged target for successive shot bonus (Aggiustare il tiro).
+  // Key by token first so distinct tokens of the same actor stay distinct.
   if (isRanged && game.combat && targetActorId) {
     const combatant = game.combat.resolveCombatant(actor);
-    if (combatant) await combatant.setFlag("sword", "lastRangedTarget", targetActorId);
+    if (combatant) await combatant.setFlag("sword", "lastRangedTarget", targetTokenId || targetActorId);
   }
 
   // Pesante weapon: deduct extra Riflessi

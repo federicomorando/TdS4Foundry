@@ -250,7 +250,7 @@ Hooks.on("updateActor", (actor, changes) => {
 
 // Duellante: modify_misura_on_riflessi_loss — detect Riflessi decrease, prompt engaged Duellanti
 Hooks.on("preUpdateActor", (actor, changes) => {
-  if (!game.combat || !game.user.isGM) return;
+  if (!game.combat || !game.users.activeGM?.isSelf) return;
   const newRiflessi = foundry.utils.getProperty(changes, "system.resources.riflessi.value");
   if (newRiflessi === undefined) return;
   const oldRiflessi = actor.system.resources.riflessi.value;
@@ -398,7 +398,7 @@ Hooks.on("updateActor", (actor, changes, options, userId) => {
 
 // Auto-resolve creature Forza reactions for disarm/push attacks
 Hooks.on("createChatMessage", async (message) => {
-  if (!game.user.isGM) return;
+  if (!game.users.activeGM?.isSelf) return;
   const attackData = message.flags?.sword?.attack;
   if (!attackData) return;
   const { specialMove, targetActorId, targetTokenId, effectiveAttackHit } = attackData;

@@ -94,12 +94,14 @@ export async function swordArsOratoria(actor) {
       icon: "fa-solid fa-comments",
       callback: (event, button) => {
         const form = button.form;
+        // Preserve a legal 0 (mute/weak opponent): only fall back on an empty/NaN field.
+        const intOr = (v, d) => { const n = parseInt(v, 10); return Number.isNaN(n) ? d : n; };
         return {
-          threshold: parseInt(form.elements.threshold.value) || 1,
+          threshold: intOr(form.elements.threshold.value, 1),
           startingSkill: form.elements.startingSkill.value,
           opponentName: form.elements.opponentName.value || "PNG",
-          opponentSuccesses: parseInt(form.elements.opponentSuccesses.value) || 2,
-          opponentRiflessi: parseInt(form.elements.opponentRiflessi.value) || 5,
+          opponentSuccesses: intOr(form.elements.opponentSuccesses.value, 2),
+          opponentRiflessi: intOr(form.elements.opponentRiflessi.value, 5),
           doSpectators: form.elements.doSpectators.checked
         };
       }

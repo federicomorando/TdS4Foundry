@@ -105,6 +105,11 @@ export async function _defendReaction(actor, attackData) {
   const armorPenalty = equippedArmor
     ? armorSkillPenalty(equippedArmor.system.protezione || 0, equippedArmor.system.pregi || [], skillId)
     : 0;
+  // Senza fiato: Forza reactions (disarm/push) are allowed but take a +1 penalty and
+  // cost no Riflessi (errata §4.6). The +1 is added on top of the (cancellable) base
+  // penalty and is itself not cancellable, matching the non-Forza reaction path.
+  const isSenzaFiato = actor.statuses?.has("senza-fiato") ?? false;
+  const senzaFiatoPenalty = isSenzaFiato ? 1 : 0;
   const basePenalty = fatiguePenalty + woundPenalty + armorPenalty + encumbrancePenalty;
   const spirito = system.resources.spirito;
 
@@ -181,18 +186,21 @@ export async function _defendReaction(actor, attackData) {
       approach: "corsa", parryModifier: 0, spiritoCancelPenalty,
       defenseMode: "schivata",
       hasRiflessiCostMinus1: !!system.talentSpecials?.has("riflessi_cost_minus1"),
-      useSpiritoForRiflessi
+      useSpiritoForRiflessi: useSpiritoForRiflessi && !isSenzaFiato
     },
-    { fatiguePenalty, woundPenalty, armorPenalty, encumbrancePenalty, spirito: spirito.value, riflessi: riflessi.value },
+    // senza-fiato +1 folded into the penalty; spiritoCancelPenalty is already clamped
+    // to the base (without the +1) above, so the +1 stays non-cancellable.
+    { fatiguePenalty, woundPenalty, armorPenalty: armorPenalty + senzaFiatoPenalty, encumbrancePenalty, spirito: spirito.value, riflessi: riflessi.value },
     diceRolled
   );
   const engineOutput = defCheckResult.engineOutput;
-  const riflessiCost = defCheckResult.riflessiCost;
+  const riflessiCost = isSenzaFiato ? 0 : defCheckResult.riflessiCost;
   const defenseSucceeded = defCheckResult.defenseSucceeded;
   const netSuccesses = engineOutput.netSuccesses;
 
   const updateData = {};
   for (const [key, value] of Object.entries(defCheckResult.patches)) {
+    if (isSenzaFiato && key === "resources.riflessi") continue; // no Riflessi cost when senza fiato
     if (key.startsWith("resources.")) {
       updateData[`system.${key}.value`] = value;
     } else {
@@ -228,7 +236,8 @@ export async function _defendReaction(actor, attackData) {
     armorPenalty,
     encumbrancePenalty,
     penaltyCancelled: spiritoCancelPenalty,
-    effectivePenalty,
+    effectivePenalty: effectivePenalty + senzaFiatoPenalty,
+    senzaFiatoPenalty,
     riflessiCost,
     isFreeShieldParry: false,
     hasDamage: false,

@@ -89,6 +89,13 @@ export async function _defendCreature(actor, attackData, defenseType) {
   const specialMove = attackData.specialMove || null;
   const system = actor.system;
 
+  // Parata costs the creature's standard action — block it with no action left,
+  // mirroring the character flow (schivata/reactions are free and stay allowed).
+  if (defenseType === "parata" && game.combat && !game.combat.hasActionAvailable(actor)) {
+    ui.notifications.warn(game.i18n.localize("SWORD.Combat.NoActionAvailable"));
+    return;
+  }
+
   let defenseSuccesses, skillLabel, defenseItemName = "";
 
   if (defenseType === "schivata") {
