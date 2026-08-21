@@ -227,7 +227,7 @@ export async function _defendCreature(actor, attackData, defenseType) {
       // Grapple (Presa): no damage — establish grapple at Abrazzar
       if (game.combat && attackData.attackerId) {
         await game.combat.setEngagementMisura(attackData.attackerTokenId || attackData.attackerId, actor, "A");
-        await game.combat.setGrappleLock(attackData.attackerTokenId || attackData.attackerId, actor);
+        await game.combat.setGrappleLock(attackData.attackerTokenId || attackData.attackerId, actor, netAttackSuccesses);
       }
       specialMoveResult = {
         type: "grapple",
@@ -459,7 +459,7 @@ export async function _defendCreatureAccompagnata(actor, attackData) {
       // Grapple (Presa): no damage — establish grapple at Abrazzar
       if (game.combat && attackData.attackerId) {
         await game.combat.setEngagementMisura(attackData.attackerTokenId || attackData.attackerId, actor, "A");
-        await game.combat.setGrappleLock(attackData.attackerTokenId || attackData.attackerId, actor);
+        await game.combat.setGrappleLock(attackData.attackerTokenId || attackData.attackerId, actor, netAttackSuccesses);
       }
       specialMoveResult = {
         type: "grapple",

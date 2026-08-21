@@ -497,10 +497,10 @@ Hooks.on("renderChatMessage", (message, html) => {
         ui.notifications.warn(game.i18n.localize("SWORD.Combat.SelectToken"));
         return;
       }
-      // Free strike after a successful grapple: a free unarmed punch that bypasses
-      // the action gate (the grapple attack already spent the action) and applies the
-      // grapple free-strike bonus (data-bonus) as a situational modifier.
-      await swordAttack(actor, "unarmed_punch", { freeStrike: true, situationalMod: bonus });
+      // Free strike after a successful grapple: a free unarmed percussion that bypasses
+      // the action gate (the grapple attack already spent the action) and deals +1 damage
+      // (data-bonus = GRAPPLE_FREE_STRIKE_BONUS), per errata §5.6.
+      await swordAttack(actor, "unarmed_punch", { freeStrike: true, damageBonus: bonus });
       el.disabled = true;
     }));
 

@@ -185,12 +185,12 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
 
   // --- Action economy gate ---
   const isFreeGrapple = !!options.freeGrapple;
-  // Grapple free strike: a free bonus unarmed punch after a successful grapple.
-  // Unlike freeGrapple it is a normal strike (not another grapple); it bypasses
-  // the action gate (the grapple attack already spent the action), does not
-  // consume an action, and carries the +1 grapple free-strike bonus.
+  // Grapple free strike: a free bonus unarmed percussion after a successful grapple.
+  // Unlike freeGrapple it is a normal strike (not another grapple); it bypasses the
+  // action gate (the grapple attack already spent the action), does not consume an
+  // action, and deals +1 damage (a headbutt/knee/elbow) per errata §5.6.
   const isFreeStrike = !!options.freeStrike;
-  const freeStrikeBonus = isFreeStrike ? (Number(options.situationalMod) || 0) : 0;
+  const freeStrikeDamage = isFreeStrike ? (Number(options.damageBonus) || 0) : 0;
   let isExtraAttack3Riflessi = false;
 
   // Off-hand attack uses the free action slot (combat only)
@@ -339,7 +339,7 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
   const modifierHtml = `
     <div class="form-group">
       <label>${game.i18n.localize("SWORD.Combat.SituationalMod")}</label>
-      <input type="number" name="situationalMod" value="${freeStrikeBonus}" />
+      <input type="number" name="situationalMod" value="0" />
     </div>
   `;
 
@@ -758,7 +758,7 @@ export async function swordAttack(actor, weaponItemId, options = {}) {
     damageValue: weapon.system.damageValue,
     damageType: weapon.system.damageType,
     damageTypeLabel: dmgTypeLabel,
-    talentDamageBonus,
+    talentDamageBonus: talentDamageBonus + freeStrikeDamage,
     isRanged,
     rangePenalty,
     rangedDistance: isRanged ? rangedDistance : null,

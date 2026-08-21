@@ -375,13 +375,16 @@ export class SwordCombat extends Combat {
    * @param {Combatant|Actor|string} grapplerRef - The combatant performing the grapple
    * @param {Combatant|Actor|string} grappledRef - The combatant being grappled
    */
-  async setGrappleLock(grapplerRef, grappledRef) {
+  async setGrappleLock(grapplerRef, grappledRef, followUpBonus = 0) {
     const cGrappler = this.resolveCombatant(grapplerRef);
     const cGrappled = this.resolveCombatant(grappledRef);
     const keyGrappler = cGrappler ? (cGrappler.tokenId ?? cGrappler.actorId) : null;
     const keyGrappled = cGrappled ? (cGrappled.tokenId ?? cGrappled.actorId) : null;
     if (cGrappler && keyGrappled) await cGrappler.setFlag("sword", "grappling", keyGrappled);
     if (cGrappled && keyGrappler) await cGrappled.setFlag("sword", "grappledBy", keyGrappler);
+    // The grab's net successes carry to the grappler's next Lotta/Forza check as a
+    // grade bonus (and pre-accumulated successes toward a lock) — errata §5.6.
+    if (cGrappler && followUpBonus > 0) await cGrappler.setFlag("sword", "grappleFollowUpBonus", followUpBonus);
   }
 
   /**
@@ -398,6 +401,7 @@ export class SwordCombat extends Combat {
     if (grappling) await combatant.unsetFlag("sword", "grappling");
     if (grappledBy) await combatant.unsetFlag("sword", "grappledBy");
     if (combatant.getFlag("sword", "lockSuccesses") !== undefined) await combatant.unsetFlag("sword", "lockSuccesses");
+    if (combatant.getFlag("sword", "grappleFollowUpBonus") !== undefined) await combatant.unsetFlag("sword", "grappleFollowUpBonus");
     // Clear opponent's flags
     const opponentId = grappling || grappledBy;
     if (opponentId) {

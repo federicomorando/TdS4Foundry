@@ -59,6 +59,11 @@ export async function swordGrappleLock(actor, options = {}) {
   const skillId = "lotta";
   const skillLabel = game.i18n.localize("SWORD.Skills.lotta");
 
+  // A successful grab pre-loads the grappler's next Lotta check with the grab's net
+  // successes (errata §5.6), accumulated toward the lock threshold of 3. Consumed here.
+  const grapplerCombatant = game.combat.resolveCombatant(actor);
+  const followUpBonus = grapplerCombatant?.getFlag("sword", "grappleFollowUpBonus") ?? 0;
+
   if (isCreature) {
     // Creature: fixed lotta successes
     const fixedSuccesses = system.skills?.lotta ?? 0;
@@ -67,16 +72,15 @@ export async function swordGrappleLock(actor, options = {}) {
     const basePenalty = fatiguePenalty + woundPenalty;
     const effectiveSuccesses = Math.max(0, fixedSuccesses - basePenalty);
 
-    // Lock difficulty: always 2 (base grapple check)
-    const lockDifficulty = 2;
-    const passed = effectiveSuccesses >= lockDifficulty;
+    // Lock: sfida to threshold 3 (errata §5.6), with the grab's net successes accumulated.
+    const lockDifficulty = 3;
+    const lockSuccesses = effectiveSuccesses + followUpBonus;
+    const passed = lockSuccesses >= lockDifficulty;
 
-    if (passed) {
-      // Store lock successes for Break Free difficulty
-      const combatant = game.combat.resolveCombatant(actor);
-      if (combatant) {
-        await combatant.setFlag("sword", "lockSuccesses", effectiveSuccesses);
-      }
+    if (grapplerCombatant) {
+      if (passed) await grapplerCombatant.setFlag("sword", "lockSuccesses", lockSuccesses);
+      // The grab bonus is consumed by this follow-up Lotta check
+      if (followUpBonus > 0) await grapplerCombatant.unsetFlag("sword", "grappleFollowUpBonus");
     }
 
     const chatData = {
@@ -86,7 +90,8 @@ export async function swordGrappleLock(actor, options = {}) {
       isCreature: true,
       skillLabel,
       lockDifficulty,
-      finalSuccesses: effectiveSuccesses,
+      finalSuccesses: lockSuccesses,
+      followUpBonus,
       passed,
       isLock: true
     };
@@ -133,7 +138,7 @@ export async function swordGrappleLock(actor, options = {}) {
 
   const penaltyHtml = buildPenaltyHtml(basePenalty, spirito.value);
 
-  const lockDifficulty = 2; // Base grapple difficulty for lock
+  const lockDifficulty = 3; // Lock sfida threshold (errata §5.6)
 
   const dialogContent = `
     <div class="sword-roll-dialog">
@@ -185,7 +190,7 @@ export async function swordGrappleLock(actor, options = {}) {
     diceCount,
     grade,
     extraDice: totalExtraDice,
-    successBonus: 0,
+    successBonus: followUpBonus,
     successPenalty: effectivePenalty,
     difficultyThreshold: lockDifficulty,
     opposedSuccesses: null,
@@ -204,12 +209,11 @@ export async function swordGrappleLock(actor, options = {}) {
     await actor.update(updateData);
   }
 
-  // Store lock successes for Break Free difficulty
-  if (passed) {
-    const combatant = game.combat.resolveCombatant(actor);
-    if (combatant) {
-      await combatant.setFlag("sword", "lockSuccesses", engineOutput.finalSuccesses);
-    }
+  // Store lock successes for Break Free difficulty (finalSuccesses already includes the
+  // accumulated grab bonus via successBonus); consume the grab bonus.
+  if (grapplerCombatant) {
+    if (passed) await grapplerCombatant.setFlag("sword", "lockSuccesses", engineOutput.finalSuccesses);
+    if (followUpBonus > 0) await grapplerCombatant.unsetFlag("sword", "grappleFollowUpBonus");
   }
 
   // Consume standard action
@@ -223,6 +227,7 @@ export async function swordGrappleLock(actor, options = {}) {
     skillLabel,
     lockDifficulty,
     ...engineOutput,
+    followUpBonus,
     diceAfterReductionDisplay: engineOutput.diceAfterReduction.map(d => ({
       value: d, isOne: d === 1
     })),
